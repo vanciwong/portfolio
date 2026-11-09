@@ -1,3 +1,6 @@
 .figma-agent/
 .DS_Store
 **/.DS_Store
+.workbuddy/
+.screenshots/
+.trae-html-share-packages/
