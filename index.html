@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VanciWong — UX &amp; AX Designer Portfolio</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  /* ===== 设计基准：Figma 1920 x 6176，所有尺寸按 --k 等比缩放 ===== */
+  :root{
+    --k: 1;
+    --u: calc(var(--k) * 1px);
+    --nav-h: calc(108 * var(--u));
+    --ink:#28282A;
+    --ink-deep:#111113;
+    --paper:#F0F0ED;
+    --red:#DD1E1E;
+    --red-bright:#E5341F;
+    --cream:#F6F4EF;
+    --cream-2:#F5F5F3;
+    --gray:#8C8C95;
+    --line-dark:#2F2F36;
+  }
+  *{box-sizing:border-box;}
+  html{overflow-x:clip;}
+  /* 锚点跳转时给固定导航预留高度 */
+  #heroPin,#works,#methodPin,#concept,#about,#contact{scroll-margin-top:calc(var(--nav-h) + 8 * var(--u));}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--cream);
+    font-family:"Noto Sans SC","PingFang SC","Hiragino Sans GB",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:clip;
+  }
+  img{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3,p{margin:0;}
+  .latin{font-family:"Montserrat","Noto Sans SC",sans-serif;}
+
+  /* ===== 页头（fixed 常驻，浮于各区块之上） ===== */
+  .site-header{
+    position:fixed;top:0;left:0;right:0;
+    height:var(--nav-h);
+    padding:0 calc(80 * var(--u));
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(40,40,42,.2);
+    border-bottom:1px solid rgba(58,58,62,.3);
+    backdrop-filter:blur(30px);
+    -webkit-backdrop-filter:blur(30px);
+    transition:background-color .3s ease,border-color .3s ease;
+    z-index:40;
+  }
+  /* 滚动后加深底色，保证压在浅色/纸面区块上时导航与 logo 仍可读 */
+  .site-header.is-stuck{
+    background:rgba(17,17,19,.78);
+    border-bottom-color:rgba(255,255,255,.1);
+  }
+  .nav{display:flex;align-items:center;gap:calc(48 * var(--u));}
+  .nav a{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(2 * var(--u));padding-top:calc(10 * var(--u));}
+  .nav .cn{font-size:calc(18 * var(--u));line-height:1;color:#808080;font-weight:400;}
+  .nav .en{font-size:calc(10 * var(--u));line-height:1;color:#7C7C7E;letter-spacing:.18em;text-transform:uppercase;}
+  .nav a.is-active .cn{color:#fff;}
+  .nav a.is-active .en{color:#CCCCCC;}
+  .nav a.is-active::after{
+    content:"";position:absolute;left:50%;bottom:calc(-12 * var(--u));
+    width:calc(6 * var(--u));height:calc(6 * var(--u));margin-left:calc(-3 * var(--u));
+    flex:none;aspect-ratio:1/1;
+    background:var(--red);
+  }
+  .logo{width:calc(176 * var(--u));height:calc(46 * var(--u));object-fit:contain;}
+
+  /* ===== 滚动容器 ===== */
+  .pin{position:relative;}
+  .stage{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:stretch;}
+  .stage-inner{width:100%;}
+
+  /* ===== 首屏 ===== */
+  /* 首屏 pin：行程 183vh = 入场 0.13 屏 + 保持 0.70 屏（sticky 舞台固定到 0.83 屏）+ 退场 1 屏随滚动离开 */
+  #heroPin{height:183vh;background:#28282A;}
+  /* 注意：不要在这里写 position:relative，会覆盖 .stage 的 sticky（同特异性、后出现者胜） */
+  .hero{background:var(--ink);height:100vh;}
+  /* 背景纹理层：1840 无缝图案平铺 + 160s 循环平移，参数对齐 PortfolioDesign */
+  .hero-flow{
+    position:absolute;top:calc(-24 * var(--u));bottom:calc(-24 * var(--u));
+    left:calc(-24 * var(--u));right:calc(-24 * var(--u));
+    overflow:hidden;z-index:0;pointer-events:none;will-change:transform;
+  }
+  .hero-flow-inner{
+    position:absolute;top:calc(-1900 * var(--u));left:calc(-1900 * var(--u));
+    width:calc(100% + 3800 * var(--u));height:calc(100% + 3800 * var(--u));
+    background-image:url(assets/bg.svg);background-repeat:repeat;
+    background-size:calc(1840 * var(--u)) calc(1840 * var(--u));
+    opacity:.2;animation:flowSlide 160s linear infinite;will-change:transform;
+  }
+  /* 视差位移层：与 160s 循环分离，避免 transform 冲突；纹理上/下各预留 1900u，位移不会露边 */
+  .hero-flow-shift{position:absolute;inset:0;will-change:transform;}
+  /* 自左上向右下循环滚动：位移恰好一整块，首尾图案完全重合，循环处无跳变 */
+  @keyframes flowSlide{
+    from{transform:translate3d(calc(-1840 * var(--u)),calc(-1840 * var(--u)),0);}
+    to{transform:translate3d(0,0,0);}
+  }
+  /* 圆环：指针缓动视差（lerp 0.075，幅度 -48 / +32，约 Design 两倍） */
+  .hero-ring{position:absolute;border:calc(48 * var(--u)) solid #202023;border-radius:50%;z-index:1;pointer-events:none;will-change:transform;}
+  .ring-a{width:calc(400 * var(--u));height:calc(400 * var(--u));left:calc(-161 * var(--u));top:calc(856 * var(--u));}
+  .ring-b{width:calc(560 * var(--u));height:calc(560 * var(--u));left:calc(1476 * var(--u));top:calc(-312 * var(--u));}
+  .hero-inner{
+    position:absolute;left:calc(200 * var(--u));top:calc(247 * var(--u));
+    width:calc(1520 * var(--u));z-index:2;
+  }
+  /* 文案块（眉标 + 主标题 + 副标题 + 按钮）整体缩放的唯一容器，锚点左上 */
+  .hero-copy{position:relative;transform-origin:0 0;will-change:transform;}
+  .eyebrow{display:flex;align-items:center;gap:calc(12 * var(--u));font-size:calc(12 * var(--u));letter-spacing:.2em;line-height:1.15;}
+  .eyebrow .dot{width:calc(8 * var(--u));height:calc(8 * var(--u));background:var(--red);flex:none;}
+  .hero-eyebrow{font-weight:700;color:#fff;letter-spacing:calc(2.4 * var(--u));}
+  .hero-title{
+    position:relative;margin-top:calc(16 * var(--u));
+    font-family:"Montserrat","Noto Sans SC",sans-serif;font-weight:700;color:#fff;
+    /* Figma 174-512：首行 128/100、次行 128/120、字距 0（原 -.005em 已去除） */
+    font-size:calc(128 * var(--u));line-height:calc(100 * var(--u));letter-spacing:0;
+    /* 标题本身不再缩放：原 1.38→1 已并入词级形变（见下方 .hero-designer / .hero-portfolio） */
+    transform-origin:0 0;
+  }
+  .hero-title .sp{font-size:calc(64 * var(--u));}
+  /* Figma 的 & 是小号字（墨迹 27.2 × 27.2u，约为 128u 大写字高 89.6u 的 30%），
+     不是把大号 & 横向压扁：旧写法用 80u 字号 + scaleX(.51)，宽度虽对，墨迹高度却有 57u（设计的 2 倍）。
+     这里直接按设计的光学尺寸还原：40u 字号（墨迹高 ≈ 28.6u），垂直居中于大写字带
+     （设计里 & 墨迹底边距基线 27.2u → 27.2/40 ≈ .68em）。
+     横向 1.11：设计稿里 & 的墨迹宽高比是 1:1（40 × 40 px，按大写字高折算），
+     Montserrat 700 的 & 自然宽高比只有 0.91，故按墨迹实测补 11% 宽度（不是压缩字形）。
+     line-height:1 让内联盒只占 40u，不会撑高首行行盒（首行高度由两侧 64u 的 .sp 决定）。 */
+  .hero-title .amp{
+    display:inline-block;font-size:calc(40 * var(--u));line-height:1;
+    position:relative;top:-.68em;
+    transform:scaleX(1.11);transform-origin:center;
+  }
+  /* Chrome 会把 128px 字号的首行撑到 123px（行高 100 + 23 内容溢出），
+     上移 13u 让第二行基线落回 Figma 的 493，块高仍为 230 */
+  .hero-title .line2{display:block;line-height:calc(120 * var(--u));margin-top:calc(-13 * var(--u));}
+  .hero-title .red-square{
+    position:absolute;left:calc(792 * var(--u));top:calc(192 * var(--u));
+    width:calc(24 * var(--u));height:calc(24 * var(--u));background:var(--red);
+  }
+  .hero-sub{
+    position:relative;margin-top:calc(16 * var(--u));
+    font-size:calc(24 * var(--u));line-height:1.2;font-weight:500;
+    letter-spacing:calc(7.2 * var(--u));color:#fff;
+    text-wrap:balance;
+  }
+  /* ===== 首屏两套排版之间的滚动形变（Figma 24-2 → 174-512） =====
+     24-2 初始态：DESIGNER 300/240（自上而下 alpha .5→0 的白色渐变填充）、PORTFOLIO 300/240（同渐变 4px 外描边）、
+     副标题 16/100% 字距、提示按钮 162×50 @879,968。
+     滚动 0→0.18 屏插值到 174-512 的落位。全程只写 transform / opacity / 描边宽，不写 top/left/width。
+     两层同字形叠加只交叉透明度，因此缩放/位移过程中两层永远重合，不会出现重影错位。
+     PORTFOLIO 两态口径：初始（24-2）竖向渐变外描边 → 终态（174-512）实心白字，
+     两层同字形交叉透明度，中间连续过渡。 */
+  .hero-word{display:inline-block;transform-origin:0 0;will-change:transform;}
+  .hero-pre{display:inline-block;transform-origin:0 0;will-change:transform,opacity;opacity:0;}
+  .hero-designer,.hero-portfolio{display:inline-block;position:relative;}
+  .hero-designer .dg-fade,.hero-designer .dg-solid,
+  .hero-portfolio .pf-outline,.hero-portfolio .pf-cover,.hero-portfolio .pf-solid{display:inline-block;white-space:nowrap;}
+  /* 初始层：24-2 的竖向透明渐变（顶部 50% → 底部 0） */
+  .hero-designer .dg-fade{
+    position:absolute;left:0;top:0;color:transparent;
+    background-image:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));
+    -webkit-background-clip:text;background-clip:text;
+    opacity:1;
+  }
+  .hero-designer .dg-solid{opacity:0;}
+  /* PORTFOLIO 三层堆叠：描边层 → 底色遮罩 → 实心白（只交叉透明度，不改字形）。
+     为什么三层：`-webkit-text-stroke` 是「居中描边」且按每条子轮廓分别描边，Montserrat 的 P/R
+     字碗与竖干是交叠子轮廓，直接描边会在交叠处露出内部接缝（斜线断口）。改成「2× 宽度居中描边 +
+     上层用底色填满整个字形」后，内半边描边与所有内部接缝都被同字形遮住，外露宽度 = 描边宽的一半 = 4u，
+     效果等价 Figma 的 OUTSIDE 描边。遮罩层是纯色 #28282A（与舞台底色一致），会盖掉字内极淡的背景条纹
+     （实测条纹幅度仅 3/255，约 1.2%，肉眼看不出），这是本方案的代价。
+     24-2 的描边是 4px（300 字号）；词级 scale 会拉粗/变细，故描边宽用 --pfs 统一控制，由 JS 按当前
+     scale 反向补偿（描边层可见期间外露线宽恒为 4u）；未跑 JS 时取 0.0625em ＝ 128 基准的 8u（外露 4u）。
+     渐变仍用 mask 复刻（CSS 不支持渐变描边），只作用在描边层。 */
+  .hero-portfolio{--pfs:0.0625em;}
+  .hero-portfolio .pf-outline{
+    position:absolute;left:0;top:0;z-index:0;color:transparent;
+    -webkit-text-stroke-width:var(--pfs);
+    -webkit-text-stroke-color:rgba(255,255,255,.5);
+    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,1),rgba(0,0,0,0));
+    mask-image:linear-gradient(180deg,rgba(0,0,0,1),rgba(0,0,0,0));
+    -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+    opacity:1;
+  }
+  /* 遮罩层：与字形完全重合的底色填充，盖住居中描边的内半边及子轮廓交叠处的接缝 */
+  .hero-portfolio .pf-cover{
+    position:absolute;left:0;top:0;z-index:1;
+    color:#28282A;
+  }
+  /* 终态层：174-512 的实心白字，不带描边（描边视觉宽度为 0） */
+  .hero-portfolio .pf-solid{
+    position:relative;z-index:2;
+    color:#fff;opacity:0;
+    -webkit-text-stroke-width:0;
+  }
+  /* 副标题逐字形变：26 个 inline-block 字块，各自 translate+scale（字距 100%→30%、字号 16→24 无法用统一缩放实现） */
+  .hero-sub .sub-ch{display:inline-block;transform-origin:0 0;will-change:transform;}
+  /* 隐藏量具：按 24-2 的 16/100% 字距排版，只为读初始落位，不参与显示 */
+  .sub-measure{
+    position:absolute;left:0;top:0;visibility:hidden;white-space:nowrap;
+    pointer-events:none;z-index:-1;
+    font-family:"Noto Sans SC","PingFang SC",sans-serif;font-weight:500;
+    font-size:calc(16 * var(--u));letter-spacing:calc(16 * var(--u));line-height:calc(19.2 * var(--u));
+  }
+  /* 首屏其余文字（眉标/按钮/数据）：24-2 里不存在，随形变尾段淡入到位 */
+  .hero-late{opacity:0;transform:translate3d(0,calc(24 * var(--u)),0);will-change:opacity,transform;}
+  .hero-actions{display:flex;align-items:center;gap:calc(24 * var(--u));margin-top:calc(32 * var(--u));}
+  .btn{
+    display:inline-flex;align-items:center;gap:calc(10 * var(--u));
+    height:calc(48 * var(--u));padding:0 calc(26 * var(--u));border-radius:999px;
+    font-size:calc(13 * var(--u));font-weight:700;letter-spacing:calc(1 * var(--u));
+    border:0;cursor:pointer;transition:transform .25s ease,background-color .25s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--cream);color:#141416;}
+  .btn-ghost{height:calc(50 * var(--u));border:1px solid #474752;color:var(--cream);background:transparent;}
+  .btn svg{width:calc(15 * var(--u));height:calc(15 * var(--u));flex:none;}
+  .hero-stats{display:flex;align-items:center;justify-content:space-between;margin-top:calc(120 * var(--u));}
+  .stat-group{display:flex;gap:calc(52 * var(--u));}
+  .stat .value{font-family:"Montserrat",sans-serif;font-weight:700;font-size:calc(40 * var(--u));line-height:1.225;letter-spacing:-.015em;color:var(--cream);}
+  .stat .label{margin-top:calc(3 * var(--u));font-size:calc(10.5 * var(--u));line-height:1.24;letter-spacing:calc(1.2 * var(--u));color:var(--gray);}
+  .hero-side{text-align:right;font-size:calc(10 * var(--u));line-height:1.2;font-weight:700;letter-spacing:calc(1.2 * var(--u));color:#9A9A9C;}
+  .hero-side .row{display:flex;justify-content:flex-end;align-items:center;gap:calc(4 * var(--u));margin-top:calc(8 * var(--u));font-size:calc(11 * var(--u));font-weight:400;letter-spacing:.12em;color:#D8D8D5;}
+  .hero-side .row a{display:inline-flex;align-items:center;gap:calc(4 * var(--u));color:#fff;font-weight:900;margin-left:0;}
+  .hero-side .row a svg{width:calc(16 * var(--u));height:calc(16 * var(--u));flex:none;}
+  /* 首屏滚动提示：Figma 24-2 节点 182:902 实测 —— 162×50（含 1px 描边）、内边距左右 26u、
+     文字 13 Bold / 字距 1u、gap 10u、箭头 15u（线宽 1.1875）、圆角 999、描边 #474752。
+     水平：24-2 的 x=879 是按「宽 162」手算的居中位，但实际盒宽随字体度量/1px 描边为 163，
+     即肉眼看到的中心会偏 +0.5px；改用 left:50% + translate:-50% 直接按真实盒宽居中（差值 0）。
+     translate 与 hintBob 的 transform 是独立属性，不会互相覆盖。
+     垂直：保持 24-2 的 y=968。原用 bottom:62u 锚底，视口高度 <1080u 时会随底边上浮，
+     与副标题（916.8→936）压字；改为 top:968u 的绝对落位后，初始态与副标题保留 32u 间隙。
+     视口高度 <1030u 时按钮会贴到 stage 下沿被裁切（不再压字），这是保持 24-2 精确落位的代价。 */
+  .hero-hint{
+    position:absolute;left:50%;top:calc(968 * var(--u));translate:-50% 0;
+    display:inline-flex;align-items:center;gap:calc(10 * var(--u));
+    height:calc(50 * var(--u));padding:0 calc(26 * var(--u));
+    border:1px solid #474752;border-radius:999px;background:transparent;color:#fff;
+    font-family:"Noto Sans SC","PingFang SC",sans-serif;
+    font-size:calc(13 * var(--u));line-height:1;letter-spacing:calc(1 * var(--u));
+    white-space:nowrap;cursor:pointer;z-index:3;
+    animation:hintBob 1.8s ease-in-out infinite;
+    transition:border-color .25s ease;
+    will-change:transform;
+  }
+  .hero-hint .hint-arrow{
+    width:calc(15 * var(--u));height:calc(15 * var(--u));flex:none;
+    color:inherit;
+  }
+  .hero-hint:hover{border-color:rgba(246,244,239,.55);animation-play-state:paused;}
+  /* 整块（盒 + 文字 + 箭头）一起跳动：只有按钮自身有动画，内部元素不再各自位移。
+     8u 上下、1.8s、ease-in-out，0% / 50% / 100% 三处速度归零，无回弹跳变 */
+  @keyframes hintBob{
+    0%,100%{transform:translate3d(0,0,0);}
+    50%{transform:translate3d(0,calc(-8 * var(--u)),0);}
+  }
+
+  /* ===== 精选项目 ===== */
+  .works{background:var(--paper);color:#28282A;padding:calc(96 * var(--u)) calc(200 * var(--u));}
+  .works-head{display:flex;justify-content:space-between;align-items:flex-start;}
+  .works-head .eyebrow{color:#6B6B6B;letter-spacing:calc(3 * var(--u));}
+  .h2{font-weight:900;font-size:calc(72 * var(--u));line-height:1.06;color:#000;}
+  .works-head h2{margin-top:calc(24 * var(--u));display:flex;align-items:flex-start;gap:calc(20 * var(--u));}
+  .works-desc{margin-top:calc(8 * var(--u));max-width:calc(468 * var(--u));font-size:calc(13 * var(--u));line-height:2;color:#6D6D6D;}
+  .works-link{display:inline-flex;flex-direction:column;gap:calc(10 * var(--u));font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));color:#28282A;padding-top:0;}
+  .works-head .works-link{padding-top:calc(123 * var(--u));}
+  .works-link .row{display:flex;align-items:center;gap:calc(8 * var(--u));}
+  .works-link .underline{height:1px;background:#28282A;}
+  .works-main{display:flex;gap:calc(56 * var(--u));margin-top:calc(48 * var(--u));}
+  .works-main .cover{width:calc(960 * var(--u));height:calc(520 * var(--u));object-fit:cover;flex:none;}
+  .works-main .case-info{align-self:center;width:calc(504 * var(--u));}
+  .case-meta{font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));color:#6B6B6B;}
+  .case-title{font-size:calc(54 * var(--u));font-weight:700;line-height:1.2;margin-top:calc(26 * var(--u));color:#28282A;}
+  .case-desc{font-size:calc(17 * var(--u));line-height:1.85;color:#6B6B6B;margin-top:calc(27 * var(--u));}
+  .tags{display:flex;gap:calc(10 * var(--u));flex-wrap:wrap;margin-top:calc(26 * var(--u));}
+  .tag{font-size:calc(12 * var(--u));color:#28282A;border:1px solid #D5D5CF;padding:calc(8 * var(--u)) calc(14 * var(--u));}
+  .case-link{display:inline-flex;align-items:center;gap:calc(10 * var(--u));margin-top:calc(26 * var(--u));font-size:calc(15 * var(--u));font-weight:500;color:#28282A;}
+  .case-link .arrow{color:var(--red);}
+  .works-sub{display:flex;gap:calc(56 * var(--u));margin-top:calc(48 * var(--u));}
+  .subcase{width:calc(732 * var(--u));}
+  .subcase .cover{width:100%;height:calc(340 * var(--u));object-fit:cover;}
+  .subcase .meta{display:flex;justify-content:space-between;align-items:center;margin-top:calc(22 * var(--u));font-size:calc(12 * var(--u));letter-spacing:calc(2 * var(--u));}
+  .subcase .num{color:var(--red);}
+  .subcase .cat{font-size:calc(11 * var(--u));color:#6B6B6B;}
+  .subcase h3{font-size:calc(32 * var(--u));font-weight:700;margin-top:calc(22 * var(--u));line-height:1.2;color:#28282A;}
+  .subcase .desc{font-size:calc(15 * var(--u));line-height:1.8;color:#6B6B6B;margin-top:calc(22 * var(--u));}
+  .subcase .tags{margin-top:calc(22 * var(--u));gap:calc(8 * var(--u));}
+  .subcase .tag{font-size:calc(11 * var(--u));padding:calc(7 * var(--u)) calc(12 * var(--u));}
+  .subcase .case-link{margin-top:calc(21 * var(--u));}
+  .cover-wrap{overflow:hidden;}
+
+  /* ===== 设计工作流 ===== */
+  /* 工作流不再 pin：去掉 40vh 的 sticky 固定行程，模块随页面连续下滑 */
+  #methodPin{background:var(--ink-deep);}
+  #methodPin .stage{position:static;height:auto;overflow:visible;display:block;}
+  /* 整个工作流模块的缩放容器：阶段二作用于它，锚点居中，向后退不会碰到上下区块 */
+  .method{background:var(--ink-deep);padding:calc(96 * var(--u)) calc(200 * var(--u)) calc(86 * var(--u));width:100%;transform-origin:50% 50%;will-change:transform;}
+  .method-head{display:flex;justify-content:space-between;align-items:flex-start;}
+  .method-head .eyebrow{color:#fff;letter-spacing:calc(3 * var(--u));}
+  .method-title{margin-top:calc(16 * var(--u));font-size:calc(72 * var(--u));font-weight:900;line-height:1.06;color:var(--cream);white-space:pre-line;transform-origin:0 0;will-change:transform;}
+  .method-title em{font-style:normal;color:var(--red-bright);}
+  .method-head .works-link{color:#fff;padding-top:calc(157 * var(--u));font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));}
+  .method-head .works-link .underline{background:var(--line-dark);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(40 * var(--u));margin-top:calc(56 * var(--u));}
+  .step{border:1px solid rgba(246,244,239,.32);padding:calc(24 * var(--u));min-height:calc(291 * var(--u));display:flex;flex-direction:column;gap:calc(18 * var(--u));}
+  .step-no{display:flex;justify-content:space-between;align-items:center;font-size:calc(11 * var(--u));letter-spacing:calc(1.6 * var(--u));color:var(--red-bright);}
+  .step-no i{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;background:var(--red-bright);}
+  .step h3{font-size:calc(26 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);}
+  .step p{font-size:calc(14 * var(--u));line-height:1.62;color:var(--cream);white-space:pre-line;}
+  .step p .ai{color:var(--gray);}
+  .artifacts{display:flex;flex-wrap:wrap;align-items:center;gap:calc(8 * var(--u));margin-top:auto;}
+  .artifact{font-size:calc(10.5 * var(--u));letter-spacing:calc(1 * var(--u));color:var(--gray);border:1px solid rgba(246,244,239,.12);padding:calc(5 * var(--u)) calc(9 * var(--u));border-radius:calc(2 * var(--u));}
+  .plus{font-size:calc(8 * var(--u));color:var(--line-dark);}
+
+  /* ===== 设计理念 ===== */
+  .concept{background:var(--ink);padding:calc(96 * var(--u)) calc(200 * var(--u));display:flex;gap:calc(72 * var(--u));}
+  .concept-left{width:calc(440 * var(--u));flex:none;}
+  .concept-left .eyebrow{color:#fff;letter-spacing:calc(3 * var(--u));}
+  .concept-title{margin-top:calc(24 * var(--u));font-size:calc(72 * var(--u));font-weight:900;line-height:1.1;letter-spacing:calc(-4.44 * var(--u));color:var(--cream-2);white-space:pre-line;transform-origin:0 20%;will-change:transform;}
+  .concept-title .red{display:block;font-size:calc(56 * var(--u));font-weight:400;color:var(--red-bright);text-transform:uppercase;}
+  .concept-body{margin-top:calc(26 * var(--u));font-size:calc(13 * var(--u));line-height:2;color:#939393;white-space:pre-line;}
+  .concept-body .lead{color:#fff;}
+  .articles{width:calc(1008 * var(--u));margin-left:auto;}
+  .article{
+    position:relative;display:grid;grid-template-columns:calc(70 * var(--u)) 1fr calc(36 * var(--u));
+    gap:calc(25 * var(--u));align-items:start;
+    background:#303033;border:1px solid #4A4A4C;padding:calc(32 * var(--u)) calc(20 * var(--u));
+    min-height:calc(166 * var(--u));
+  }
+  .article + .article{border-top:0;}
+  .article .no{font-size:calc(9 * var(--u));line-height:1.5;color:#777;letter-spacing:calc(1.62 * var(--u));}
+  .article .label{font-size:calc(9 * var(--u));line-height:1.5;letter-spacing:calc(1.62 * var(--u));color:#777;margin-bottom:calc(12 * var(--u));text-transform:uppercase;}
+  .article h3{font-size:calc(25 * var(--u));line-height:1.5;font-weight:400;color:var(--cream-2);}
+  .article p{font-size:calc(12 * var(--u));line-height:1.8;color:#999;margin-top:calc(13 * var(--u));max-width:calc(540 * var(--u));}
+  .article .circle{width:calc(36 * var(--u));height:calc(36 * var(--u));border:1px solid #555;border-radius:50%;display:grid;place-items:center;font-size:calc(16 * var(--u));color:var(--cream-2);}
+  .article-inner{display:grid;grid-template-columns:calc(70 * var(--u)) 1fr;gap:calc(25 * var(--u));}
+  .article-inner .body{margin-left:calc(95 * var(--u));}
+
+  /* ===== 关于我 ===== */
+  .about-wrap{position:relative;background:var(--ink-deep);}
+  .about{position:relative;width:100%;background:var(--ink-deep);padding:calc(150 * var(--u)) calc(185.3 * var(--u));overflow:hidden;}
+  .about-bg{position:absolute;inset:0;background:var(--red);transform-origin:50% 50%;will-change:transform;}
+  .about-inner{position:relative;height:calc(452 * var(--u));width:calc(1549 * var(--u));max-width:100%;will-change:transform;}
+  .about-top{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(28 * var(--u));}
+  .about .eyebrow{color:#fff;letter-spacing:calc(3 * var(--u));}
+  .about .eyebrow .dot{background:#fff;}
+  .about h2{margin-top:calc(16 * var(--u));font-size:calc(72 * var(--u));line-height:1.06;font-weight:900;color:var(--cream);max-width:calc(1485 * var(--u));transform-origin:0 30%;will-change:transform;white-space:pre-line;}
+  .about h2 .dark{color:#111113;}
+  .about .circle{width:calc(64 * var(--u));height:calc(64 * var(--u));flex:none;border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:calc(32 * var(--u));color:var(--cream-2);}
+  .about-bottom{display:flex;justify-content:space-between;gap:calc(148 * var(--u));margin-top:calc(90 * var(--u));align-items:flex-end;}
+  .about p.lead{width:calc(720 * var(--u));font-size:calc(13 * var(--u));line-height:2;color:#fff;}
+  .about-stats{display:flex;gap:calc(96 * var(--u));padding:calc(25 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.466);}
+  .about-stat .num{font-family:"Montserrat",sans-serif;font-weight:700;font-size:calc(38 * var(--u));line-height:1.5;color:#fff;}
+  .about-stat .lab{font-size:calc(9 * var(--u));letter-spacing:calc(.72 * var(--u));color:#fff;margin-top:calc(7 * var(--u));}
+
+  /* ===== 页脚 ===== */
+  .footer{position:relative;background:var(--ink-deep);padding:calc(158 * var(--u)) calc(200 * var(--u)) calc(40 * var(--u));color:var(--cream-2);}
+  .footer .circle{position:absolute;top:calc(200 * var(--u));right:calc(200 * var(--u));width:calc(58 * var(--u));height:calc(58 * var(--u));border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:calc(28 * var(--u));color:var(--cream-2);}
+  .footer .eyebrow{font-size:calc(10 * var(--u));letter-spacing:calc(2.2 * var(--u));color:var(--cream-2);}
+  .footer-title{margin-top:calc(36 * var(--u));font-size:calc(170 * var(--u));font-weight:900;line-height:.85;letter-spacing:calc(-12.75 * var(--u));transform-origin:0 40%;will-change:transform;}
+  /*
+     Figma 设计为 strokeAlign:OUTSIDE + strokeWeight:4，且无填充。
+     -webkit-text-stroke 只能做居中描边，且超大字号下路径描边 + 覆盖层双层文本
+     首次光栅化要 40ms 以上，滚动到页脚时必丢一帧。
+     改用零模糊八向 text-shadow 复制字形轮廓，字形本身填页脚底色：
+     只留下外侧 4u（0.0235em）的奶白轮廓，绘制层从 3 层文本降为 2 层，
+     光栅化开销 ≈ 下降 24%（实测单次 46ms → 33ms），视觉无差别。
+  */
+  .footer-title .solid{position:relative;z-index:2;display:block;color:var(--cream-2);}
+  .footer-title .outline{position:relative;display:block;}
+  .footer-title .outline-text{
+    display:block;color:var(--ink-deep);
+    text-shadow:
+      0.0235em 0 0 var(--cream-2), -0.0235em 0 0 var(--cream-2),
+      0 0.0235em 0 var(--cream-2), 0 -0.0235em 0 var(--cream-2),
+      0.0166em 0.0166em 0 var(--cream-2), -0.0166em 0.0166em 0 var(--cream-2),
+      0.0166em -0.0166em 0 var(--cream-2), -0.0166em -0.0166em 0 var(--cream-2);
+  }
+  /* 两行分别成为独立合成层：整块标题的首次铺贴从单任务 33ms 拆成 ~18ms + ~13ms，
+     两个任务可并行，不再因为一块 290px 高的超大文字挤爆一帧的铺贴预算 */
+  .footer-title .solid,
+  .footer-title .outline-text{will-change:transform;transform:translateZ(0);}
+  .footer-mail{display:inline-flex;align-items:center;gap:calc(25 * var(--u));margin-top:calc(70 * var(--u));padding-bottom:calc(10 * var(--u));border-bottom:1px solid #777;font-size:calc(12 * var(--u));letter-spacing:calc(1.8 * var(--u));color:var(--cream-2);text-transform:uppercase;}
+  .footer-mail .arrow{font-size:calc(12 * var(--u));}
+  .footer-bottom{margin-top:calc(73 * var(--u));border-top:1px solid #333;padding-top:calc(57 * var(--u));padding-bottom:calc(119 * var(--u));display:flex;justify-content:space-between;font-size:calc(8 * var(--u));letter-spacing:calc(1.2 * var(--u));color:#777;}
+
+  /* ===== 动效基础 ===== */
+  .reveal{will-change:transform,opacity;}
+
+  @media (max-width:900px){
+    :root{--nav-h:64px;}
+    .site-header{height:var(--nav-h);padding:0 20px;}
+    .nav{gap:14px;}
+    .nav .cn{font-size:14px;}
+    .nav .en{font-size:7px;}
+    .logo{width:104px;height:auto;}
+    .stage{position:static;height:auto;overflow:visible;}
+    .pin{height:auto !important;}
+    #heroPin{height:auto;background:var(--ink);}
+    .hero{position:relative;height:auto;min-height:100svh;padding:96px 20px 48px;overflow:hidden;}
+    .hero-inner{position:relative;left:auto;top:auto;width:auto;}
+    .hero-flow{top:-12px;bottom:-12px;left:-12px;right:-12px;}
+    .ring-a{width:200px;height:200px;border-width:24px;left:-100px;top:auto;bottom:-40px;}
+    .ring-b{width:260px;height:260px;border-width:24px;left:auto;right:-110px;top:-80px;}
+    .hero-title{font-size:clamp(40px,11.4vw,64px);line-height:.95;margin-top:16px;letter-spacing:0;}
+    .hero-late{opacity:1;transform:none;}
+    /* 移动端不做形变：直接呈现 174-512 终态（实心白描边 + 终态副标），渐变描边层隐藏
+       注意：基础规则是 .hero-designer .dg-solid / .hero-portfolio .pf-solid（0,2,0），
+       这里必须用同等特异性，否则被基础层压回 0 */
+    .hero-pre,.hero-designer .dg-solid,.hero-portfolio .pf-solid{opacity:1;}
+    .hero-designer .dg-fade,.hero-portfolio .pf-outline{display:none;}
+    .hero-sub .sub-ch{transform:none;}
+    .hero-title .sp{font-size:.5em;}
+    .hero-title .amp{font-size:.3125em;display:inline-block;}
+    .hero-title .line2{line-height:.95;margin-top:0;}
+    .hero-title .red-square{width:12px;height:12px;left:auto;right:0;top:6px;}
+    .hero-sub{font-size:18px;letter-spacing:0;margin-top:14px;}
+    .hero-actions{gap:12px;margin-top:26px;flex-wrap:wrap;}
+    .btn{height:44px;padding:0 18px;font-size:13px;}
+    .btn-ghost{height:44px;}
+    .hero-stats{margin-top:64px;flex-direction:column;align-items:flex-start;gap:28px;}
+    .stat-group{flex-wrap:wrap;gap:24px 32px;}
+    .stat .value{font-size:32px;}
+    .stat .label{font-size:11px;}
+    .hero-side{text-align:left;font-size:11px;}
+    .hero-side .row{justify-content:flex-start;font-size:11px;}
+    /* 移动端不 pin：提示落到正常流里、位于文案与圆圈之间，保留静态可点，不做跳动 */
+    .hero-hint{position:static;translate:none;margin-top:26px;height:44px;padding:0 18px;font-size:12px;letter-spacing:1px;gap:10px;animation:none;}
+    .hero-hint .hint-arrow{width:13px;height:13px;animation:none;}
+    .works,.method,.concept{padding:48px 20px;}
+    .works-head{gap:20px;flex-direction:column;}
+    .h2{font-size:34px;}
+    .works-head h2{margin-top:16px;gap:10px;}
+    .works-head .works-link{padding-top:0;}
+    .works-desc{font-size:13px;line-height:1.8;}
+    .works-main{flex-direction:column;gap:20px;margin-top:32px;}
+    .works-main .cover{width:100%;height:220px;}
+    .works-main .case-info{width:100%;}
+    .case-title{font-size:30px;margin-top:16px;}
+    .case-desc{font-size:15px;margin-top:14px;}
+    .works-sub{flex-direction:column;gap:40px;margin-top:40px;}
+    .subcase{width:100%;}
+    .subcase .cover{height:200px;}
+    .subcase h3{font-size:24px;}
+    .method-head{flex-direction:column;gap:16px;}
+    .method-title{font-size:34px;}
+    .method-head .works-link{padding-top:0;}
+    .steps{grid-template-columns:1fr;gap:16px;margin-top:32px;}
+    .step{min-height:0;}
+    .step h3{font-size:20px;}
+    .step p{font-size:13px;}
+    .concept{flex-direction:column;gap:32px;}
+    .concept-left{width:100%;}
+    .concept-title{font-size:34px;letter-spacing:-1px;}
+    .concept-title .red{font-size:26px;}
+    .concept-body{font-size:13px;}
+    .articles{width:100%;margin-left:0;}
+    .article{grid-template-columns:40px 1fr 30px;padding:20px 14px;min-height:0;gap:12px;}
+    .article h3{font-size:18px;}
+    .article p{font-size:12px;margin-top:8px;max-width:none;}
+    .article .label{font-size:9px;margin-bottom:6px;}
+    .article-inner{grid-template-columns:40px 1fr;gap:12px;}
+    .article-inner .body{margin-left:0;}
+    .article .circle{width:30px;height:30px;font-size:13px;}
+    .about{padding:64px 20px;}
+    .about-inner{height:auto;width:100%;}
+    .about h2{font-size:34px;max-width:none;}
+    .about .circle{width:44px;height:44px;font-size:20px;}
+    .about-bottom{flex-direction:column;align-items:flex-start;gap:28px;margin-top:40px;}
+    .about p.lead{width:100%;font-size:13px;}
+    .about-stats{gap:40px;padding-left:0;flex-wrap:wrap;}
+    .about-stat .num{font-size:28px;}
+    .footer{padding:64px 20px 24px;}
+    .footer .circle{top:64px;right:20px;width:44px;height:44px;font-size:20px;}
+    .footer-title{font-size:clamp(56px,16vw,96px);letter-spacing:-.045em;line-height:.92;}
+    .footer-mail{margin-top:36px;font-size:12px;}
+    .footer-bottom{margin-top:72px;padding:32px 0;flex-wrap:wrap;gap:12px;font-size:9px;}
+    .works-link{font-size:11px;}
+    .eyebrow{font-size:11px;}
+    .tag{font-size:11px;}
+    .case-link{font-size:14px;margin-top:18px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+    .pin{height:auto !important;}
+    .stage{position:static;height:auto;overflow:visible;}
+    .hero-copy,.hero-inner,.hero-flow,.method-title,.about h2,.about-inner,.about-bg,.footer-title,.cover-wrap img{transform:none !important;}
+    .hero-flow-inner{animation:none !important;}
+    .hero-ring{transform:none !important;}
+    .hero-late{opacity:1 !important;transform:none !important;}
+    /* 减少动效：首屏直接显示 174-512 终态，不跑 24-2→174-512 的形变 */
+    .hero-pre,.dg-solid,.pf-solid{opacity:1 !important;}
+    .dg-fade,.pf-outline{opacity:0 !important;}
+    .hero-designer,.hero-portfolio,.hero-pre,.hero-sub .sub-ch{transform:none !important;}
+    .pin .stage-inner{opacity:1 !important;}
+  }
+  /* 桌面端减少动效：首屏为绝对定位排版，需恢复为文档流，避免内容塌陷叠加 */
+  @media (prefers-reduced-motion: reduce) and (min-width: 901px){
+    #heroPin .stage-inner{position:relative;min-height:calc(1080 * var(--u));padding:calc(247 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));}
+    #heroPin .hero-inner{position:relative;left:auto;top:auto;width:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="#heroPin" class="is-active"><span class="cn">首页</span><span class="en">HOME</span></a>
+    <a href="#works"><span class="cn">作品</span><span class="en">WORK</span></a>
+    <a href="#concept"><span class="cn">理念</span><span class="en">CONCEPT</span></a>
+    <a href="#about"><span class="cn">关于</span><span class="en">ABOUT</span></a>
+    <a href="#contact"><span class="cn">联系</span><span class="en">CONTACT</span></a>
+  </nav>
+  <img class="logo" src="assets/logo.png" alt="無白設計 EXTREME BLACK">
+</header>
+
+<!-- ===== 首屏 ===== -->
+<section class="pin" id="heroPin" data-pin="hero">
+  <div class="stage hero">
+    <div class="stage-inner">
+      <div class="hero-flow" id="heroFlow">
+        <div class="hero-flow-shift" id="heroFlowShift">
+          <div class="hero-flow-inner"></div>
+        </div>
+      </div>
+      <div class="hero-ring ring-a"></div>
+      <div class="hero-ring ring-b"></div>
+
+      <div class="hero-inner" id="heroInner">
+        <div class="hero-copy" id="heroCopy">
+        <div class="eyebrow hero-eyebrow hero-late">交互设计师｜用户体验｜Agent 体验设计｜VibeCoding｜AI 工作流搭建｜人机交互｜可用性验证｜克制化极简设计｜B2B/B2C经验</div>
+
+        <h1 class="hero-title" id="heroTitle">
+          <span class="hero-pre" id="heroPre">UX<span class="sp">&nbsp;</span><span class="amp">&amp;</span><span class="sp">&nbsp;</span>AX</span> <span class="hero-word hero-designer" id="heroDesigner"><span class="dg-fade" aria-hidden="true">DESIGNER</span><span class="dg-solid">DESIGNER</span></span><span class="line2"><span class="hero-word hero-portfolio" id="heroPortfolio"><span class="pf-outline" aria-hidden="true">PORTFOLIO</span><span class="pf-cover" aria-hidden="true">PORTFOLIO</span><span class="pf-solid">PORTFOLIO</span></span></span><span class="red-square" aria-hidden="true"></span>
+        </h1>
+
+        <div class="hero-sub">用户体验设计师 / AGENT体验设计师 / 王家彬</div>
+
+        <div class="hero-actions hero-late">
+          <a class="btn btn-primary" href="#works">查看精选作品
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2667"><path d="M8 2v11M4 9l4 4 4-4"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#methodPin">走进 AI 设计工作流
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2667"><path d="M4 12 12 4M6 4h6v6"/></svg>
+          </a>
+        </div>
+        </div>
+
+        <div class="hero-stats hero-late">
+          <div class="stat-group">
+            <div class="stat"><div class="value">14</div><div class="label">从业经验</div></div>
+            <div class="stat"><div class="value">42</div><div class="label">产品上线</div></div>
+            <div class="stat"><div class="value">91</div><div class="label">SUS 平均分</div></div>
+            <div class="stat"><div class="value">1.4M</div><div class="label">用户触达</div></div>
+          </div>
+          <div class="hero-side">
+            E-Mail vanciwong@foxmail.com / Mobile 15960098748
+            <div class="row">2012 - 2026 · VanciWong ·<a href="#contact"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2667"><path d="M8 2v9M4.5 8 8 11.5 11.5 8M2 14h12"/></svg>简历下载</a></div>
+          </div>
+        </div>
+      </div>
+      <button class="hero-hint" id="heroHint" type="button" aria-label="向下滚动查看作品">
+        向下滚动查看
+        <svg class="hint-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2667" aria-hidden="true"><path d="M8 2v11M4 9l4 4 4-4"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 精选项目 ===== -->
+<section class="works" id="works">
+  <div class="works-head">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>SELECTED WORKS / 精选作品</div>
+      <h2 class="h2 reveal" data-enter="1.06" data-no-fade="1">近期作品案例</h2>
+      <p class="works-desc">从真实问题出发，通过系统思考与高保真原型，将洞察转化为可验证的产品体验。</p>
+    </div>
+    <a class="works-link" href="#works"><span class="row">ALL PROJECTS 全部作品 <span style="color:var(--red)">›</span></span><span class="underline"></span></a>
+  </div>
+
+  <div class="works-main">
+    <div class="cover-wrap reveal" data-enter="1.045" data-no-fade="1"><img class="cover" src="assets/cover-motion.jpg" alt="MOTION 智能出行项目封面"></div>
+    <div class="case-info">
+      <div class="case-meta">PRODUCT · UX · 2024</div>
+      <h3 class="case-title">MOTION 智能出行</h3>
+      <p class="case-desc">为覆盖多终端的智能出行产品重构核心行程流程，让复杂的跨设备信息在驾驶场景中保持清晰、克制且可预判。</p>
+      <div class="tags"><span class="tag">用户研究</span><span class="tag">交互原型</span><span class="tag">可用性验证</span></div>
+      <a class="case-link" href="#works">查看案例 <span class="arrow">↗</span></a>
+    </div>
+  </div>
+
+  <div class="works-sub">
+    <article class="subcase">
+      <div class="cover-wrap reveal" data-enter="1.05" data-no-fade="1"><img class="cover" src="assets/cover-pulse.jpg" alt="PULSE 健康数据中台项目封面"></div>
+      <div class="meta"><span class="num">02</span><span class="cat">DASHBOARD · 2023</span></div>
+      <h3>PULSE 健康数据中台</h3>
+      <p class="desc">为医院运营团队设计的数据决策中台，把 14 个模块的信息层级重新排布。</p>
+      <div class="tags"><span class="tag">信息架构</span><span class="tag">数据可视化</span></div>
+      <a class="case-link" href="#works">查看案例 <span class="arrow">↗</span></a>
+    </article>
+    <article class="subcase">
+      <div class="cover-wrap reveal" data-enter="1.05" data-no-fade="1"><img class="cover" src="assets/cover-nova.jpg" alt="NOVA 座舱语音助手项目封面"></div>
+      <div class="meta"><span class="num">03</span><span class="cat">VOICE UI · 2023</span></div>
+      <h3>NOVA 座舱语音助手</h3>
+      <p class="desc">在驾驶场景中重新定义人机对话节奏，减少 40% 的视线离开时间。</p>
+      <div class="tags"><span class="tag">对话设计</span><span class="tag">动效原型</span></div>
+      <a class="case-link" href="#works">查看案例 <span class="arrow">↗</span></a>
+    </article>
+  </div>
+</section>
+
+<!-- ===== 设计工作流 ===== -->
+<section class="pin" id="methodPin">
+  <div class="stage">
+    <div class="stage-inner method" id="methodStage">
+      <div class="method-head">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>DESIGN THE WORKFLOW / 设计工作流</div>
+          <h2 class="method-title" id="methodTitle">先做<em>研究，</em>
+再做设计。</h2>
+        </div>
+        <a class="works-link" href="#methodPin"><span class="row">COMPLETE PROCESS 完整流程 <span style="color:var(--red)">›</span></span><span class="underline"></span></a>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <div class="step-no"><span>01</span><i></i></div>
+          <h3>需求对齐 &amp; 前期研判</h3>
+          <p>对齐业务目标、约束条件（研发成本、跨端差异、产品特性），区分「功能需求」和「真实用户诉求」
+<span class="ai">AI 参与：需求文档草案、竞品信息汇总、访谈提纲生成、提炼目标/风险/约束</span></p>
+          <div class="artifacts"><span class="artifact">需求简报</span><span class="plus">+</span><span class="artifact">竞品信息</span><span class="plus">+</span><span class="artifact">约束分析</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>02</span><i></i></div>
+          <h3>用户研究 &amp; 定义问题</h3>
+          <p>访谈核心用户、定性研究、共情理解，识别隐性需求、挖掘真实痛点，基于研究结论收敛问题
+<span class="ai">AI 参与：转录访谈录音、整理问卷数据、生成用户画像、用户旅程初稿，模拟不同用户角色陈述问题，提前预判负面体验</span></p>
+          <div class="artifacts"><span class="artifact">用户画像</span><span class="plus">+</span><span class="artifact">用户旅程图</span><span class="plus">+</span><span class="artifact">痛点汇总</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>03</span><i></i></div>
+          <h3>信息架构 &amp; 交互方案</h3>
+          <p>搭建信息架构、主流程分支，把控信息层级、减法设计，砍掉不必要步骤，基于设计理念筛选方向，排除不合理方案
+<span class="ai">AI 参与：多方案头脑风暴、场景推演，生成流程图初稿、信息结构建议、交互文案批量生成</span></p>
+          <div class="artifacts"><span class="artifact">信息架构</span><span class="plus">+</span><span class="artifact">流程推演</span><span class="plus">+</span><span class="artifact">体验原则</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>04</span><i></i></div>
+          <h3>原型迭代 &amp; 方案评估</h3>
+          <p>通过VibeCoding把原型转成可直接运行的前端Demo，组织用户测试、方案取舍决策
+<span class="ai">AI 参与：辅助生成DEMO，可用性问题预排查、多版本对比、注释整理</span></p>
+          <div class="artifacts"><span class="artifact">VibeCoding</span><span class="plus">+</span><span class="artifact">用户测试</span><span class="plus">+</span><span class="artifact">方案评估</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>05</span><i></i></div>
+          <h3>设计系统 &amp; 规范沉淀</h3>
+          <p>根据项目内容编写 design.md ，把视觉交互约束、验收标准写清楚，保证团队对齐、AI 生成可控、设计决策可追溯
+<span class="ai">AI 参与：Agent 将 design.md 作为项目设计契约、约束边界，完成方案生成、校验、自检。</span></p>
+          <div class="artifacts"><span class="artifact">design.md</span><span class="plus">+</span><span class="artifact">设计规范</span><span class="plus">+</span><span class="artifact">方案自检</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>06</span><i></i></div>
+          <h3>跨项目复用 &amp; 技能沉淀</h3>
+          <p>使用 skill.md 沉淀跨项目复用的 UX/AX 设计范式、组件基线、交互约束，作为 Agent 与 VibeCoding 的默认能力包
+<span class="ai">AI 参与：Agent 将 skill.md 作为通用设计基线，统一设计原则、交互范式与规则。</span></p>
+          <div class="artifacts"><span class="artifact">skill.md</span><span class="plus">+</span><span class="artifact">技能沉淀</span><span class="plus">+</span><span class="artifact">通用原则</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>07</span><i></i></div>
+          <h3>评审、协同 &amp; 落地跟进</h3>
+          <p>组织产研评审，对齐研发、测试，做设计走查，守住体验底线
+<span class="ai">AI 参与：整理评审意见，归类问题、生成待办清单；自动检查文案一致性</span></p>
+          <div class="artifacts"><span class="artifact">项目评审</span><span class="plus">+</span><span class="artifact">设计走查</span><span class="plus">+</span><span class="artifact">测试自检</span></div>
+        </article>
+        <article class="step">
+          <div class="step-no"><span>08</span><i></i></div>
+          <h3>数据采集 &amp; 复盘迭代</h3>
+          <p>埋点指标解读、回访用户，判断体验是否达成目标，识别新痛点
+<span class="ai">AI 参与：汇总用户反馈、客服工单、行为数据，自动聚类问题；生成迭代方向初稿</span></p>
+          <div class="artifacts"><span class="artifact">复盘回访</span><span class="plus">+</span><span class="artifact">数据分析</span><span class="plus">+</span><span class="artifact">迭代升級</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 设计理念 ===== -->
+<section class="concept" id="concept">
+  <div class="concept-left">
+    <div class="eyebrow"><span class="dot"></span>DESIGN CONCEPT / 设计理念</div>
+    <h2 class="concept-title reveal" data-enter="1.08" data-no-fade="1">少即是多，
+<span class="red">Less is more 。</span></h2>
+    <p class="concept-body"><span class="lead">界面做减法，体验做加法，AI工具辅助验证。</span>
+我理解的少即是多，不是空洞的删减，而是对复杂度的重新分配：把繁杂的选项、冗余信息、分支判断交给 AI 能力在后台消化；面向用户的交互界面，只交付当下任务所必需的信息与操作。</p>
+  </div>
+
+  <div class="articles">
+    <article class="article reveal" data-enter="1.04" data-no-fade="1">
+      <div class="no">01</div>
+      <div>
+        <div class="label">convergence</div>
+        <h3>降噪收敛</h3>
+        <p>通过 AI 聚类用户行为，识别低频、冗余功能，将次要能力收拢到二级入口，只保留核心任务路径</p>
+      </div>
+      <div class="circle">↗</div>
+    </article>
+    <article class="article reveal" data-enter="1.04" data-no-fade="1">
+      <div class="no">02</div>
+      <div>
+        <div class="label">Progressive</div>
+        <h3>渐进披露</h3>
+        <p>默认呈现最简结果，复杂参数、深度信息按需展开，避免一次性轰炸用户认知</p>
+      </div>
+      <div class="circle">↗</div>
+    </article>
+    <article class="article reveal" data-enter="1.04" data-no-fade="1">
+      <div class="no">03</div>
+      <div>
+        <div class="label">Simplify</div>
+        <h3>去繁就简</h3>
+        <p>视觉克制，移除装饰性元素，依靠网格、排版、留白建立层级；动效仅用于反馈，拒绝无意义视觉噪音</p>
+      </div>
+      <div class="circle">↗</div>
+    </article>
+    <article class="article reveal" data-enter="1.04" data-no-fade="1">
+      <div class="no">04</div>
+      <div>
+        <div class="label">controllability</div>
+        <h3>可控为底</h3>
+        <p>简化交互的同时保留用户控制权，AI 的自动输出支持修改、回退、查看依据，极简但不失去掌控</p>
+      </div>
+      <div class="circle">↗</div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== 关于我 ===== -->
+<section class="about-wrap" id="about">
+  <div class="about" id="aboutStage">
+      <div class="about-bg" id="aboutBg"></div>
+      <div class="about-inner" id="aboutInner">
+        <div class="about-top">
+          <div>
+            <div class="eyebrow"><span class="dot"></span>ABOUT / 关于我</div>
+            <h2 id="aboutTitle">我是王家彬，
+一名专注于<span class="dark">简化复杂系统</span>
+与<span class="dark">AI提效</span>的体验设计师。</h2>
+          </div>
+          <div class="circle">↗</div>
+        </div>
+        <div class="about-bottom">
+          <p class="lead">拥有 14 年互联网行业经验，其中 8 年深耕交互与用户体验设计、6 年 UX 团队管理经验。曾参与智慧教学、AI 工具、银行服务产品、艺术品商城等项目。我擅长把复杂系统翻译成清晰的用户路径，并用高保真交互原型推动团队形成共识。</p>
+          <div class="about-stats">
+            <div class="about-stat"><div class="num latin">14</div><div class="lab">设计经验</div></div>
+            <div class="about-stat"><div class="num latin">18</div><div class="lab">上线项目</div></div>
+            <div class="about-stat"><div class="num latin">42</div><div class="lab">体验验证</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="footer" id="contact">
+  <div class="circle">↗</div>
+  <div class="eyebrow">HAVE A PROJECT IN MIND?</div>
+  <div class="footer-title reveal">
+    <span class="solid">一起创造</span>
+    <span class="outline">
+      <span class="outline-text">好体验。</span>
+    </span>
+  </div>
+  <a class="footer-mail" href="mailto:vanciwong@foxmail.com">vanciwong@foxmail.com <span class="arrow">↗</span></a>
+  <div class="footer-bottom">
+    <span>FUZHOU · CHINA</span>
+    <span>WeChat / Mobile 15960098748</span>
+    <span>© 2026 VANCI DESIGN</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const root=document.documentElement;
+  const motionQuery=matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce=motionQuery.matches;
+  const mobileQuery=matchMedia('(max-width: 900px)');
+  let isMobile=mobileQuery.matches;
+
+  /* ---------- 等比缩放基准 ---------- */
+  let vw=innerWidth, vh=innerHeight;
+  function setScale(){
+    vw=innerWidth; vh=innerHeight;
+    isMobile=mobileQuery.matches;
+    root.style.setProperty('--k', isMobile ? 1 : Math.min(1, vw/1920));
+  }
+  setScale();
+
+  /* ---------- 圆环指针视差：Design 参数（lerp 0.075、深度 -24/+16）基础上幅度 ×2 ---------- */
+  const finePointer=matchMedia('(hover: hover) and (pointer: fine)');
+  const ringLayers=[
+    {el:document.querySelector('.ring-a'),depth:-48},
+    {el:document.querySelector('.ring-b'),depth:32}
+  ];
+  let targetX=0,targetY=0,curX=0,curY=0,ringRaf=0;
+
+  function resetRings(){
+    targetX=0;targetY=0;curX=0;curY=0;
+    if(ringRaf){cancelAnimationFrame(ringRaf);ringRaf=0;}
+    ringLayers.forEach(l=>{if(l.el) l.el.style.transform='';});
+  }
+
+  function renderRings(){
+    curX+=(targetX-curX)*0.075;
+    curY+=(targetY-curY)*0.075;
+    ringLayers.forEach(l=>{
+      if(!l.el) return;
+      l.el.style.transform=`translate3d(${(curX*l.depth).toFixed(2)}px, ${(curY*l.depth).toFixed(2)}px, 0) scale(1)`;
+    });
+    if(Math.abs(targetX-curX)>0.0015||Math.abs(targetY-curY)>0.0015){
+      ringRaf=requestAnimationFrame(renderRings);
+    }else{
+      ringRaf=0;
+    }
+  }
+
+  document.addEventListener('pointermove',e=>{
+    if(reduce||isMobile||!finePointer.matches) return;
+    targetX=(e.clientX/vw-0.5)*2;
+    targetY=(e.clientY/vh-0.5)*2;
+    if(!ringRaf) ringRaf=requestAnimationFrame(renderRings);
+  },{passive:true});
+  document.addEventListener('pointerleave',()=>{
+    if(reduce||isMobile||!finePointer.matches) return;
+    targetX=0;targetY=0;
+    if(!ringRaf) ringRaf=requestAnimationFrame(renderRings);
+  });
+
+  /* ---------- 需要处理的元素 ---------- */
+  const heroCopy=document.getElementById('heroCopy');
+  const heroTitle=document.getElementById('heroTitle');
+  const heroLates=[...document.querySelectorAll('.hero-late')];
+  /* 两套排版形变要用的节点：UX & AX 组、DESIGNER / PORTFOLIO 各两层、红方块、水印、副标题 */
+  const heroPre=document.getElementById('heroPre');
+  const heroDesigner=document.getElementById('heroDesigner');
+  const heroPortfolio=document.getElementById('heroPortfolio');
+  const dgFade=heroDesigner.querySelector('.dg-fade');
+  const dgSolid=heroDesigner.querySelector('.dg-solid');
+  const pfOutline=heroPortfolio.querySelector('.pf-outline');
+  const pfSolid=heroPortfolio.querySelector('.pf-solid');
+  const heroRed=heroTitle.querySelector('.red-square');
+  const heroSub=document.querySelector('.hero-sub');
+  const heroFlowShift=document.getElementById('heroFlowShift');
+  const heroHint=document.getElementById('heroHint');
+  const heroRings=[...document.querySelectorAll('.hero-ring')];
+  const methodTitle=document.getElementById('methodTitle');
+  const methodSteps=document.querySelector('#methodPin .steps');
+  const methodStage=document.getElementById('methodStage');
+  const methodPin=document.getElementById('methodPin');
+  const aboutEl=document.getElementById('aboutStage');
+  const aboutBg=document.getElementById('aboutBg');
+  const aboutInner=document.getElementById('aboutInner');
+  const aboutTitle=document.getElementById('aboutTitle');
+  const footerTitleEl=document.querySelector('.footer-title');
+  const heroPin=document.getElementById('heroPin');
+  const reveals=[...document.querySelectorAll('[data-enter]')];
+
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  /* 统一用首尾速度为 0 的缓动（easeInOut）：任何一段进入/离开时速度都从 0 起、到 0 止，
+     段与段衔接处不会出现「突然起步 / 突然停住」的顿挫 */
+  const easeInOut=t=>t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+
+  /* 缓存位置，避免滚动时读取布局 */
+  let heroTop=0, heroStart=0, heroTravel=1, heroRelease=0, methodTop=0, methodModH=0;
+  let methodTextStart=0, methodTextTravel=1, methodModStart=0, methodModTravel=1;
+  let aboutTop=0, aboutStart=0, aboutTravel=1, footerTop=0, footerStart=0, footerTravel=1;
+  let methodTitleH=0, triggerPx=0, maxScroll=0;
+  let revealGeo=[];
+
+  /* offsetTop 链不受自身 transform 影响，适合测量被缩放元素的真实位置 */
+  function docTop(el){ let y=0; while(el){ y+=el.offsetTop; el=el.offsetParent; } return y; }
+  function docLeft(el){ let x=0; while(el){ x+=el.offsetLeft; el=el.offsetParent; } return x; }
+
+  /* ---------- 首屏两套排版形变（Figma 24-2 → 174-512） ---------- */
+  /* 24-2：DESIGNER 300/240 @(22,289)、PORTFOLIO 300/240 @(22,551)、副标题 16/100% 字距 @(600,917)。
+     终态 174-512：DESIGNER 128 落在第一行末词、PORTFOLIO 128 在第二行、副标题 24/30% 字距 @(200,523)。
+     形变窗口 0→0.18 屏；量具与常量在 measure() 里读一次布局，滚动帧只写 transform/opacity */
+  const MORPH_S=300/128;         /* 词级放大倍率：24-2 的 300 字号 ÷ 终态 128 字号 = 2.34375 */
+  const MORPH_TRAVEL=0.18;       /* 入场形变占 0.18 屏，之后才是「保持」段 */
+  const SUB_SCALE=16/24;         /* 副标题 16 → 24 */
+  const INK_D=302.9;             /* 24-2 导出的 DESIGNER 墨迹顶（300px，无描边） */
+  const INK_P=560.95;            /* 24-2 导出的 PORTFOLIO 墨迹顶（含 4px 外描边） */
+  const SUB_X=600, SUB_Y=917;    /* 24-2 副标题盒位（1920 基准） */
+  const measureCtx=document.createElement('canvas').getContext('2d');
+  let morphK=1, morphWords=[], preTx=0;
+  const subGeo={tx:[],ty:0};
+  const subChars=[];             /* 逐字块；移动端恢复整段文本 */
+  let subMeasure=null;
+  const subPlain=heroSub.textContent.trim();
+
+  /* 用 canvas 读 Montserrat 的墨迹偏移，避免硬编码行盒差异：
+     line-height 100 的行盒里，128px 字号的基线在 96，墨迹顶在 4.864；300px 时为 13.9 */
+  function inkMetrics(sizePx,linePx){
+    measureCtx.font='700 '+sizePx+'px "Montserrat"';
+    const m=measureCtx.measureText('DESIGNER');
+    const asc=m.fontBoundingBoxAscent, desc=m.fontBoundingBoxDescent;
+    const baseline=(linePx-(asc+desc))/2+asc;
+    return {baseline, inkTop:baseline-m.actualBoundingBoxAscent};
+  }
+
+  function buildSubChars(){
+    heroSub.textContent='';
+    subChars.length=0;
+    for(const ch of subPlain){
+      const s=document.createElement('span');
+      s.className='sub-ch';
+      s.textContent=ch===' '?'\u00a0':ch;
+      heroSub.appendChild(s);
+      subChars.push(s);
+    }
+    /* 隐藏量具：同一串字按 24-2 的 16/100% 字距排版，只用于读取初始落位 */
+    subMeasure=document.createElement('div');
+    subMeasure.className='sub-measure';
+    subMeasure.setAttribute('aria-hidden','true');
+    for(const ch of subPlain){
+      const s=document.createElement('span');
+      s.style.display='inline-block';
+      s.textContent=ch===' '?'\u00a0':ch;
+      subMeasure.appendChild(s);
+    }
+    heroSub.parentNode.appendChild(subMeasure);
+  }
+  function restoreSubText(){
+    if(!subChars.length) return;
+    heroSub.textContent=subPlain;
+    subChars.length=0;
+    if(subMeasure){ subMeasure.remove(); subMeasure=null; }
+  }
+
+  function measureHeroMorph(){
+    morphK=isMobile?1:Math.min(1,vw/1920);
+    const k=morphK, sizePx=128*k;
+    if(isMobile){ restoreSubText(); }
+    else if(!subChars.length){ buildSubChars(); }
+
+    const md=inkMetrics(sizePx,parseFloat(getComputedStyle(heroDesigner).lineHeight)||sizePx);
+    const mp=inkMetrics(sizePx,parseFloat(getComputedStyle(heroPortfolio).lineHeight)||sizePx);
+    const strokeLocal=(4/MORPH_S)*k;   /* 4px@300 换算到 128 基准后再被词级 scale 放大回 4u */
+    morphWords=[
+      {el:heroDesigner,  tx:22*k-docLeft(heroDesigner),  ty:INK_D*k-(docTop(heroDesigner)+(md.inkTop)*MORPH_S)},
+      {el:heroPortfolio, tx:22*k-docLeft(heroPortfolio), ty:INK_P*k-(docTop(heroPortfolio)+(mp.inkTop-strokeLocal)*MORPH_S)}
+    ];
+    /* UX & AX 在 24-2 里不存在：初值整组左移 604.4u（大部分在画布外），随词一起右移，
+       始终与 DESIGNER 墨迹左缘留 8u 以上间隙，不会压字 */
+    preTx=38.9*k-(docLeft(heroPre)+heroPre.offsetWidth);
+    if(subChars.length&&subMeasure){
+      const init=[...subMeasure.children].map(s=>s.offsetLeft);
+      const fin=subChars.map(s=>s.offsetLeft);
+      subGeo.tx=fin.map((f,i)=>SUB_X*k+init[i]-(docLeft(heroSub)+f));
+      subGeo.ty=SUB_Y*k-docTop(heroSub);
+    }else{
+      subGeo.tx.length=0; subGeo.ty=0;
+    }
+  }
+
+  function measure(){
+    setScale();
+    /* 统一触发点：区块内容顶部滚动到视口 50% 高度处才开始缩放（用视口比例，随视口自适应） */
+    triggerPx=vh*0.5;
+    maxScroll=Math.max(0, document.documentElement.scrollHeight-vh);
+
+    /* 首屏：pin 行程 = 183vh；sticky 舞台在前 (183vh-100vh)=0.83 屏固定，之后随滚动离开 */
+    heroTop=docTop(heroPin);
+    heroStart=Math.max(0, docTop(heroCopy)-triggerPx);
+    heroTravel=Math.max(1, heroPin.offsetHeight);
+    heroRelease=Math.max(0, heroTravel-vh);
+
+    /* 工作流不 pin，模块随页面连续滚动，两段缩放全部由模块在视口中的实际位置驱动：
+       阶段一（文字缩放）：模块顶部到视口 50% 处开始，仅标题 1.34→1，
+                          行程 0.65vh，与其余缩放段（首屏 1vh、关于 0.55vh/0.55 有效段）同量级的
+                          单位滚动变化量（0.34 / 0.65vh ≈ 0.16 / 0.3025vh），体感速度对齐；
+       阶段二（整体后退）：模块底部到视口 50% 处开始，整块 1→0.86，
+                          行程 0.5vh，恰好在模块完全滚出视口时收敛。
+       两段起点相差「模块高度 - 0.65vh」，模块高度 ≥ 0.65vh 时阶段一必然先完成，不会重叠。 */
+    methodTop=methodPin.offsetTop;
+    methodModH=Math.max(1, methodStage.offsetHeight);
+    methodTitleH=methodTitle.offsetHeight;
+    methodTextStart=Math.max(0, methodTop-triggerPx);
+    methodTextTravel=Math.max(1, vh*0.65);
+    methodModStart=Math.max(methodTextStart+methodTextTravel, methodTop+methodModH-triggerPx);
+    methodModTravel=Math.max(1, vh*0.5);
+
+    /* 关于：标题顶部到 50vh 开始；若超出文档可滚动范围，则前移触发点保证能走完 */
+    aboutTop=aboutEl.getBoundingClientRect().top+scrollY;
+    aboutTravel=Math.max(1, vh*0.55);
+    aboutStart=Math.max(0, Math.min(docTop(aboutTitle)-triggerPx, maxScroll-aboutTravel));
+
+    /* 页脚：标题顶部到 50vh 开始；若页尾偏短，行程按剩余可滚动距离收缩，终点正好落在文档末端 */
+    footerTop=docTop(footerTitleEl);
+    footerTravel=Math.max(1, vh*0.48);
+    const footerIdeal=footerTop-triggerPx;
+    if(footerIdeal<=0){
+      footerStart=0;
+    }else if(footerIdeal<=maxScroll){
+      footerStart=footerIdeal;
+      footerTravel=Math.max(1, Math.min(footerTravel, maxScroll-footerStart));
+    }else{
+      /* 标题顶部永远到不了 50vh（页尾极短/视口过高）：取能容纳完整行程的最晚起点 */
+      footerStart=Math.max(0, maxScroll-footerTravel);
+    }
+
+    revealGeo=reveals.map(el=>{
+      const top=docTop(el);
+      const travel=Math.max(1, vh*0.62);
+      return {el, noFade:el.dataset.noFade==='1', top, start:Math.max(0, Math.min(top-triggerPx, maxScroll-travel)), travel};
+    });
+
+    measureHeroMorph();
+  }
+
+  /* 每帧只在数值真正变化时写 style：静止/超出区间的元素不再无谓地触发样式重算 */
+  const styleCache=new WeakMap();
+  function writeStyle(el,prop,value){
+    let c=styleCache.get(el);
+    if(!c){ c={}; styleCache.set(el,c); }
+    if(c[prop]===value) return;
+    c[prop]=value;
+    el.style[prop]=value;
+  }
+
+  function setTransform(el,scale,ty,opacity){
+    writeStyle(el,'transform',`translate3d(0, ${Number(ty).toFixed(2)}px, 0) scale(${Number(scale).toFixed(4)})`);
+    if(opacity!==undefined) writeStyle(el,'opacity',Number(opacity).toFixed(3));
+  }
+
+  /* 首屏缩放值：直接由滚动位置算出，不做 lerp 跟随，因此不会与原生滚动产生滞后 */
+  let heroScale=1;
+  /* PORTFOLIO 描边宽补偿缓存，避免每帧重复写同一个 CSS 变量 */
+  let pfsCur=0;
+
+  function render(){
+    const y=scrollY;
+
+    /* ---- 首屏三段（sticky pin）：
+       ① 入场  y 0 → 0.18 屏：不再是 1.38→1 的文字缩放，而是「24-2 排版 → 174-512 排版」的词级形变；
+          24-2 的巨型 DESIGNER/PORTFOLIO、底部副标题随同一进度就位，174-512 独有的
+          眉标/按钮/数据/UX&AX/红方块在形变尾段淡入
+       ② 保持  y 0.18 屏 → heroRelease（0.83 屏）：舞台固定，形变锁死在终态
+       ③ 退场  y heroRelease → heroTravel：舞台解开，随一屏滚动离场，整块 1→0.64 ---- */
+    const exitP=clamp((y-heroRelease)/vh,0,1);
+    /* 缩放值直接由位置决定，不做额外缓动，保证与滚动位置严格连续；保持段 exitP=0，缩放恒为 1 */
+    heroScale=1-0.36*easeInOut(exitP);
+    /* 锚点左上：整块等比收缩，顶边/左边固定，不会与上方或下方元素相撞 */
+    writeStyle(heroCopy,'transform',`scale(${heroScale.toFixed(4)})`);
+
+    /* ---- 两套排版之间的形变：单一进度 me（0→1，0→0.18 屏，首尾速度 0）。
+       原来 0→0.10 屏的标题 1.38→1 缩放已并入这里、不再叠加：24-2 初始就是 300px（2.34375× 终态），
+       再乘 1.38 会到 414px、首行右缘推到 2256 出画，所以旧缩放由词级形变取代（pin 三段结构不变）。
+       transform = translate(Δ×(1-me)) + scale(1+(S-1)(1-me))：三组文字共用同一 me 与同一 origin(0 0)，
+       平移/缩放的速率同源，中间态不会出现先后错位。 ---- */
+    const mp=clamp(y/(vh*MORPH_TRAVEL),0,1);
+    const me=easeInOut(mp);
+    const ms=1+(MORPH_S-1)*(1-me);
+    for(const g of morphWords){
+      writeStyle(g.el,'transform',
+        `translate3d(${(g.tx*(1-me)).toFixed(2)}px, ${(g.ty*(1-me)).toFixed(2)}px, 0) scale(${ms.toFixed(4)})`);
+    }
+    /* UX & AX：24-2 里没有；与 DESIGNER 同向滑入，始终与其墨迹左缘留 8u 以上间隙，不压字。
+       淡入窗口压到 me 0.60→0.82：左缘在 me≈0.67 才越过视口左边（stage overflow 会裁切），
+       0.60 之前 opacity 为 0，所以裁切只发生在透明度 <20% 的一瞬，不会出现「半个 UX」的观感 */
+    const preE=easeInOut(clamp((me-0.60)/0.22,0,1));
+    writeStyle(heroPre,'transform',`translate3d(${(preTx*(1-me)).toFixed(2)}px, 0, 0)`);
+    writeStyle(heroPre,'opacity',preE.toFixed(3));
+
+    /* 24-2 的「竖向渐变填充 / 渐变外描边」与 174-512 的「实心白」是同字形的两层，只交叉透明度：
+       任何进度下两层几何完全一致，不会出现重影或描边错位。
+       DESIGNER：渐变填充 → 实心白；PORTFOLIO：渐变描边 → 实心白（终态无描边）。
+       描边层在 opacity 归零前始终维持补偿后的线宽，不会出现「描边变粗再突然消失」。 */
+    writeStyle(dgFade,'opacity',(1-me).toFixed(3));
+    writeStyle(dgSolid,'opacity',me.toFixed(3));
+    writeStyle(pfOutline,'opacity',(1-me).toFixed(3));
+    writeStyle(pfSolid,'opacity',me.toFixed(3));
+    /* 描边宽反向补偿：词级 scale=ms 会把描边一起放大，这里令局部描边宽 = 8u / ms（居中描边，
+       外露一半 = 4u），各进度视觉外露线宽恒为 4u（1440 下恒为 3px）。只写 CSS 变量，不触发布局。 */
+    const pfs=8*morphK/ms;
+    if(Math.abs(pfs-pfsCur)>0.002){
+      heroPortfolio.style.setProperty('--pfs',pfs.toFixed(3)+'px');
+      pfsCur=pfs;
+    }
+
+    /* 副标题逐字形变：16→24 字号与 100%→30% 字距无法用一次 uniform scale 同时满足，
+       26 个字块各自 translate + scale（只写 transform） */
+    if(subChars.length){
+      const ss=1-(1-SUB_SCALE)*(1-me);
+      const sty=(subGeo.ty*(1-me)).toFixed(2);
+      for(let i=0;i<subChars.length;i++){
+        writeStyle(subChars[i],'transform',
+          `translate3d(${(subGeo.tx[i]*(1-me)).toFixed(2)}px, ${sty}px, 0) scale(${ss.toFixed(4)})`);
+      }
+    }
+
+    /* ---- 174-512 独有的元素（眉标/按钮/数据/水印/红方块）：形变尾段淡入。
+       0.78 起步是实测边界：me≈0.90 时副标题已越过按钮行、PORTFOLIO 已收缩到按钮/水印上方，
+       淡入全程不压字；这样「入场」结束时（me=1）所有元素恰好全部落定，保持段完全静止 ---- */
+    const lateE=easeInOut(clamp((mp-0.78)/0.22,0,1));
+    const lateShift=(1-lateE)*24*morphK;
+    for(const el of heroLates){
+      writeStyle(el,'opacity',lateE.toFixed(3));
+      writeStyle(el,'transform',`translate3d(0, ${lateShift.toFixed(2)}px, 0)`);
+      // 未显示完成前不可点击，避免透明状态的按钮/下载链接被误触
+      writeStyle(el,'pointerEvents',lateE>=0.999?'':'none');
+    }
+    /* 红方块 x=992 距 PORTFOLIO 墨迹右缘（990）只有 2u，me≥0.969 才完全脱离描边，故再压后一档 */
+    const redE=easeInOut(clamp((mp-0.88)/0.12,0,1));
+    writeStyle(heroRed,'opacity',redE.toFixed(3));
+
+    /* ---- 背景纹理视差：按旧速率 0.12（每滚 1px 位移 0.12px）在 pin 全程持续推进，
+       保持段照样在走；到 pin 结束封顶。写在独立的位移层上，160s 循环动画照旧。
+       纹理本身只有约 3/255 的明暗差，纯位移看不出在动：保持段内再叠一层 0→10% 的放大，
+       让条纹间距/走向持续变化，形成「文字停住、背景在走」的明确观感 ---- */
+    const bgShift=Math.min(y,heroTravel)*0.12;
+    const bgScale=1+0.10*clamp((y-vh*MORPH_TRAVEL)/Math.max(1,heroRelease-vh*MORPH_TRAVEL),0,1);
+    writeStyle(heroFlowShift,'transform',`translate3d(0, ${bgShift.toFixed(2)}px, 0) scale(${bgScale.toFixed(4)})`);
+
+    /* ---- 滚动提示：常驻显示，不做任何淡出/点击隐藏；
+       它随 stage 在 pin 退场时自然滚出（无需额外动画）。
+       位置改为 top:968u（24-2 精确落位），与副标题底（936）保持 32u，不与按钮/数据区相交 ---- */
+
+    /* ---- 阶段一：模块顶部到 50vh → 只缩小标题，模块盒尺寸/位置不变 ---- */
+    const mText=clamp((y-methodTextStart)/methodTextTravel,0,1);
+    const mEnter=easeInOut(mText);
+    /* 标题缩放不改变布局高度，按缩放后的实际占位把下方步骤同步下移，保证留白恒定 */
+    const methodScale=1.34-0.34*mEnter;
+    setTransform(methodTitle,methodScale,0);
+    writeStyle(methodSteps,'transform',`translate3d(0, ${((methodScale-1)*methodTitleH).toFixed(2)}px, 0)`);
+
+    /* ---- 阶段二：模块底部到 50vh → 标题与步骤作为一层整体缩小后退（内部不发生相对变形） ---- */
+    const mBack=easeInOut(clamp((y-methodModStart)/methodModTravel,0,1));
+    writeStyle(methodStage,'transform',`translate3d(0, 0, 0) scale(${(1-0.14*mBack).toFixed(4)})`);
+
+    /* ---- 关于：顶部到 50vh 才开始进入，离场仍按位置触发 ---- */
+    const relTop=aboutTop-y;
+    const aEnter=easeInOut(clamp(clamp((y-aboutStart)/aboutTravel,0,1)/0.55,0,1));
+    const aExit=easeInOut(clamp((vh*0.12-relTop)/(vh*0.45),0,1));
+    setTransform(aboutBg,1.06-0.06*aEnter,0);
+    setTransform(aboutTitle,1.16-0.16*aEnter-0.06*aExit,0);
+    writeStyle(aboutInner,'transform',`translate3d(0, ${(-vh*0.04*aExit).toFixed(2)}px, 0) scale(${(1-0.08*aExit).toFixed(4)})`);
+    writeStyle(aboutInner,'opacity',(1-0.35*aExit).toFixed(3));
+
+    /* ---- 页脚标题：顶部到 50vh 才开始；页尾行程偏短，用 easeInOut 保证起点无突变 ---- */
+    const fRel=footerTop-y;
+    const fp=clamp((y-footerStart)/footerTravel,0,1);
+    const fEnter=easeInOut(fp);
+    const fExit=easeInOut(clamp((vh*0.12-fRel)/(vh*0.45),0,1));
+    setTransform(footerTitleEl,1.16-0.16*fEnter-0.06*fExit,0,0.55+0.45*fEnter);
+
+    /* ---- 视口进入：标题/封面 超大 → 1，同样以 50vh 为起点 ---- */
+    for(const g of revealGeo){
+      const q=clamp((y-g.start)/g.travel,0,1);
+      const e=easeInOut(q);
+      const s0=parseFloat(g.el.dataset.enter)||1;
+      writeStyle(g.el,'transform',`scale(${(1+(s0-1)*(1-e)).toFixed(4)})`);
+      /* 精选作品区（图1）只做缩放，全程不写半透明；其余区块保留淡入 */
+      writeStyle(g.el,'opacity',g.noFade?'1':(0.55+0.45*e).toFixed(3));
+    }
+  }
+
+  function clearMotion(){
+    [heroCopy,heroTitle,heroFlowShift,methodTitle,methodSteps,methodStage,aboutBg,aboutInner,aboutTitle,footerTitleEl].forEach(el=>{
+      if(!el) return;
+      styleCache.delete(el);
+      el.style.transform='';
+      el.style.opacity='';
+    });
+    heroLates.forEach(el=>{styleCache.delete(el);el.style.transform='';el.style.opacity='';el.style.pointerEvents='';});
+    /* 形变相关元素：reduce / 移动端一律回到 CSS 终态（实心白、终态副标题、无 transform） */
+    [heroPre,heroDesigner,heroPortfolio,dgFade,dgSolid,pfOutline,pfSolid,heroRed,...subChars].forEach(el=>{
+      if(!el) return;
+      styleCache.delete(el);
+      el.style.transform='';
+      el.style.opacity='';
+    });
+    /* 描边宽回到 CSS 默认（0.0625em，居中描边外露 4u），避免 reduce/移动端残留 JS 补偿值 */
+    if(heroPortfolio){ heroPortfolio.style.removeProperty('--pfs'); pfsCur=0; }
+    heroRings.forEach(el=>{styleCache.delete(el);});
+    resetRings();
+    reveals.forEach(el=>{styleCache.delete(el);el.style.transform='';el.style.opacity='';});
+  }
+
+  let queued=false;
+  const headerEl=document.querySelector('.site-header');
+  function updateHeader(){
+    headerEl.classList.toggle('is-stuck', scrollY>8);
+  }
+  function schedule(){
+    if(queued) return;
+    queued=true;
+    requestAnimationFrame(()=>{
+      queued=false;
+      updateHeader();
+      if(reduce||isMobile){ clearMotion(); return; }
+      render();
+    });
+  }
+
+  addEventListener('scroll',schedule,{passive:true});
+  let resizeTimer=0;
+  addEventListener('resize',()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(()=>{
+      measure();
+      if(reduce||isMobile) clearMotion(); else render();
+    },120);
+  });
+
+  motionQuery.addEventListener('change',e=>{
+    reduce=e.matches;
+    if(reduce) clearMotion(); else {measure();render();}
+  });
+  mobileQuery.addEventListener('change',()=>{
+    measure();
+    if(reduce||isMobile) clearMotion(); else render();
+  });
+
+  /* ---------- 导航平滑滚动：easing + 固定导航偏移；减少动效时直接跳转 ---------- */
+  let scrollAnim=0;
+  function stopScrollAnim(){
+    if(scrollAnim){ cancelAnimationFrame(scrollAnim); scrollAnim=0; }
+  }
+  function navOffset(){
+    return headerEl.offsetHeight + 8 * (isMobile ? 1 : Math.min(1, vw/1920));
+  }
+  function smoothTo(targetY){
+    stopScrollAnim();
+    const start=scrollY, delta=targetY-start;
+    if(reduce || Math.abs(delta)<1){ scrollTo(0,targetY); return; }
+    const dur=Math.min(1100, Math.max(560, Math.abs(delta)*0.65));
+    const t0=performance.now();
+    const ease=t=>t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+    function step(now){
+      const t=Math.min(1,(now-t0)/dur);
+      scrollTo(0, Math.round(start+delta*ease(t)));
+      scrollAnim = t<1 ? requestAnimationFrame(step) : 0;
+    }
+    scrollAnim=requestAnimationFrame(step);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const hash=a.getAttribute('href');
+      if(!hash || hash.length<2) return;
+      const target=document.getElementById(hash.slice(1));
+      if(!target) return;
+      e.preventDefault();
+      smoothTo(Math.max(0, target.getBoundingClientRect().top + scrollY - navOffset()));
+      try{ history.pushState(null,'',hash); }catch(_){}
+    });
+  });
+  /* 滚动提示：点击滚到作品区顶部（扣掉固定导航高度）；按钮本身常驻，不因点击而隐藏 */
+  if(heroHint){
+    heroHint.addEventListener('click',()=>{
+      const works=document.getElementById('works');
+      if(works) smoothTo(Math.max(0, docTop(works) - navOffset()));
+    });
+  }
+  /* 用户主动滚动时立即交出控制权 */
+  addEventListener('wheel',stopScrollAnim,{passive:true});
+  addEventListener('touchstart',stopScrollAnim,{passive:true});
+  addEventListener('keydown',e=>{
+    if(['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].indexOf(e.key)>-1) stopScrollAnim();
+  });
+
+  /* 首屏入场：只做透明度淡入。
+     形变要求「初始帧严格等于 24-2 的几何」，原来叠加的 scale(.94→1) 会在加载后 0.8s 内
+     把整块文案缩小 6%，使 DESIGNER/PORTFOLIO/副标的初始落位偏离 Figma，故改为纯淡入。 */
+  function intro(){
+    if(reduce||isMobile||!heroCopy.animate) return;
+    heroCopy.animate(
+      [{opacity:0},{opacity:1}],
+      {duration:800,easing:'cubic-bezier(.22,1,.36,1)'}
+    );
+  }
+
+  addEventListener('load',()=>{
+    measure();
+    updateHeader();
+    if(!reduce&&!isMobile) render();
+    intro();
+  });
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(()=>{ measure(); if(!reduce&&!isMobile) render(); });
+  }
+  measure();
+  updateHeader();
+  if(!reduce&&!isMobile) render();
+
+  // 暴露给自动化验证
+  window.__scrollScale={
+    triggerPx:()=>triggerPx,
+    maxScroll:()=>maxScroll,
+    heroPin:()=>({top:heroStart,range:heroTravel,start:heroStart,travel:heroTravel,
+      release:heroRelease,introEnd:vh*MORPH_TRAVEL,hold:heroRelease-vh*MORPH_TRAVEL}),
+    heroMorph:()=>({travel:vh*MORPH_TRAVEL,k:morphK,scale:MORPH_S,preTx,
+      words:morphWords.map(g=>({tx:g.tx,ty:g.ty})),subTy:subGeo.ty,subTx:subGeo.tx.slice()}),
+    methodPin:()=>({top:methodTop,height:methodModH,modH:methodModH,
+      textStart:methodTextStart,textTravel:methodTextTravel,
+      modStart:methodModStart,modTravel:methodModTravel,
+      start:methodTextStart,travel:methodTextTravel}),
+    about:()=>({top:aboutTop,start:aboutStart,travel:aboutTravel}),
+    footer:()=>({top:footerTop,start:footerStart,travel:footerTravel}),
+    aboutTop:()=>aboutTop,
+    footerTop:()=>footerTop,
+    reveals:()=>revealGeo.map(g=>({top:g.top,start:g.start,travel:g.travel,noFade:g.noFade})),
+    heroTransform:()=>heroCopy.style.transform,
+    heroScale:()=>heroScale,
+    methodTitleH:()=>methodTitleH
+  };
+})();
+</script>
+</body>
+</html>
