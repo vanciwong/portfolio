@@ -486,6 +486,187 @@
     .case-link{font-size:14px;margin-top:18px;}
   }
 
+  /* ===== 手机端细化（≤600px）：在 900px 断点基础上收紧导航、间距与字号 ===== */
+  @media (max-width:600px){
+    :root{--nav-h:56px;}
+    .site-header{padding:0 16px;}
+    .nav{gap:10px;}
+    .nav a{padding-top:0;}
+    .nav .cn{font-size:13px;}
+    .nav .en{display:none;}
+    .nav a.is-active::after{bottom:-6px;width:5px;height:5px;margin-left:calc(-2.5 * var(--u));}
+    .logo{width:88px;}
+    .hero{padding:80px 16px 36px;}
+    .hero-eyebrow{font-size:10px;line-height:1.6;letter-spacing:.06em;}
+    .hero-title{font-size:clamp(34px,10.2vw,50px);}
+    .hero-sub{font-size:15px;line-height:1.6;letter-spacing:0;}
+    .hero-actions{gap:10px;margin-top:22px;}
+    .btn{height:42px;padding:0 15px;font-size:12px;}
+    .btn-ghost{height:42px;}
+    .btn svg{width:13px;height:13px;}
+    .hero-stats{margin-top:44px;gap:22px;}
+    .stat-group{gap:18px 22px;}
+    .stat .value{font-size:27px;}
+    .stat .label{font-size:10px;}
+    .hero-side{font-size:10px;line-height:1.6;overflow-wrap:anywhere;}
+    .hero-side .row{flex-wrap:wrap;font-size:10px;gap:6px;}
+    .hero-hint{margin-top:22px;height:40px;font-size:11px;}
+    .works,.method,.concept{padding:40px 16px;}
+    .h2,.method-title,.concept-title,.about h2{font-size:30px;}
+    .concept-title .red{font-size:22px;}
+    .works-main .cover{height:190px;}
+    .subcase .cover{height:175px;}
+    .case-title{font-size:26px;}
+    .case-desc{font-size:14px;}
+    .works-sub{gap:32px;}
+    .steps{gap:12px;}
+    .step{padding:18px;gap:14px;}
+    .step h3{font-size:18px;}
+    .article{grid-template-columns:26px 1fr 26px;gap:10px;padding:16px 12px;}
+    .article h3{font-size:16px;}
+    .article .circle{width:26px;height:26px;font-size:12px;}
+    .article-inner{grid-template-columns:26px 1fr;gap:10px;}
+    .about{padding:52px 16px;}
+    .about .circle{width:38px;height:38px;font-size:17px;}
+    .about-stats{gap:24px;}
+    .about-stat .num{font-size:24px;}
+    .footer{padding:52px 16px 20px;}
+    .footer .circle{top:52px;right:16px;width:38px;height:38px;font-size:17px;}
+    .footer-title{font-size:clamp(44px,13.5vw,68px);}
+    .footer-mail{margin-top:28px;font-size:11px;gap:14px;}
+    .footer-bottom{flex-direction:column;gap:8px;margin-top:56px;padding:24px 0;font-size:9px;}
+    .eyebrow{font-size:10px;letter-spacing:.14em;}
+    .works-desc,.concept-body,.about p.lead{font-size:12px;}
+  }
+
+  /* ===== 平板竖屏（601–900px）：沿用流式布局，恢复双列以利用宽度 ===== */
+  @media (min-width:601px) and (max-width:900px){
+    :root{--nav-h:68px;}
+    .site-header{padding:0 32px;}
+    .logo{width:124px;}
+    .nav{gap:20px;}
+    .nav .cn{font-size:15px;}
+    .nav .en{font-size:8px;}
+    .hero{padding:112px 32px 56px;}
+    .hero-title{font-size:clamp(56px,9.2vw,80px);}
+    .hero-sub{font-size:20px;}
+    .hero-stats{flex-direction:row;align-items:flex-end;gap:32px;margin-top:72px;}
+    .hero-side{text-align:right;font-size:11px;}
+    .hero-side .row{justify-content:flex-end;font-size:11px;}
+    .works,.method,.concept{padding:64px 32px;}
+    .h2,.method-title,.concept-title,.about h2{font-size:46px;}
+    .concept-title .red{font-size:34px;}
+    .works-main .cover{height:320px;}
+    .works-sub{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+    .subcase .cover{height:210px;}
+    .steps{grid-template-columns:repeat(2,1fr);gap:20px;}
+    .step{min-height:0;padding:22px;}
+    .step h3{font-size:22px;}
+    .step p{font-size:13px;}
+    .concept{gap:40px;}
+    .about{padding:72px 32px;}
+    .about-bottom{gap:32px;}
+    .about p.lead{font-size:14px;}
+    .footer{padding:72px 32px 28px;}
+    .footer .circle{top:72px;right:32px;}
+    .footer-title{font-size:clamp(72px,12vw,104px);}
+  }
+
+  /* ===== 平板横屏 / 小桌面（901–1200px）=====
+     原本这段会走桌面逻辑：--k = vw/1920 把 1920 设计稿整体缩到 0.5 左右，
+     正文缩到 7px、多列挤在一屏。这里改为固定 k=1（由 JS setScale 同步设置）、
+     关闭 pin/sticky 与全部滚动动效，用可读的流式双列布局承载同样的内容层级。 */
+  @media (min-width:901px) and (max-width:1200px){
+    :root{--nav-h:72px;}
+    .site-header{height:var(--nav-h);padding:0 40px;}
+    .nav{gap:26px;}
+    .nav .cn{font-size:16px;}
+    .nav .en{font-size:9px;}
+    .logo{width:140px;height:auto;}
+    .stage{position:static;height:auto;overflow:visible;}
+    .pin{height:auto !important;}
+    #heroPin{height:auto;background:var(--ink);}
+    .hero{position:relative;height:auto;min-height:100svh;padding:120px 40px 64px;overflow:hidden;}
+    .hero-inner{position:relative;left:auto;top:auto;width:auto;}
+    .hero-flow{top:-16px;bottom:-16px;left:-16px;right:-16px;}
+    .ring-a{width:280px;height:280px;border-width:32px;left:-120px;top:auto;bottom:-60px;}
+    .ring-b{width:360px;height:360px;border-width:32px;left:auto;right:-140px;top:-100px;}
+    .hero-title{font-size:clamp(68px,7.6vw,92px);line-height:.95;margin-top:18px;}
+    .hero-title .sp{font-size:.5em;}
+    .hero-title .amp{font-size:.3125em;}
+    .hero-title .line2{line-height:.95;margin-top:0;}
+    .hero-title .red-square{width:16px;height:16px;left:auto;right:0;top:8px;}
+    .hero-late{opacity:1;transform:none;}
+    .hero-pre,.hero-designer .dg-solid,.hero-portfolio .pf-solid{opacity:1;}
+    .hero-designer .dg-fade,.hero-portfolio .pf-outline{display:none;}
+    .hero-sub .sub-ch{transform:none;}
+    .hero-eyebrow{font-size:12px;letter-spacing:.1em;line-height:1.6;}
+    .hero-sub{font-size:21px;letter-spacing:0;margin-top:18px;}
+    .hero-actions{gap:16px;margin-top:30px;}
+    .btn{height:46px;padding:0 22px;font-size:13px;}
+    .btn-ghost{height:46px;}
+    .btn svg{width:15px;height:15px;}
+    .hero-stats{margin-top:72px;}
+    .stat-group{gap:36px;}
+    .stat .value{font-size:34px;}
+    .stat .label{font-size:11px;}
+    .hero-side{font-size:11px;}
+    .hero-side .row{font-size:12px;}
+    .hero-hint{position:static;translate:none;margin-top:32px;height:46px;padding:0 22px;font-size:13px;animation:none;}
+    .hero-hint .hint-arrow{width:14px;height:14px;animation:none;}
+    .works,.method,.concept{padding:72px 40px;}
+    .h2,.method-title,.concept-title,.about h2{font-size:52px;}
+    .works-head .works-link{padding-top:72px;}
+    .method-head .works-link{padding-top:96px;}
+    .works-desc{font-size:14px;max-width:420px;}
+    .works-main{gap:36px;margin-top:40px;}
+    .works-main .cover{flex:0 0 54%;width:54%;height:auto;aspect-ratio:960/520;}
+    .works-main .case-info{width:auto;flex:1;}
+    .case-title{font-size:38px;margin-top:20px;}
+    .case-desc{font-size:15px;margin-top:18px;}
+    .works-sub{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px;}
+    .subcase{width:100%;}
+    .subcase .cover{height:auto;aspect-ratio:732/340;}
+    .subcase h3{font-size:26px;}
+    .steps{grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px;}
+    .step{min-height:0;padding:24px;}
+    .step h3{font-size:23px;}
+    .step p{font-size:13px;}
+    .concept{gap:36px;}
+    .concept-left{width:34%;}
+    .concept-title{font-size:42px;letter-spacing:-2px;}
+    .concept-title .red{font-size:30px;}
+    .concept-body{font-size:13px;}
+    .articles{width:auto;flex:1;margin-left:0;}
+    .article{grid-template-columns:46px 1fr 32px;gap:16px;padding:24px 16px;min-height:0;}
+    .article h3{font-size:21px;}
+    .article p{font-size:12px;max-width:none;}
+    .article .circle{width:32px;height:32px;font-size:14px;}
+    .article-inner{grid-template-columns:46px 1fr;gap:16px;}
+    .article-inner .body{margin-left:0;}
+    .about{padding:88px 40px;}
+    .about-inner{height:auto;width:100%;}
+    .about h2{max-width:none;}
+    .about .circle{width:52px;height:52px;font-size:24px;}
+    .about-bottom{flex-direction:column;align-items:flex-start;gap:36px;margin-top:56px;}
+    .about p.lead{width:100%;font-size:14px;}
+    .about-stats{gap:64px;}
+    .about-stat .num{font-size:32px;}
+    .footer{padding:88px 40px 32px;}
+    .footer .circle{top:88px;right:40px;width:50px;height:50px;font-size:23px;}
+    .footer-title{font-size:clamp(88px,10vw,124px);letter-spacing:-.05em;line-height:.9;}
+    .footer-mail{margin-top:48px;font-size:13px;}
+    .footer-bottom{margin-top:72px;padding:36px 0 64px;font-size:10px;}
+    .works-link,.case-meta,.eyebrow,.tag{font-size:12px;}
+    .case-link{font-size:15px;margin-top:20px;}
+  }
+
+  /* 流式布局下滚动提示回到文档流，但 position:static 会让 z-index 失效，
+     左半边会被首屏圆环（z-index:1）盖住；改 relative 并清掉绝对定位偏移，层级才真正生效 */
+  @media (max-width:1200px){
+    .hero-hint{position:relative;left:auto;top:auto;z-index:3;}
+  }
+
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;}
     .pin{height:auto !important;}
@@ -500,8 +681,9 @@
     .hero-designer,.hero-portfolio,.hero-pre,.hero-sub .sub-ch{transform:none !important;}
     .pin .stage-inner{opacity:1 !important;}
   }
-  /* 桌面端减少动效：首屏为绝对定位排版，需恢复为文档流，避免内容塌陷叠加 */
-  @media (prefers-reduced-motion: reduce) and (min-width: 901px){
+  /* 桌面端减少动效：首屏为绝对定位排版，需恢复为文档流，避免内容塌陷叠加。
+     下限与新平板断点对齐（1201px），否则 901–1200px 会被误按桌面绝对定位处理，把内容压塌 */
+  @media (prefers-reduced-motion: reduce) and (min-width: 1201px){
     #heroPin .stage-inner{position:relative;min-height:calc(1080 * var(--u));padding:calc(247 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));}
     #heroPin .hero-inner{position:relative;left:auto;top:auto;width:auto;}
   }
@@ -789,7 +971,10 @@
   const root=document.documentElement;
   const motionQuery=matchMedia('(prefers-reduced-motion: reduce)');
   let reduce=motionQuery.matches;
-  const mobileQuery=matchMedia('(max-width: 900px)');
+  /* 简化模式断点与 CSS 的平板横屏断点保持一致（≤1200px）：
+     这段宽度已改为流式布局，必须同时停掉 pin/缩放动效，否则 JS 的 transform 会打乱排版。
+     >1200px 的桌面逻辑完全不变。 */
+  const mobileQuery=matchMedia('(max-width: 1200px)');
   let isMobile=mobileQuery.matches;
 
   /* ---------- 等比缩放基准 ---------- */
