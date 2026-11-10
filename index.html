@@ -299,7 +299,7 @@
   #methodPin{background:var(--ink-deep);}
   #methodPin .stage{position:static;height:auto;overflow:visible;display:block;}
   /* 整个工作流模块的缩放容器：阶段二作用于它，锚点居中，向后退不会碰到上下区块 */
-  .method{background:var(--ink-deep);padding:calc(96 * var(--u)) calc(200 * var(--u)) calc(86 * var(--u));width:100%;transform-origin:50% 50%;will-change:transform;}
+  .method{background:var(--ink-deep);padding:calc(96 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));width:100%;transform-origin:50% 50%;will-change:transform;}
   .method-head{display:flex;justify-content:space-between;align-items:flex-start;}
   .method-head .eyebrow{color:#fff;letter-spacing:calc(3 * var(--u));}
   .method-title{margin-top:calc(16 * var(--u));font-size:calc(72 * var(--u));font-weight:900;line-height:1.06;color:var(--cream);white-space:pre-line;transform-origin:0 0;will-change:transform;}
@@ -313,24 +313,24 @@
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(40 * var(--u));margin-top:calc(56 * var(--u));}
   /* 工作流卡片：默认「精简大标题」，hover 沿 Y 轴 3D 翻页到「详细说明」背面。
      两层 grid 同格叠放，卡片高度自动取正反两面中较高的一面，背面不会被裁切 */
-  .step{display:grid;min-height:calc(291 * var(--u));perspective:900px;outline:none;}
+  .step{display:grid;min-height:calc(290 * var(--u));perspective:900px;outline:none;}
   .step:focus-visible{outline:2px solid var(--red-bright);outline-offset:3px;}
   .step-flip{grid-area:1/1;display:grid;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .82s cubic-bezier(.72,.02,.28,1);will-change:transform;}
-  .step-face{grid-area:1/1;display:flex;flex-direction:column;gap:calc(14 * var(--u));padding:calc(24 * var(--u));border:1px solid rgba(246,244,239,.32);backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-  .step-back{transform:rotateY(180deg);background:rgba(246,244,239,.022);border-color:rgba(246,244,239,.42);box-shadow:0 16px 38px rgba(0,0,0,.35);}
+  .step-face{grid-area:1/1;display:flex;flex-direction:column;gap:calc(28 * var(--u));padding:calc(24 * var(--u));border:1px solid #4E4E4E;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+  .step-back{gap:calc(18 * var(--u));transform:rotateY(180deg);background:rgba(246,244,239,.022);border-color:#4E4E4E;box-shadow:0 16px 38px rgba(0,0,0,.35);}
   .step.is-flipped .step-flip{transform:translateY(-3px) rotateY(180deg);}
   @media (hover:hover) and (pointer:fine){
     .step:hover .step-flip{transform:translateY(-3px) rotateY(180deg);}
   }
-  .step-no{display:flex;justify-content:space-between;align-items:center;font-size:calc(11 * var(--u));letter-spacing:calc(1.6 * var(--u));color:var(--red-bright);}
+  .step-no{display:flex;justify-content:space-between;align-items:center;min-height:calc(13 * var(--u));font-size:calc(11 * var(--u));line-height:1;letter-spacing:calc(1.6 * var(--u));color:var(--red-bright);}
   .step-no i{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;background:var(--red-bright);}
-  .step-front .flip-title{margin:auto 0;font-size:calc(34 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);letter-spacing:calc(-.5 * var(--u));}
-  .step-back .flip-sub{font-size:calc(16 * var(--u));font-weight:700;line-height:1.4;color:var(--cream);margin:0;}
+  .step-front .flip-title{margin:0;font-size:calc(56 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);letter-spacing:0;}
+  .step-back .flip-sub{font-size:calc(26 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);margin:0;}
   .step-back p{font-size:calc(14 * var(--u));line-height:1.62;color:var(--cream);white-space:pre-line;margin:0;}
   .step-back p .ai{color:var(--gray);}
   .artifacts{display:flex;flex-wrap:wrap;align-items:center;gap:calc(8 * var(--u));margin-top:auto;}
-  .artifact{font-size:calc(10.5 * var(--u));letter-spacing:calc(1 * var(--u));color:var(--gray);border:1px solid rgba(246,244,239,.12);padding:calc(5 * var(--u)) calc(9 * var(--u));border-radius:calc(2 * var(--u));}
-  .plus{font-size:calc(8 * var(--u));color:var(--line-dark);}
+  .artifact{font-size:calc(10.5 * var(--u));line-height:calc(13 * var(--u));letter-spacing:calc(1 * var(--u));color:var(--gray);border:1px solid var(--line-dark);padding:calc(5 * var(--u)) calc(9 * var(--u));border-radius:0;}
+  .plus{font-size:calc(8 * var(--u));line-height:1;color:var(--line-dark);}
 
   /* ===== 设计理念 ===== */
   .concept{background:var(--ink);padding:calc(96 * var(--u)) calc(200 * var(--u));display:flex;gap:calc(72 * var(--u));}
@@ -467,9 +467,10 @@
     .method-head .works-link{padding-top:0;}
     .steps{grid-template-columns:1fr;gap:16px;margin-top:32px;}
     .step{min-height:0;}
-    .step-face{gap:12px;}
-    .step-front .flip-title{font-size:28px;}
-    .step-back .flip-sub{font-size:15px;}
+    .step-face{gap:16px;}
+    .step-back{gap:12px;}
+    .step-front .flip-title{font-size:36px;}
+    .step-back .flip-sub{font-size:18px;}
     .step-back p{font-size:13px;}
     .concept{flex-direction:column;gap:32px;}
     .concept-left{width:100%;}
@@ -537,9 +538,10 @@
     .case-desc{font-size:14px;}
     .works-sub{gap:32px;}
     .steps{gap:12px;}
-    .step-face{padding:18px;gap:12px;}
-    .step-front .flip-title{font-size:25px;}
-    .step-back .flip-sub{font-size:14px;}
+    .step-face{padding:18px;gap:14px;}
+    .step-back{gap:10px;}
+    .step-front .flip-title{font-size:34px;}
+    .step-back .flip-sub{font-size:17px;}
     .article{grid-template-columns:26px 1fr 26px;gap:10px;padding:16px 12px;}
     .article h3{font-size:16px;}
     .article .circle{width:26px;height:26px;font-size:12px;}
@@ -579,10 +581,11 @@
     .subcase .cover{height:210px;}
     .steps{grid-template-columns:repeat(2,1fr);gap:20px;}
     .step{min-height:0;}
-    .step-face{padding:22px;}
-    .step-front .flip-title{font-size:27px;}
-    .step-back .flip-sub{font-size:15px;}
-    .step-back p{font-size:13px;}
+    .step-face{padding:22px;gap:18px;}
+    .step-back{gap:12px;}
+    .step-front .flip-title{font-size:40px;}
+    .step-back .flip-sub{font-size:19px;}
+    .step-back p{font-size:14px;}
     .concept{gap:40px;}
     .about{padding:72px 32px;}
     .about-bottom{gap:32px;}
@@ -650,10 +653,11 @@
     .subcase h3{font-size:26px;}
     .steps{grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px;}
     .step{min-height:0;}
-    .step-face{padding:24px;}
-    .step-front .flip-title{font-size:29px;}
-    .step-back .flip-sub{font-size:16px;}
-    .step-back p{font-size:13px;}
+    .step-face{padding:24px;gap:22px;}
+    .step-back{gap:14px;}
+    .step-front .flip-title{font-size:46px;}
+    .step-back .flip-sub{font-size:21px;}
+    .step-back p{font-size:14px;}
     .concept{gap:36px;}
     .concept-left{width:34%;}
     .concept-title{font-size:42px;letter-spacing:-2px;}
