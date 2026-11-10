@@ -150,14 +150,11 @@
     letter-spacing:calc(7.2 * var(--u));color:#fff;
     text-wrap:balance;
   }
-  /* 副标题左右居中：24-2 的初始态本来就落在页面中心（SUB_X=600），但 174-512 的终态
-     按 x=200 左对齐，形变途中整行会持续左移，与始终居中的「向下滚动查看」按钮错开。
-     桌面端让逐字块在 .hero-inner（中心即页面中心）里水平居中：终态居中，初始态由
-     measureHeroMorph() 的 tx 自动补偿、仍居中，两者线性插值的中间态也保持居中。
-     不用 text-indent 抵消末字字距：text-indent 会继承给每个 .sub-ch，把字距整体拉宽。 */
-  @media (min-width:1201px){
-    .hero-sub{text-align:center;}
-  }
+  /* 副标题水平位置（只对滚动前的初始态居中，终态保持左对齐）：
+     174-512 终态按 x=200 与标题左缘对齐，因此这里必须是默认的左对齐，
+     不能给 .hero-sub 加 text-align:center（那会把终态也推到页面中央）。
+     滚动前 24-2 的「居中」由 measureHeroMorph() 按实测初始字宽算出起始 x，
+     写进 subGeo.tx；me 0→1 时逐字从居中位线性移回 x=200 的左对齐终态。 */
   /* ===== 首屏两套排版之间的滚动形变（Figma 24-2 → 174-512） =====
      24-2 初始态：DESIGNER 300/240（自上而下 alpha .5→0 的白色渐变填充）、PORTFOLIO 300/240（同渐变 4px 外描边）、
      副标题 16/100% 字距、提示按钮 162×50 @879,968。
@@ -1149,6 +1146,7 @@
 
   /* ---------- 需要处理的元素 ---------- */
   const heroCopy=document.getElementById('heroCopy');
+  const heroInner=document.getElementById('heroInner');
   const heroTitle=document.getElementById('heroTitle');
   const heroLates=[...document.querySelectorAll('.hero-late')];
   /* 两套排版形变要用的节点：UX & AX 组、DESIGNER / PORTFOLIO 各两层、红方块、水印、副标题 */
@@ -1193,15 +1191,15 @@
   function docLeft(el){ let x=0; while(el){ x+=el.offsetLeft; el=el.offsetParent; } return x; }
 
   /* ---------- 首屏两套排版形变（Figma 24-2 → 174-512） ---------- */
-  /* 24-2：DESIGNER 300/240 @(22,289)、PORTFOLIO 300/240 @(22,551)、副标题 16/100% 字距 @(600,917)。
-     终态 174-512：DESIGNER 128 落在第一行末词、PORTFOLIO 128 在第二行、副标题 24/30% 字距 @(200,523)。
+  /* 24-2：DESIGNER 300/240 @(22,289)、PORTFOLIO 300/240 @(22,551)、副标题 16/100% 字距在页面水平居中 @y=917。
+     终态 174-512：DESIGNER 128 落在第一行末词、PORTFOLIO 128 在第二行、副标题 24/30% 字距 @(200,523) 左对齐。
      形变窗口 0→0.18 屏；量具与常量在 measure() 里读一次布局，滚动帧只写 transform/opacity */
   const MORPH_S=300/128;         /* 词级放大倍率：24-2 的 300 字号 ÷ 终态 128 字号 = 2.34375 */
   const MORPH_TRAVEL=0.18;       /* 入场形变占 0.18 屏，之后才是「保持」段 */
   const SUB_SCALE=16/24;         /* 副标题 16 → 24 */
   const INK_D=302.9;             /* 24-2 导出的 DESIGNER 墨迹顶（300px，无描边） */
   const INK_P=560.95;            /* 24-2 导出的 PORTFOLIO 墨迹顶（含 4px 外描边） */
-  const SUB_X=600, SUB_Y=917;    /* 24-2 副标题盒位（1920 基准） */
+  const SUB_Y=917;              /* 24-2 副标题盒位 y（1920 基准）；x 改为按页面中心实时计算 */
   const measureCtx=document.createElement('canvas').getContext('2d');
   let morphK=1, morphWords=[], preTx=0;
   const subGeo={tx:[],ty:0};
@@ -1267,7 +1265,13 @@
     if(subChars.length&&subMeasure){
       const init=[...subMeasure.children].map(s=>s.offsetLeft);
       const fin=subChars.map(s=>s.offsetLeft);
-      subGeo.tx=fin.map((f,i)=>SUB_X*k+init[i]-(docLeft(heroSub)+f));
+      /* 滚动前（24-2）整行相对页面水平居中：起始 x = 画布中心 - 初始整行宽/2。
+         整行宽取「末字初始位 + 末字块在 16/24 缩放后的宽度」，与渲染出来的字块盒一致；
+         终态不动（transform 归零后自然落在 docLeft(heroSub)，即 x=200 与标题左缘对齐）。 */
+      const centerX=docLeft(heroInner)+heroInner.offsetWidth/2;
+      const initLineW=init[init.length-1]+subChars[subChars.length-1].offsetWidth*SUB_SCALE;
+      const startX=centerX-initLineW/2;
+      subGeo.tx=fin.map((f,i)=>startX+init[i]-(docLeft(heroSub)+f));
       subGeo.ty=SUB_Y*k-docTop(heroSub);
     }else{
       subGeo.tx.length=0; subGeo.ty=0;
