@@ -5,6 +5,18 @@
   setScale();
   addEventListener('resize', setScale, {passive:true});
 
+  /* 页头滚动加深（与首页导航栏一致）：滚过 8px 后加 .is-stuck 让底色变深，
+     保证压在浅色/纸面区块上时导航与 logo 仍可读 */
+  var headerEl=document.querySelector('.site-header');
+  if(headerEl){
+    var onScroll=function(){
+      var y=window.pageYOffset||document.documentElement.scrollTop||0;
+      headerEl.classList.toggle('is-stuck', y>8);
+    };
+    onScroll();
+    addEventListener('scroll', onScroll, {passive:true});
+  }
+
   /* 作品页分类筛选：默认「全部 ALL」，点击后只显示对应 data-cat 的卡片 */
   var filters=[].slice.call(document.querySelectorAll('.filter'));
   if(filters.length){
