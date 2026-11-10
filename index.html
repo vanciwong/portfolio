@@ -306,13 +306,28 @@
   .method-title em{font-style:normal;color:var(--red-bright);}
   .method-head .works-link{color:#fff;padding-top:calc(157 * var(--u));font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));}
   .method-head .works-link .underline{background:var(--line-dark);}
+  /* 触屏没有 hover，给一条轻触提示；鼠标设备隐藏，默认态保持参考稿原样 */
+  .step-hint{display:none;margin-top:calc(24 * var(--u));font-size:calc(11 * var(--u));letter-spacing:calc(1.4 * var(--u));color:var(--gray);}
+  .step-hint b{font-weight:400;color:var(--red-bright);margin-left:calc(10 * var(--u));}
+  @media (hover:none), (pointer:coarse){ .step-hint{display:block;} }
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(40 * var(--u));margin-top:calc(56 * var(--u));}
-  .step{border:1px solid rgba(246,244,239,.32);padding:calc(24 * var(--u));min-height:calc(291 * var(--u));display:flex;flex-direction:column;gap:calc(18 * var(--u));}
+  /* 工作流卡片：默认「精简大标题」，hover 沿 Y 轴 3D 翻页到「详细说明」背面。
+     两层 grid 同格叠放，卡片高度自动取正反两面中较高的一面，背面不会被裁切 */
+  .step{display:grid;min-height:calc(291 * var(--u));perspective:900px;outline:none;}
+  .step:focus-visible{outline:2px solid var(--red-bright);outline-offset:3px;}
+  .step-flip{grid-area:1/1;display:grid;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .82s cubic-bezier(.72,.02,.28,1);will-change:transform;}
+  .step-face{grid-area:1/1;display:flex;flex-direction:column;gap:calc(14 * var(--u));padding:calc(24 * var(--u));border:1px solid rgba(246,244,239,.32);backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+  .step-back{transform:rotateY(180deg);background:rgba(246,244,239,.022);border-color:rgba(246,244,239,.42);box-shadow:0 16px 38px rgba(0,0,0,.35);}
+  .step.is-flipped .step-flip{transform:translateY(-3px) rotateY(180deg);}
+  @media (hover:hover) and (pointer:fine){
+    .step:hover .step-flip{transform:translateY(-3px) rotateY(180deg);}
+  }
   .step-no{display:flex;justify-content:space-between;align-items:center;font-size:calc(11 * var(--u));letter-spacing:calc(1.6 * var(--u));color:var(--red-bright);}
   .step-no i{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;background:var(--red-bright);}
-  .step h3{font-size:calc(26 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);}
-  .step p{font-size:calc(14 * var(--u));line-height:1.62;color:var(--cream);white-space:pre-line;}
-  .step p .ai{color:var(--gray);}
+  .step-front .flip-title{margin:auto 0;font-size:calc(34 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);letter-spacing:calc(-.5 * var(--u));}
+  .step-back .flip-sub{font-size:calc(16 * var(--u));font-weight:700;line-height:1.4;color:var(--cream);margin:0;}
+  .step-back p{font-size:calc(14 * var(--u));line-height:1.62;color:var(--cream);white-space:pre-line;margin:0;}
+  .step-back p .ai{color:var(--gray);}
   .artifacts{display:flex;flex-wrap:wrap;align-items:center;gap:calc(8 * var(--u));margin-top:auto;}
   .artifact{font-size:calc(10.5 * var(--u));letter-spacing:calc(1 * var(--u));color:var(--gray);border:1px solid rgba(246,244,239,.12);padding:calc(5 * var(--u)) calc(9 * var(--u));border-radius:calc(2 * var(--u));}
   .plus{font-size:calc(8 * var(--u));color:var(--line-dark);}
@@ -452,8 +467,10 @@
     .method-head .works-link{padding-top:0;}
     .steps{grid-template-columns:1fr;gap:16px;margin-top:32px;}
     .step{min-height:0;}
-    .step h3{font-size:20px;}
-    .step p{font-size:13px;}
+    .step-face{gap:12px;}
+    .step-front .flip-title{font-size:28px;}
+    .step-back .flip-sub{font-size:15px;}
+    .step-back p{font-size:13px;}
     .concept{flex-direction:column;gap:32px;}
     .concept-left{width:100%;}
     .concept-title{font-size:34px;letter-spacing:-1px;}
@@ -520,8 +537,9 @@
     .case-desc{font-size:14px;}
     .works-sub{gap:32px;}
     .steps{gap:12px;}
-    .step{padding:18px;gap:14px;}
-    .step h3{font-size:18px;}
+    .step-face{padding:18px;gap:12px;}
+    .step-front .flip-title{font-size:25px;}
+    .step-back .flip-sub{font-size:14px;}
     .article{grid-template-columns:26px 1fr 26px;gap:10px;padding:16px 12px;}
     .article h3{font-size:16px;}
     .article .circle{width:26px;height:26px;font-size:12px;}
@@ -560,9 +578,11 @@
     .works-sub{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
     .subcase .cover{height:210px;}
     .steps{grid-template-columns:repeat(2,1fr);gap:20px;}
-    .step{min-height:0;padding:22px;}
-    .step h3{font-size:22px;}
-    .step p{font-size:13px;}
+    .step{min-height:0;}
+    .step-face{padding:22px;}
+    .step-front .flip-title{font-size:27px;}
+    .step-back .flip-sub{font-size:15px;}
+    .step-back p{font-size:13px;}
     .concept{gap:40px;}
     .about{padding:72px 32px;}
     .about-bottom{gap:32px;}
@@ -629,9 +649,11 @@
     .subcase .cover{height:auto;aspect-ratio:732/340;}
     .subcase h3{font-size:26px;}
     .steps{grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px;}
-    .step{min-height:0;padding:24px;}
-    .step h3{font-size:23px;}
-    .step p{font-size:13px;}
+    .step{min-height:0;}
+    .step-face{padding:24px;}
+    .step-front .flip-title{font-size:29px;}
+    .step-back .flip-sub{font-size:16px;}
+    .step-back p{font-size:13px;}
     .concept{gap:36px;}
     .concept-left{width:34%;}
     .concept-title{font-size:42px;letter-spacing:-2px;}
@@ -810,62 +832,136 @@
         <a class="works-link" href="#methodPin"><span class="row">COMPLETE PROCESS 完整流程 <span style="color:var(--red)">›</span></span><span class="underline"></span></a>
       </div>
 
+      <p class="step-hint">轻触卡片查看详细说明<b>TAP TO FLIP</b></p>
+
       <div class="steps">
-        <article class="step">
-          <div class="step-no"><span>01</span><i></i></div>
-          <h3>需求对齐 &amp; 前期研判</h3>
-          <p>对齐业务目标、约束条件（研发成本、跨端差异、产品特性），区分「功能需求」和「真实用户诉求」
-<span class="ai">AI 参与：需求文档草案、竞品信息汇总、访谈提纲生成、提炼目标/风险/约束</span></p>
-          <div class="artifacts"><span class="artifact">需求简报</span><span class="plus">+</span><span class="artifact">竞品信息</span><span class="plus">+</span><span class="artifact">约束分析</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>01</span><i></i></div>
+              <h3 class="flip-title">需求对齐<br>前期研判</h3>
+              <div class="artifacts"><span class="artifact">需求简报</span><span class="plus">+</span><span class="artifact">竞品信息</span><span class="plus">+</span><span class="artifact">约束分析</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>01</span><i></i></div>
+              <h4 class="flip-sub">需求对齐 &amp; 前期研判</h4>
+              <p>对齐业务目标、约束条件（研发成本、跨端差异、产品特性），区分「功能需求」和「真实用户诉求」
+              <span class="ai">AI 参与：需求文档草案、竞品信息汇总、访谈提纲生成、提炼目标/风险/约束</span></p>
+              <div class="artifacts"><span class="artifact">需求简报</span><span class="plus">+</span><span class="artifact">竞品信息</span><span class="plus">+</span><span class="artifact">约束分析</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>02</span><i></i></div>
-          <h3>用户研究 &amp; 定义问题</h3>
-          <p>访谈核心用户、定性研究、共情理解，识别隐性需求、挖掘真实痛点，基于研究结论收敛问题
-<span class="ai">AI 参与：转录访谈录音、整理问卷数据、生成用户画像、用户旅程初稿，模拟不同用户角色陈述问题，提前预判负面体验</span></p>
-          <div class="artifacts"><span class="artifact">用户画像</span><span class="plus">+</span><span class="artifact">用户旅程图</span><span class="plus">+</span><span class="artifact">痛点汇总</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>02</span><i></i></div>
+              <h3 class="flip-title">用户研究<br>定义问题</h3>
+              <div class="artifacts"><span class="artifact">用户画像</span><span class="plus">+</span><span class="artifact">用户旅程图</span><span class="plus">+</span><span class="artifact">痛点汇总</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>02</span><i></i></div>
+              <h4 class="flip-sub">用户研究 &amp; 定义问题</h4>
+              <p>访谈核心用户、定性研究、共情理解，识别隐性需求、挖掘真实痛点，基于研究结论收敛问题
+              <span class="ai">AI 参与：转录访谈录音、整理问卷数据、生成用户画像、用户旅程初稿，模拟不同用户角色陈述问题，提前预判负面体验</span></p>
+              <div class="artifacts"><span class="artifact">用户画像</span><span class="plus">+</span><span class="artifact">用户旅程图</span><span class="plus">+</span><span class="artifact">痛点汇总</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>03</span><i></i></div>
-          <h3>信息架构 &amp; 交互方案</h3>
-          <p>搭建信息架构、主流程分支，把控信息层级、减法设计，砍掉不必要步骤，基于设计理念筛选方向，排除不合理方案
-<span class="ai">AI 参与：多方案头脑风暴、场景推演，生成流程图初稿、信息结构建议、交互文案批量生成</span></p>
-          <div class="artifacts"><span class="artifact">信息架构</span><span class="plus">+</span><span class="artifact">流程推演</span><span class="plus">+</span><span class="artifact">体验原则</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>03</span><i></i></div>
+              <h3 class="flip-title">信息架构<br>交互方案</h3>
+              <div class="artifacts"><span class="artifact">信息架构</span><span class="plus">+</span><span class="artifact">流程推演</span><span class="plus">+</span><span class="artifact">体验原则</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>03</span><i></i></div>
+              <h4 class="flip-sub">信息架构 &amp; 交互方案</h4>
+              <p>搭建信息架构、主流程分支，把控信息层级、减法设计，砍掉不必要步骤，基于设计理念筛选方向，排除不合理方案
+              <span class="ai">AI 参与：多方案头脑风暴、场景推演，生成流程图初稿、信息结构建议、交互文案批量生成</span></p>
+              <div class="artifacts"><span class="artifact">信息架构</span><span class="plus">+</span><span class="artifact">流程推演</span><span class="plus">+</span><span class="artifact">体验原则</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>04</span><i></i></div>
-          <h3>原型迭代 &amp; 方案评估</h3>
-          <p>通过VibeCoding把原型转成可直接运行的前端Demo，组织用户测试、方案取舍决策
-<span class="ai">AI 参与：辅助生成DEMO，可用性问题预排查、多版本对比、注释整理</span></p>
-          <div class="artifacts"><span class="artifact">VibeCoding</span><span class="plus">+</span><span class="artifact">用户测试</span><span class="plus">+</span><span class="artifact">方案评估</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>04</span><i></i></div>
+              <h3 class="flip-title">原型迭代<br>方案评估</h3>
+              <div class="artifacts"><span class="artifact">VibeCoding</span><span class="plus">+</span><span class="artifact">用户测试</span><span class="plus">+</span><span class="artifact">方案评估</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>04</span><i></i></div>
+              <h4 class="flip-sub">原型迭代 &amp; 方案评估</h4>
+              <p>通过VibeCoding把原型转成可直接运行的前端Demo，组织用户测试、方案取舍决策
+              <span class="ai">AI 参与：辅助生成DEMO，可用性问题预排查、多版本对比、注释整理</span></p>
+              <div class="artifacts"><span class="artifact">VibeCoding</span><span class="plus">+</span><span class="artifact">用户测试</span><span class="plus">+</span><span class="artifact">方案评估</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>05</span><i></i></div>
-          <h3>设计系统 &amp; 规范沉淀</h3>
-          <p>根据项目内容编写 design.md ，把视觉交互约束、验收标准写清楚，保证团队对齐、AI 生成可控、设计决策可追溯
-<span class="ai">AI 参与：Agent 将 design.md 作为项目设计契约、约束边界，完成方案生成、校验、自检。</span></p>
-          <div class="artifacts"><span class="artifact">design.md</span><span class="plus">+</span><span class="artifact">设计规范</span><span class="plus">+</span><span class="artifact">方案自检</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>05</span><i></i></div>
+              <h3 class="flip-title">设计系统<br>规范沉淀</h3>
+              <div class="artifacts"><span class="artifact">design.md</span><span class="plus">+</span><span class="artifact">设计规范</span><span class="plus">+</span><span class="artifact">方案自检</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>05</span><i></i></div>
+              <h4 class="flip-sub">设计系统 &amp; 规范沉淀</h4>
+              <p>根据项目内容编写 design.md ，把视觉交互约束、验收标准写清楚，保证团队对齐、AI 生成可控、设计决策可追溯
+              <span class="ai">AI 参与：Agent 将 design.md 作为项目设计契约、约束边界，完成方案生成、校验、自检。</span></p>
+              <div class="artifacts"><span class="artifact">design.md</span><span class="plus">+</span><span class="artifact">设计规范</span><span class="plus">+</span><span class="artifact">方案自检</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>06</span><i></i></div>
-          <h3>跨项目复用 &amp; 技能沉淀</h3>
-          <p>使用 skill.md 沉淀跨项目复用的 UX/AX 设计范式、组件基线、交互约束，作为 Agent 与 VibeCoding 的默认能力包
-<span class="ai">AI 参与：Agent 将 skill.md 作为通用设计基线，统一设计原则、交互范式与规则。</span></p>
-          <div class="artifacts"><span class="artifact">skill.md</span><span class="plus">+</span><span class="artifact">技能沉淀</span><span class="plus">+</span><span class="artifact">通用原则</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>06</span><i></i></div>
+              <h3 class="flip-title">跨项目复用<br>技能沉淀</h3>
+              <div class="artifacts"><span class="artifact">skill.md</span><span class="plus">+</span><span class="artifact">技能沉淀</span><span class="plus">+</span><span class="artifact">通用原则</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>06</span><i></i></div>
+              <h4 class="flip-sub">跨项目复用 &amp; 技能沉淀</h4>
+              <p>使用 skill.md 沉淀跨项目复用的 UX/AX 设计范式、组件基线、交互约束，作为 Agent 与 VibeCoding 的默认能力包
+              <span class="ai">AI 参与：Agent 将 skill.md 作为通用设计基线，统一设计原则、交互范式与规则。</span></p>
+              <div class="artifacts"><span class="artifact">skill.md</span><span class="plus">+</span><span class="artifact">技能沉淀</span><span class="plus">+</span><span class="artifact">通用原则</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>07</span><i></i></div>
-          <h3>评审、协同 &amp; 落地跟进</h3>
-          <p>组织产研评审，对齐研发、测试，做设计走查，守住体验底线
-<span class="ai">AI 参与：整理评审意见，归类问题、生成待办清单；自动检查文案一致性</span></p>
-          <div class="artifacts"><span class="artifact">项目评审</span><span class="plus">+</span><span class="artifact">设计走查</span><span class="plus">+</span><span class="artifact">测试自检</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>07</span><i></i></div>
+              <h3 class="flip-title">评审、协同<br>落地跟进</h3>
+              <div class="artifacts"><span class="artifact">项目评审</span><span class="plus">+</span><span class="artifact">设计走查</span><span class="plus">+</span><span class="artifact">测试自检</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>07</span><i></i></div>
+              <h4 class="flip-sub">评审、协同 &amp; 落地跟进</h4>
+              <p>组织产研评审，对齐研发、测试，做设计走查，守住体验底线
+              <span class="ai">AI 参与：整理评审意见，归类问题、生成待办清单；自动检查文案一致性</span></p>
+              <div class="artifacts"><span class="artifact">项目评审</span><span class="plus">+</span><span class="artifact">设计走查</span><span class="plus">+</span><span class="artifact">测试自检</span></div>
+            </div>
+          </div>
         </article>
-        <article class="step">
-          <div class="step-no"><span>08</span><i></i></div>
-          <h3>数据采集 &amp; 复盘迭代</h3>
-          <p>埋点指标解读、回访用户，判断体验是否达成目标，识别新痛点
-<span class="ai">AI 参与：汇总用户反馈、客服工单、行为数据，自动聚类问题；生成迭代方向初稿</span></p>
-          <div class="artifacts"><span class="artifact">复盘回访</span><span class="plus">+</span><span class="artifact">数据分析</span><span class="plus">+</span><span class="artifact">迭代升級</span></div>
+        <article class="step" tabindex="0" role="button" aria-pressed="false">
+          <div class="step-flip">
+            <div class="step-face step-front">
+              <div class="step-no"><span>08</span><i></i></div>
+              <h3 class="flip-title">数据采集<br>复盘迭代</h3>
+              <div class="artifacts"><span class="artifact">复盘回访</span><span class="plus">+</span><span class="artifact">数据分析</span><span class="plus">+</span><span class="artifact">迭代升級</span></div>
+            </div>
+            <div class="step-face step-back">
+              <div class="step-no"><span>08</span><i></i></div>
+              <h4 class="flip-sub">数据采集 &amp; 复盘迭代</h4>
+              <p>埋点指标解读、回访用户，判断体验是否达成目标，识别新痛点
+              <span class="ai">AI 参与：汇总用户反馈、客服工单、行为数据，自动聚类问题；生成迭代方向初稿</span></p>
+              <div class="artifacts"><span class="artifact">复盘回访</span><span class="plus">+</span><span class="artifact">数据分析</span><span class="plus">+</span><span class="artifact">迭代升級</span></div>
+            </div>
+          </div>
         </article>
       </div>
     </div>
@@ -988,6 +1084,17 @@
 
   /* ---------- 圆环指针视差：Design 参数（lerp 0.075、深度 -24/+16）基础上幅度 ×2 ---------- */
   const finePointer=matchMedia('(hover: hover) and (pointer: fine)');
+  /* ---------- 工作流卡片翻页：鼠标 hover 由 CSS 驱动，触屏点击 / 键盘走状态切换 ---------- */
+  Array.from(document.querySelectorAll('#methodPin .step')).forEach(function(card){
+    const toggle=function(){
+      const on=card.classList.toggle('is-flipped');
+      card.setAttribute('aria-pressed',on?'true':'false');
+    };
+    card.addEventListener('click',function(){ if(!finePointer.matches) toggle(); });
+    card.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}
+    });
+  });
   const ringLayers=[
     {el:document.querySelector('.ring-a'),depth:-48},
     {el:document.querySelector('.ring-b'),depth:32}
