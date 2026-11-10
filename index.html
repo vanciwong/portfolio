@@ -153,8 +153,11 @@
   /* 副标题水平位置（只对滚动前的初始态居中，终态保持左对齐）：
      174-512 终态按 x=200 与标题左缘对齐，因此这里必须是默认的左对齐，
      不能给 .hero-sub 加 text-align:center（那会把终态也推到页面中央）。
-     滚动前 24-2 的「居中」由 measureHeroMorph() 按实测初始字宽算出起始 x，
-     写进 subGeo.tx；me 0→1 时逐字从居中位线性移回 x=200 的左对齐终态。 */
+     滚动前 24-2 的「居中」由 measureHeroMorph() 按屏幕中心（vw/2，与
+     .hero-hint 的 left:50% 同一基准）减去实测初始字宽/2 算出起始 x，写进 subGeo.tx；
+     me 0→1 时逐字从屏幕中心线性移回 x=200 的左对齐终态。
+     注意不能用 1920 设计画布中心：--k 在 vw>1920 钳为 1，画布中心恒为 960，
+     而按钮在 vw/2，宽屏上文字会明显偏左。 */
   /* ===== 首屏两套排版之间的滚动形变（Figma 24-2 → 174-512） =====
      24-2 初始态：DESIGNER 300/240（自上而下 alpha .5→0 的白色渐变填充）、PORTFOLIO 300/240（同渐变 4px 外描边）、
      副标题 16/100% 字距、提示按钮 162×50 @879,968。
@@ -1146,7 +1149,6 @@
 
   /* ---------- 需要处理的元素 ---------- */
   const heroCopy=document.getElementById('heroCopy');
-  const heroInner=document.getElementById('heroInner');
   const heroTitle=document.getElementById('heroTitle');
   const heroLates=[...document.querySelectorAll('.hero-late')];
   /* 两套排版形变要用的节点：UX & AX 组、DESIGNER / PORTFOLIO 各两层、红方块、水印、副标题 */
@@ -1265,10 +1267,13 @@
     if(subChars.length&&subMeasure){
       const init=[...subMeasure.children].map(s=>s.offsetLeft);
       const fin=subChars.map(s=>s.offsetLeft);
-      /* 滚动前（24-2）整行相对页面水平居中：起始 x = 画布中心 - 初始整行宽/2。
+      /* 滚动前（24-2）整行相对「屏幕」水平居中：起始 x = vw/2 - 初始整行宽/2。
+         必须用屏幕中心而不是 1920 设计画布中心（960*k）：--k 在 vw>1920 时被钳为 1，
+         画布仍是左对齐的 1920 宽，而 .hero-hint 用 left:50% 恒在 vw/2；
+         用画布中心会让宽屏上的文字比居中的按钮左偏 (vw/2 - 960)px。
          整行宽取「末字初始位 + 末字块在 16/24 缩放后的宽度」，与渲染出来的字块盒一致；
          终态不动（transform 归零后自然落在 docLeft(heroSub)，即 x=200 与标题左缘对齐）。 */
-      const centerX=docLeft(heroInner)+heroInner.offsetWidth/2;
+      const centerX=vw/2;
       const initLineW=init[init.length-1]+subChars[subChars.length-1].offsetWidth*SUB_SCALE;
       const startX=centerX-initLineW/2;
       subGeo.tx=fin.map((f,i)=>startX+init[i]-(docLeft(heroSub)+f));
