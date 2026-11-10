@@ -386,7 +386,18 @@
 
   /* ===== 页脚 ===== */
   .footer{position:relative;background:var(--ink-deep);padding:calc(158 * var(--u)) calc(200 * var(--u)) calc(40 * var(--u));color:var(--cream-2);}
-  .footer .circle{position:absolute;top:calc(200 * var(--u));right:calc(200 * var(--u));width:calc(58 * var(--u));height:calc(58 * var(--u));border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:calc(28 * var(--u));color:var(--cream-2);}
+  /* 页脚右上：ABOUT ME 按钮 + 右下双列导航（菜单 / 联系） */
+  .footer-grid{display:flex;align-items:stretch;gap:calc(60 * var(--u));}
+  .footer-cta{flex:1 1 auto;min-width:0;}
+  .footer-aside{flex:none;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;text-align:right;padding-top:calc(10 * var(--u));}
+  .about-me{display:inline-flex;align-items:center;gap:calc(16 * var(--u));text-decoration:none;color:var(--cream-2);font-size:calc(12 * var(--u));font-weight:600;letter-spacing:calc(2 * var(--u));text-transform:uppercase;}
+  .about-me .about-me-circle{width:calc(46 * var(--u));height:calc(46 * var(--u));border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:calc(18 * var(--u));transition:background .25s ease,color .25s ease;}
+  .about-me:hover .about-me-circle{background:var(--cream-2);color:var(--ink-deep);}
+  .footer-cols{display:flex;gap:calc(90 * var(--u));text-align:left;}
+  .footer-col{display:flex;flex-direction:column;gap:calc(13 * var(--u));}
+  .footer-col a,.footer-col span{font-size:calc(12 * var(--u));line-height:1.3;letter-spacing:calc(1 * var(--u));color:var(--cream-2);text-decoration:none;white-space:nowrap;}
+  .footer-col a:hover{color:var(--red-bright);}
+  .col-label{font-size:calc(10 * var(--u));letter-spacing:calc(1.6 * var(--u));color:#777;text-transform:uppercase;margin-bottom:calc(10 * var(--u));white-space:nowrap;}
   .footer .eyebrow{font-size:calc(10 * var(--u));letter-spacing:calc(2.2 * var(--u));color:var(--cream-2);}
   .footer-title{margin-top:calc(36 * var(--u));font-size:calc(170 * var(--u));font-weight:900;line-height:.85;letter-spacing:calc(-12.75 * var(--u));transform-origin:0 40%;will-change:transform;}
   /*
@@ -505,7 +516,9 @@
     .about-stats{gap:40px;padding-left:0;flex-wrap:wrap;}
     .about-stat .num{font-size:28px;}
     .footer{padding:64px 20px 24px;}
-    .footer .circle{top:64px;right:20px;width:44px;height:44px;font-size:20px;}
+    .footer-grid{flex-direction:column;gap:calc(44 * var(--u));}
+    .footer-aside{align-items:flex-start;text-align:left;justify-content:flex-start;padding-top:0;}
+    .footer-cols{margin-top:calc(32 * var(--u));gap:calc(48 * var(--u));flex-wrap:wrap;}
     .footer-title{font-size:clamp(56px,16vw,96px);letter-spacing:-.045em;line-height:.92;}
     .footer-mail{margin-top:36px;font-size:12px;}
     .footer-bottom{margin-top:72px;padding:32px 0;flex-wrap:wrap;gap:12px;font-size:9px;}
@@ -562,7 +575,9 @@
     .about-stats{gap:24px;}
     .about-stat .num{font-size:24px;}
     .footer{padding:52px 16px 20px;}
-    .footer .circle{top:52px;right:16px;width:38px;height:38px;font-size:17px;}
+    .footer-cols{gap:calc(36 * var(--u));}
+    .about-me{font-size:12px;}
+    .about-me .about-me-circle{width:38px;height:38px;font-size:15px;}
     .footer-title{font-size:clamp(44px,13.5vw,68px);}
     .footer-mail{margin-top:28px;font-size:11px;gap:14px;}
     .footer-bottom{flex-direction:column;gap:8px;margin-top:56px;padding:24px 0;font-size:9px;}
@@ -602,7 +617,8 @@
     .about-bottom{gap:32px;}
     .about p.lead{font-size:14px;}
     .footer{padding:72px 32px 28px;}
-    .footer .circle{top:72px;right:32px;}
+    .footer-aside{padding-top:0;}
+    .footer-cols{gap:calc(64 * var(--u));}
     .footer-title{font-size:clamp(72px,12vw,104px);}
   }
 
@@ -690,7 +706,8 @@
     .about-stats{gap:64px;}
     .about-stat .num{font-size:32px;}
     .footer{padding:88px 40px 32px;}
-    .footer .circle{top:88px;right:40px;width:50px;height:50px;font-size:23px;}
+    .footer-aside{padding-top:0;}
+    .footer-cols{gap:calc(72 * var(--u));}
     .footer-title{font-size:clamp(88px,10vw,124px);letter-spacing:-.05em;line-height:.9;}
     .footer-mail{margin-top:48px;font-size:13px;}
     .footer-bottom{margin-top:72px;padding:36px 0 64px;font-size:10px;}
@@ -1061,19 +1078,43 @@
 
 <!-- ===== 页脚 ===== -->
 <footer class="footer" id="contact">
-  <div class="circle">↗</div>
-  <div class="eyebrow">HAVE A PROJECT IN MIND?</div>
-  <div class="footer-title reveal">
-    <span class="solid">一起创造</span>
-    <span class="outline">
-      <span class="outline-text">好体验。</span>
-    </span>
+  <div class="footer-grid">
+    <div class="footer-cta">
+      <div class="eyebrow">HAVE A PROJECT IN MIND?</div>
+      <div class="footer-title reveal">
+        <span class="solid">一起创造</span>
+        <span class="outline">
+          <span class="outline-text">好体验。</span>
+        </span>
+      </div>
+      <a class="footer-mail" href="mailto:vanciwong@foxmail.com">vanciwong@foxmail.com <span class="arrow">↗</span></a>
+    </div>
+    <div class="footer-aside">
+      <a class="about-me" href="about.html">
+        <span class="about-me-text">ABOUT ME</span>
+        <span class="about-me-circle">↗</span>
+      </a>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <div class="col-label">菜单 / SITEMAP</div>
+          <a href="index.html">首页 Home</a>
+          <a href="works.html">作品 Work</a>
+          <a href="concept.html">理念 Concept</a>
+          <a href="about.html">关于 About</a>
+          <a href="index.html#contact">联系 Contact</a>
+        </div>
+        <div class="footer-col">
+          <div class="col-label">联系 / CONTACT</div>
+          <a href="mailto:vanciwong@foxmail.com">邮箱 vanciwong@foxmail.com</a>
+          <span>微信 vanciwong</span>
+          <span>手机 15960028748</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <a class="footer-mail" href="mailto:vanciwong@foxmail.com">vanciwong@foxmail.com <span class="arrow">↗</span></a>
   <div class="footer-bottom">
-    <span>FUZHOU · CHINA</span>
-    <span>WeChat / Mobile 15960098748</span>
-    <span>© 2026 VANCI DESIGN</span>
+    <span>FLUORIE × EVANG</span>
+    <span>© 2026 Vanci Design</span>
   </div>
 </footer>
 
