@@ -58,13 +58,15 @@
     border-bottom-color:rgba(255,255,255,.1);
   }
   .nav{display:flex;align-items:center;gap:calc(48 * var(--u));}
-  .nav a{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(2 * var(--u));padding-top:calc(10 * var(--u));}
+  /* tab 内容本身垂直居中：原 padding-top:10u 会把「中文+英文」整组下推 10u，
+     使文字中心比 header / logo 中心低 5u（nav 盒子仍居中，偏的是内容）。 */
+  .nav a{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(2 * var(--u));padding:0;}
   .nav .cn{font-size:calc(18 * var(--u));line-height:1;color:#808080;font-weight:400;}
   .nav .en{font-size:calc(10 * var(--u));line-height:1;color:#7C7C7E;letter-spacing:.18em;text-transform:uppercase;}
   .nav a.is-active .cn{color:#fff;}
   .nav a.is-active .en{color:#CCCCCC;}
   .nav a.is-active::after{
-    content:"";position:absolute;left:50%;bottom:calc(-12 * var(--u));
+    content:"";position:absolute;left:50%;bottom:calc(-9 * var(--u));
     width:calc(6 * var(--u));height:calc(6 * var(--u));margin-left:calc(-3 * var(--u));
     flex:none;aspect-ratio:1/1;
     background:var(--red);
@@ -147,6 +149,14 @@
     font-size:calc(24 * var(--u));line-height:1.2;font-weight:500;
     letter-spacing:calc(7.2 * var(--u));color:#fff;
     text-wrap:balance;
+  }
+  /* 副标题左右居中：24-2 的初始态本来就落在页面中心（SUB_X=600），但 174-512 的终态
+     按 x=200 左对齐，形变途中整行会持续左移，与始终居中的「向下滚动查看」按钮错开。
+     桌面端让逐字块在 .hero-inner（中心即页面中心）里水平居中：终态居中，初始态由
+     measureHeroMorph() 的 tx 自动补偿、仍居中，两者线性插值的中间态也保持居中。
+     不用 text-indent 抵消末字字距：text-indent 会继承给每个 .sub-ch，把字距整体拉宽。 */
+  @media (min-width:1201px){
+    .hero-sub{text-align:center;}
   }
   /* ===== 首屏两套排版之间的滚动形变（Figma 24-2 → 174-512） =====
      24-2 初始态：DESIGNER 300/240（自上而下 alpha .5→0 的白色渐变填充）、PORTFOLIO 300/240（同渐变 4px 外描边）、
