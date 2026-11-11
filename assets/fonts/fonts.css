@@ -1,5 +1,6 @@
 @font-face{font-family:'Montserrat';font-style:normal;font-weight:700;font-display:swap;src:url('Montserrat-700-normal.woff2') format('woff2');}
-@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:400;font-display:swap;src:url('NotoSansSC-400-normal.woff2') format('woff2');}
-@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:500;font-display:swap;src:url('NotoSansSC-500-normal.woff2') format('woff2');}
-@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:700;font-display:swap;src:url('NotoSansSC-700-normal.woff2') format('woff2');}
-@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:900;font-display:swap;src:url('NotoSansSC-900-normal.woff2') format('woff2');}
+/* v2: 真实分字重子集（400/500/700/900），修复中文混排粗细不一致；?v=2 用于绕过 CDN/浏览器旧字体缓存 */
+@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:400;font-display:swap;src:url('NotoSansSC-400-normal.woff2?v=2') format('woff2');}
+@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:500;font-display:swap;src:url('NotoSansSC-500-normal.woff2?v=2') format('woff2');}
+@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:700;font-display:swap;src:url('NotoSansSC-700-normal.woff2?v=2') format('woff2');}
+@font-face{font-family:'Noto Sans SC';font-style:normal;font-weight:900;font-display:swap;src:url('NotoSansSC-900-normal.woff2?v=2') format('woff2');}
