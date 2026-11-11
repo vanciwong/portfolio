@@ -9,3 +9,8 @@ assets/works/**/*.pdf
 # 华艺案例弹窗提供原 PDF 下载，需随站点发布
 !assets/works/华艺APP/*.pdf
 **/.@__thumb/
+# 四个合集的原图约 48MB 仅本地留存，网页只发布 pages/ 内的压缩封面与长图
+assets/works/PC 端产品合集/*.jpg
+assets/works/移动端 APP合集/*.jpg
+assets/works/品牌&平面设计合集/*.jpg
+assets/works/插画&3D作品合集/*.jpg
