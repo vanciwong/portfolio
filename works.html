@@ -39,6 +39,9 @@
   /* 提示文字与关闭按钮成组靠右，文字紧贴按钮 */
   .case-actions{display:flex;align-items:center;gap:12px;flex:none;}
   .case-tip{font-size:11px;color:var(--gray);letter-spacing:1px;white-space:nowrap;}
+  .case-download{font-size:11px;letter-spacing:1px;color:var(--red);text-decoration:none;white-space:nowrap;}
+  .case-download:hover{text-decoration:underline;}
+  .case-download:focus-visible{outline:2px solid var(--red);outline-offset:3px;}
   .case-close{flex:none;width:34px;height:34px;border:none;border-radius:50%;background:var(--ink);
     color:#fff;font-size:22px;line-height:1;cursor:pointer;transition:background .2s ease;}
   .case-close:hover{background:var(--red);}
@@ -55,6 +58,7 @@
     .case-modal{padding:0;}
     .case-dialog{width:100vw;height:100vh;max-height:none;border-radius:0;}
     .case-tip{display:none;}
+    .case-title em{display:none;}
     .case-bar{padding:10px 12px;}
   }
   @media (prefers-reduced-motion: reduce){
@@ -230,7 +234,7 @@
             </div>
           </article>
           <article class="card card--case" data-cat="research" data-reveal
-                   data-case="yidongnan" role="button" tabindex="0" aria-haspopup="dialog"
+                   data-case="yidongnan" data-modal="caseModal" role="button" tabindex="0" aria-haspopup="dialog"
                    aria-label="艺东南APP，点击查看完整案例长图">
             <div class="card-thumb card-thumb--img">
               <img src="assets/works/艺东南/1-1.jpg" alt="艺东南APP 案例封面" loading="lazy">
@@ -242,8 +246,13 @@
               <div class="tags"><span class="tag">需求简报</span><span class="tag">需求简报</span></div>
             </div>
           </article>
-          <article class="card" data-cat="research" data-reveal>
-            <div class="card-thumb" aria-hidden="true"></div>
+          <article class="card card--case" data-cat="research" data-reveal
+                   data-case="huayi" data-modal="caseModalHuayi" role="button" tabindex="0" aria-haspopup="dialog"
+                   aria-label="华艺APP，点击查看品牌设计说明">
+            <div class="card-thumb card-thumb--img">
+              <img src="assets/works/华艺APP/cover.jpg" alt="华艺APP 品牌设计封面" loading="lazy">
+              <span class="card-thumb__hint">点击查看品牌设计说明 ↗</span>
+            </div>
             <div class="card-body">
               <h3>华艺APP</h3>
               <p>写清目标、约束与不做什么；把「成功」变成可观察的行为</p>
@@ -401,50 +410,110 @@
     </div>
   </div>
 </div>
+<div class="case-modal" id="caseModalHuayi" hidden>
+  <div class="case-backdrop" data-close></div>
+  <div class="case-dialog" role="dialog" aria-modal="true" aria-label="华艺APP 品牌设计说明">
+    <div class="case-bar">
+      <span class="case-title">华艺APP <em>BRAND DESIGN / 42 PAGES</em></span>
+      <div class="case-actions">
+        <a class="case-download" href="assets/works/华艺APP/华艺品牌设计说明.pdf" target="_blank" rel="noopener">下载 PDF ↗</a>
+        <span class="case-tip">向下滚动查看 · 共 42 页</span>
+        <button class="case-close" type="button" data-close aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="case-scroll" tabindex="0" aria-label="华艺APP 品牌设计说明，可滚动查看">
+        <img src="assets/works/华艺APP/pages/p01.jpg" alt="华艺APP 品牌设计说明 第 1 页" width="1200" height="675" loading="eager" decoding="async">
+        <img src="assets/works/华艺APP/pages/p02.jpg" alt="华艺APP 品牌设计说明 第 2 页" width="1200" height="675" loading="eager" decoding="async">
+        <img src="assets/works/华艺APP/pages/p03.jpg" alt="华艺APP 品牌设计说明 第 3 页" width="1200" height="675" loading="eager" decoding="async">
+        <img src="assets/works/华艺APP/pages/p04.jpg" alt="华艺APP 品牌设计说明 第 4 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p05.jpg" alt="华艺APP 品牌设计说明 第 5 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p06.jpg" alt="华艺APP 品牌设计说明 第 6 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p07.jpg" alt="华艺APP 品牌设计说明 第 7 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p08.jpg" alt="华艺APP 品牌设计说明 第 8 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p09.jpg" alt="华艺APP 品牌设计说明 第 9 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p10.jpg" alt="华艺APP 品牌设计说明 第 10 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p11.jpg" alt="华艺APP 品牌设计说明 第 11 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p12.jpg" alt="华艺APP 品牌设计说明 第 12 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p13.jpg" alt="华艺APP 品牌设计说明 第 13 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p14.jpg" alt="华艺APP 品牌设计说明 第 14 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p15.jpg" alt="华艺APP 品牌设计说明 第 15 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p16.jpg" alt="华艺APP 品牌设计说明 第 16 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p17.jpg" alt="华艺APP 品牌设计说明 第 17 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p18.jpg" alt="华艺APP 品牌设计说明 第 18 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p19.jpg" alt="华艺APP 品牌设计说明 第 19 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p20.jpg" alt="华艺APP 品牌设计说明 第 20 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p21.jpg" alt="华艺APP 品牌设计说明 第 21 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p22.jpg" alt="华艺APP 品牌设计说明 第 22 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p23.jpg" alt="华艺APP 品牌设计说明 第 23 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p24.jpg" alt="华艺APP 品牌设计说明 第 24 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p25.jpg" alt="华艺APP 品牌设计说明 第 25 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p26.jpg" alt="华艺APP 品牌设计说明 第 26 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p27.jpg" alt="华艺APP 品牌设计说明 第 27 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p28.jpg" alt="华艺APP 品牌设计说明 第 28 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p29.jpg" alt="华艺APP 品牌设计说明 第 29 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p30.jpg" alt="华艺APP 品牌设计说明 第 30 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p31.jpg" alt="华艺APP 品牌设计说明 第 31 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p32.jpg" alt="华艺APP 品牌设计说明 第 32 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p33.jpg" alt="华艺APP 品牌设计说明 第 33 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p34.jpg" alt="华艺APP 品牌设计说明 第 34 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p35.jpg" alt="华艺APP 品牌设计说明 第 35 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p36.jpg" alt="华艺APP 品牌设计说明 第 36 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p37.jpg" alt="华艺APP 品牌设计说明 第 37 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p38.jpg" alt="华艺APP 品牌设计说明 第 38 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p39.jpg" alt="华艺APP 品牌设计说明 第 39 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p40.jpg" alt="华艺APP 品牌设计说明 第 40 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p41.jpg" alt="华艺APP 品牌设计说明 第 41 页" width="1200" height="675" loading="lazy" decoding="async">
+        <img src="assets/works/华艺APP/pages/p42.jpg" alt="华艺APP 品牌设计说明 第 42 页" width="1200" height="675" loading="lazy" decoding="async">
+    </div>
+  </div>
+</div>
 <script src="assets/pages.js"></script>
 <script>
 (function(){
-  var card=document.querySelector('[data-case="yidongnan"]');
-  var modal=document.getElementById('caseModal');
-  if(!card||!modal) return;
-  var scroll=modal.querySelector('.case-scroll');
-  var closeBtn=modal.querySelector('.case-close');
-  /* 打开后按顺序静默预取后续图片，避免快速拖动长图时留下空白段 */
-  var prefetched=false;
-  function prefetch(){
-    if(prefetched) return;
-    prefetched=true;
-    var imgs=[].slice.call(scroll.querySelectorAll('img'));
-    var i=0;
-    (function next(){
-      if(i>=imgs.length) return;
-      var el=imgs[i++];
-      var pre=new Image();
-      pre.onload=pre.onerror=function(){
-        el.setAttribute('data-prefetched','1');   /* 已进缓存，滚动到该段可即时渲染 */
-        setTimeout(next,0);
-      };
-      pre.src=el.getAttribute('src');
-    })();
+  /* 通用案例弹窗：卡片用 data-modal 指向对应弹窗，两个案例共用同一套交互 */
+  function setup(card){
+    var modal=document.getElementById(card.getAttribute('data-modal'));
+    if(!modal) return;
+    var scroll=modal.querySelector('.case-scroll');
+    var closeBtn=modal.querySelector('.case-close');
+    /* 打开后按顺序静默预取后续图片，避免快速拖动长图时留下空白段 */
+    var prefetched=false;
+    function prefetch(){
+      if(prefetched) return;
+      prefetched=true;
+      var imgs=[].slice.call(scroll.querySelectorAll('img'));
+      var i=0;
+      (function next(){
+        if(i>=imgs.length) return;
+        var el=imgs[i++];
+        var pre=new Image();
+        pre.onload=pre.onerror=function(){
+          el.setAttribute('data-prefetched','1');
+          setTimeout(next,0);
+        };
+        pre.src=el.getAttribute('src');
+      })();
+    }
+    function open(){
+      modal.hidden=false;
+      document.body.style.overflow='hidden';
+      scroll.scrollTop=0;
+      closeBtn.focus();
+      prefetch();
+    }
+    function close(){
+      modal.hidden=true;
+      document.body.style.overflow='';
+      card.focus();
+    }
+    card.addEventListener('click',open);
+    card.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();open();}
+    });
+    modal.querySelectorAll('[data-close]').forEach(function(el){el.addEventListener('click',close);});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
   }
-  function open(){
-    modal.hidden=false;
-    document.body.style.overflow='hidden';
-    scroll.scrollTop=0;
-    closeBtn.focus();
-    prefetch();
-  }
-  function close(){
-    modal.hidden=true;
-    document.body.style.overflow='';
-    card.focus();
-  }
-  card.addEventListener('click',open);
-  card.addEventListener('keydown',function(e){
-    if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();open();}
-  });
-  modal.querySelectorAll('[data-close]').forEach(function(el){el.addEventListener('click',close);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+  document.querySelectorAll('[data-case][data-modal]').forEach(setup);
 })();
 </script>
 </body>

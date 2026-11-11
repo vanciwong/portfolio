@@ -6,4 +6,6 @@
 .trae-html-share-packages/
 # 作品长图素材：只发布 jpg，体积较大的源 PDF 与缩略图缓存不入库
 assets/works/**/*.pdf
+# 华艺案例弹窗提供原 PDF 下载，需随站点发布
+!assets/works/华艺APP/*.pdf
 **/.@__thumb/
