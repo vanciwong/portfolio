@@ -4,3 +4,6 @@
 .workbuddy/
 .screenshots/
 .trae-html-share-packages/
+# 作品长图素材：只发布 jpg，体积较大的源 PDF 与缩略图缓存不入库
+assets/works/**/*.pdf
+**/.@__thumb/
