@@ -36,6 +36,8 @@
   .case-title{font-size:14px;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
   .case-title em{font-family:"Montserrat","Noto Sans SC",sans-serif;font-style:normal;font-size:10px;
     letter-spacing:2px;color:var(--gray);margin-left:10px;}
+  /* 提示文字与关闭按钮成组靠右，文字紧贴按钮 */
+  .case-actions{display:flex;align-items:center;gap:12px;flex:none;}
   .case-tip{font-size:11px;color:var(--gray);letter-spacing:1px;white-space:nowrap;}
   .case-close{flex:none;width:34px;height:34px;border:none;border-radius:50%;background:var(--ink);
     color:#fff;font-size:22px;line-height:1;cursor:pointer;transition:background .2s ease;}
@@ -232,7 +234,7 @@
                    aria-label="艺东南APP，点击查看完整案例长图">
             <div class="card-thumb card-thumb--img">
               <img src="assets/works/艺东南/1-1.jpg" alt="艺东南APP 案例封面" loading="lazy">
-              <span class="card-thumb__hint">点击查看长图 ↗</span>
+              <span class="card-thumb__hint">点击查看</span>
             </div>
             <div class="card-body">
               <h3>艺东南APP</h3>
@@ -356,8 +358,10 @@
   <div class="case-dialog" role="dialog" aria-modal="true" aria-label="艺东南APP 案例长图">
     <div class="case-bar">
       <span class="case-title">艺东南APP <em>CASE STUDY / 2018</em></span>
-      <span class="case-tip">向下滚动查看 · 共 34 张</span>
-      <button class="case-close" type="button" data-close aria-label="关闭">×</button>
+      <div class="case-actions">
+        <span class="case-tip">向下滚动查看 · 共 34 张</span>
+        <button class="case-close" type="button" data-close aria-label="关闭">×</button>
+      </div>
     </div>
     <div class="case-scroll" tabindex="0" aria-label="艺东南APP 案例长图，可滚动查看">
         <img src="assets/works/艺东南/1-1.jpg" alt="艺东南APP 设计稿 1-1" width="1600" height="1200" loading="eager" decoding="async">
