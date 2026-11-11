@@ -405,11 +405,30 @@
   if(!card||!modal) return;
   var scroll=modal.querySelector('.case-scroll');
   var closeBtn=modal.querySelector('.case-close');
+  /* 打开后按顺序静默预取后续图片，避免快速拖动长图时留下空白段 */
+  var prefetched=false;
+  function prefetch(){
+    if(prefetched) return;
+    prefetched=true;
+    var imgs=[].slice.call(scroll.querySelectorAll('img'));
+    var i=0;
+    (function next(){
+      if(i>=imgs.length) return;
+      var el=imgs[i++];
+      var pre=new Image();
+      pre.onload=pre.onerror=function(){
+        el.setAttribute('data-prefetched','1');   /* 已进缓存，滚动到该段可即时渲染 */
+        setTimeout(next,0);
+      };
+      pre.src=el.getAttribute('src');
+    })();
+  }
   function open(){
     modal.hidden=false;
     document.body.style.overflow='hidden';
     scroll.scrollTop=0;
     closeBtn.focus();
+    prefetch();
   }
   function close(){
     modal.hidden=true;
