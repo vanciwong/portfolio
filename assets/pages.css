@@ -45,7 +45,7 @@ img{display:block;max-width:100%;}
 a{color:inherit;text-decoration:none;}
 h1,h2,h3,h4,p{margin:0;}
 button{font:inherit;}
-::selection{background:var(--red);color:#fff;}
+::selection{background:#DE4842;color:#fff;}
 
 /* ---------- 共用骨架 ---------- */
 .wrap{width:calc(100% - var(--side) - var(--side));max-width:1520px;margin-inline:auto;}

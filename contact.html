@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>联系 Contact — VanciWong · 無白設計</title>
+<meta name="description" content="想聊项目或交个朋友？通过邮箱、微信或手机随时联系王家彬（VanciWong）。">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/pages.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  /* 联系卡片（仅本页使用） */
+  .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(24 * var(--u));margin-top:calc(8 * var(--u));}
+  .contact-card{position:relative;display:flex;flex-direction:column;gap:calc(20 * var(--u));
+    padding:calc(44 * var(--u)) calc(40 * var(--u));background:#fff;border:1px solid var(--line-light);
+    border-radius:calc(6 * var(--u));transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;}
+  .contact-card:hover{transform:translateY(calc(-4 * var(--u)));box-shadow:0 calc(20 * var(--u)) calc(44 * var(--u)) rgba(17,17,19,.10);border-color:var(--red);}
+  .contact-card .c-label{font-family:"Montserrat","Noto Sans SC",sans-serif;font-size:calc(11 * var(--u));letter-spacing:2px;color:var(--gray);text-transform:uppercase;}
+  .contact-card .c-value{font-size:calc(26 * var(--u));font-weight:700;line-height:1.35;color:var(--ink);word-break:break-all;}
+  .contact-card .c-arrow{position:absolute;top:calc(34 * var(--u));right:calc(34 * var(--u));font-size:calc(20 * var(--u));color:var(--red);}
+  .contact-card.is-static{cursor:default;}
+  .contact-card.is-static:hover{transform:none;box-shadow:none;border-color:var(--line-light);}
+  .contact-note{margin-top:calc(40 * var(--u));font-size:var(--fs-body);line-height:1.9;color:#8A8A88;}
+  @media (max-width:900px){
+    .contact-grid{grid-template-columns:1fr;gap:16px;}
+    .contact-card{padding:28px 24px;}
+    .contact-card .c-value{font-size:22px;}
+    .contact-card .c-arrow{top:22px;right:22px;}
+    .contact-note{margin-top:28px;}
+  }
+  /* 微信卡片按钮化 + 二维码弹窗 */
+  .contact-card--btn{cursor:pointer;width:100%;font:inherit;color:inherit;text-align:left;
+    -webkit-appearance:none;appearance:none;background:#fff;border:1px solid var(--line-light);
+    border-radius:calc(6 * var(--u));}
+  .contact-card--btn .c-hint{font-size:calc(13 * var(--u));color:var(--gray);margin-top:calc(-6 * var(--u));}
+  .contact-card--btn:hover{transform:translateY(calc(-4 * var(--u)));box-shadow:0 calc(20 * var(--u)) calc(44 * var(--u)) rgba(17,17,19,.10);border-color:var(--red);}
+  .qr-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .qr-modal[hidden]{display:none;}
+  .qr-backdrop{position:absolute;inset:0;background:rgba(17,17,19,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}
+  .qr-dialog{position:relative;width:min(86vw,340px);background:#fff;border-radius:calc(14 * var(--u));padding:calc(14 * var(--u));box-shadow:0 calc(30 * var(--u)) calc(70 * var(--u)) rgba(0,0,0,.32);animation:qrPop .25s ease;}
+  .qr-dialog .qr-img{display:block;width:100%;height:auto;border-radius:calc(8 * var(--u));}
+  .qr-close{position:absolute;top:calc(-16 * var(--u));right:calc(-16 * var(--u));width:calc(38 * var(--u));height:calc(38 * var(--u));border:none;border-radius:50%;background:var(--ink);color:#fff;font-size:calc(22 * var(--u));line-height:1;cursor:pointer;box-shadow:0 calc(6 * var(--u)) calc(16 * var(--u)) rgba(0,0,0,.3);}
+  .qr-close:hover{background:var(--red);}
+  @keyframes qrPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){.qr-dialog{animation:none}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <nav class="nav" aria-label="主导航">
+    <a href="index.html"><span class="cn">首页</span><span class="en">HOME</span></a>
+    <a href="works.html"><span class="cn">作品</span><span class="en">WORK</span></a>
+    <a href="concept.html"><span class="cn">理念</span><span class="en">CONCEPT</span></a>
+    <a href="about.html"><span class="cn">关于</span><span class="en">ABOUT</span></a>
+    <a href="contact.html" class="is-active" aria-current="page"><span class="cn">联系</span><span class="en">CONTACT</span></a>
+  </nav>
+  <a href="index.html" aria-label="返回首页"><img class="logo" src="assets/logo.png" alt="無白設計 EXTREME BLACK"></a>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow--dim">CONTACT / 联系</p>
+    <div class="hero-block">
+      <h1 class="hero-title">一起创造<span class="punct">，</span><br>好体验<span class="punct">。</span></h1>
+    </div>
+    <p class="hero-lead">欢迎通过下面任意方式找到我。我会认真读完每一条消息，并尽快回复。</p>
+    <p class="hero-en">Welcome to reach out to me through any of the following methods. I will carefully read each message and respond as soon as possible.</p>
+  </div>
+</section>
+
+<section class="section section--paper">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">GET IN TOUCH / 联系方式</p>
+      <h2 class="h2 h2--dark">三个常用方式，随时找我</h2>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:vanciwong@foxmail.com" data-reveal>
+        <span class="c-label">邮箱 / EMAIL</span>
+        <span class="c-value">vanciwong@foxmail.com</span>
+        <span class="c-arrow" aria-hidden="true">↗</span>
+      </a>
+      <button class="contact-card contact-card--btn" type="button" id="wechatCard" data-reveal aria-haspopup="dialog" aria-label="微信二维码：vanciwong，点击查看">
+        <span class="c-label">微信 / WECHAT</span>
+        <span class="c-value">vanciwong</span>
+        <span class="c-hint">点击查看二维码</span>
+        <span class="c-arrow" aria-hidden="true">↗</span>
+      </button>
+      <a class="contact-card" href="tel:15960098748" data-reveal>
+        <span class="c-label">手机 / PHONE</span>
+        <span class="c-value">159 6009 8748</span>
+        <span class="c-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <p class="contact-note">欢迎加微信联系交流。</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" aria-label="返回首页"><img src="assets/logo.png" alt="無白設計 EXTREME BLACK"></a>
+        <p>我是王家彬，擅长把复杂系统翻译成清晰的用户路径，并用高保真交互原型推动团队形成共识。</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>导航 / SITEMAP</h4>
+          <a href="index.html">首页 Home</a>
+          <a href="works.html">作品 Work</a>
+          <a href="concept.html">理念 Concept</a>
+          <a href="about.html">关于 About</a>
+          <a href="contact.html">联系 Contact</a>
+        </div>
+        <div>
+          <h4>联系 / CONTACT</h4>
+          <a href="mailto:vanciwong@foxmail.com">邮箱 vanciwong@foxmail.com</a>
+          <span style="display:block;margin-bottom:14px;font-size:inherit;line-height:1.2;color:#D8D8D5">微信 vanciwong</span>
+          <a href="tel:15960098748">手机 159 6009 8748</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>FUZHOU · CHINA</span><span>© 2026 VANCI DESIGN</span></div>
+  </div>
+</footer>
+
+<div class="qr-modal" id="qrModal" hidden>
+  <div class="qr-backdrop" data-close></div>
+  <div class="qr-dialog" role="dialog" aria-modal="true" aria-label="微信二维码">
+    <button class="qr-close" type="button" data-close aria-label="关闭">×</button>
+    <img class="qr-img" src="assets/wechat-qr.jpg" alt="微信二维码，扫一扫添加我为好友">
+  </div>
+</div>
+<script src="assets/pages.js"></script>
+<script>
+(function(){
+  var card=document.getElementById('wechatCard');
+  var modal=document.getElementById('qrModal');
+  if(!card||!modal) return;
+  function open(){modal.hidden=false;document.body.style.overflow='hidden';card.focus();}
+  function close(){modal.hidden=true;document.body.style.overflow='';card.focus();}
+  card.addEventListener('click',open);
+  modal.querySelectorAll('[data-close]').forEach(function(el){el.addEventListener('click',close);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+})();
+</script>
+</body>
+</html>
