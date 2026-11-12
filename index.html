@@ -337,11 +337,12 @@
   #methodPin .stage{position:static;height:auto;overflow:visible;display:block;}
   /* 整个工作流模块的缩放容器：阶段二作用于它，锚点居中，向后退不会碰到上下区块 */
   .method{background:var(--ink-deep);padding:calc(96 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));width:100%;transform-origin:50% 50%;will-change:transform;}
-  .method-head{display:flex;justify-content:space-between;align-items:flex-start;}
+  .method-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px calc(40 * var(--u));}
+  .method-head>div{flex:0 1 auto;min-width:0;}
   .method-head .eyebrow{color:#fff;letter-spacing:calc(3 * var(--u));}
   .method-title{margin-top:calc(16 * var(--u));font-size:calc(72 * var(--u));font-weight:900;line-height:1.06;color:var(--cream);white-space:pre-line;transform-origin:0 0;will-change:transform;}
   .method-title em{font-style:normal;color:var(--red-bright);}
-  .method-head .works-link{color:#fff;padding-top:calc(157 * var(--u));font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));}
+  .method-head .works-link{flex:0 0 auto;color:#fff;padding-top:0;font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));}
   .method-head .works-link .underline{background:var(--line-dark);}
   /* 触屏没有 hover，给一条轻触提示；鼠标设备隐藏，默认态保持参考稿原样 */
   .step-hint{display:none;margin-top:calc(24 * var(--u));font-size:calc(11 * var(--u));letter-spacing:calc(1.4 * var(--u));color:var(--gray);}
@@ -550,7 +551,7 @@
     .subcase{width:100%;}
     .subcase .cover{height:200px;}
     .subcase h3{font-size:24px;}
-    .method-head{flex-direction:column;gap:16px;}
+    .method-head{flex-direction:column;align-items:flex-start;gap:52px;}
     .method-title{font-size:34px;}
     .method-head .works-link{padding-top:0;}
     .steps{grid-template-columns:1fr;gap:16px;margin-top:32px;}
@@ -844,7 +845,7 @@
     .works,.method,.concept{padding:72px 40px;}
     .h2,.method-title,.concept-title,.about h2{font-size:52px;}
     .works-head .works-link{padding-top:72px;}
-    .method-head .works-link{padding-top:96px;}
+    .method-head .works-link{padding-top:0;}
     .works-desc{font-size:14px;max-width:420px;}
     .works-main{gap:36px;margin-top:40px;}
     .works-main .cover{flex:0 0 54%;width:54%;height:auto;aspect-ratio:960/520;}
