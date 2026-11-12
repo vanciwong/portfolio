@@ -361,12 +361,21 @@
   }
   .step-no{display:flex;justify-content:space-between;align-items:center;min-height:calc(13 * var(--u));font-size:calc(11 * var(--u));line-height:1;letter-spacing:calc(1.6 * var(--u));color:var(--red-bright);}
   .step-no i{
+    position:relative;
     width:calc(22 * var(--u));height:calc(22 * var(--u));display:inline-block;
-    background:url("assets/click-outlined.svg") no-repeat center / contain;
+    background:url("assets/dianji.svg") no-repeat center / contain;
     /* 图标自身也参与背面剔除：它带 transform 动画，会被提升为独立合成层，
        只靠父级 .step-face 的 backface-visibility 在部分 GPU 路径下会被绕过 */
     backface-visibility:hidden;-webkit-backface-visibility:hidden;
-    animation:finger-bounce 1.8s ease-in-out infinite;
+    animation:tap-anim 1.6s ease-in-out infinite;
+  }
+  /* 点击波纹：从指尖（图标顶部中心）向外扩散并淡出，呼应 gif 的点击迸发 */
+  .step-no i::after{
+    content:"";position:absolute;top:0;left:50%;
+    width:calc(20 * var(--u));height:calc(20 * var(--u));
+    border:calc(1.6 * var(--u)) solid var(--red-bright);border-radius:50%;
+    transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;
+    animation:tap-ripple 1.6s ease-in-out infinite;
   }
   /* 翻页后正面手指图标若穿透，会镜像到卡片左上、盖住背面的编号与标题。
      翻转过半（0.41s = .82s 过渡的中点）后显式隐藏正面图标作为兜底；
@@ -376,7 +385,21 @@
   @media (hover:hover) and (pointer:fine){
     .step:hover .step-front .step-no i{visibility:hidden;transition:visibility 0s linear .41s;}
   }
-  @keyframes finger-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(-4 * var(--u)))}}
+  /* 点击动效：手指先抬起、按下（tap）、再抬起，配合 ::after 波纹在按下瞬间迸发 */
+  @keyframes tap-anim{
+    0%{transform:translateY(calc(-3 * var(--u))) scale(1);}
+    22%{transform:translateY(0) scale(.94);}
+    38%{transform:translateY(0) scale(.94);}
+    56%{transform:translateY(calc(-3 * var(--u))) scale(1);}
+    100%{transform:translateY(calc(-3 * var(--u))) scale(1);}
+  }
+  @keyframes tap-ripple{
+    0%{transform:translate(-50%,-50%) scale(.2);opacity:0;}
+    18%{opacity:0;}
+    26%{transform:translate(-50%,-50%) scale(.4);opacity:.9;}
+    60%{transform:translate(-50%,-50%) scale(1.5);opacity:0;}
+    100%{transform:translate(-50%,-50%) scale(1.5);opacity:0;}
+  }
   .step-front .flip-title{margin:0;font-size:calc(56 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);letter-spacing:0;}
   .step-back .flip-sub{font-size:calc(26 * var(--u));font-weight:900;line-height:1.3;color:var(--cream);margin:0;}
   .step-back p{font-size:calc(14 * var(--u));line-height:1.62;color:var(--cream);white-space:pre-line;margin:0;}
