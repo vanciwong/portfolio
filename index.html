@@ -874,34 +874,18 @@
     .hero-hint{position:relative;left:50%;translate:-50% 0;top:auto;z-index:3;}
   }
 
-  /* ===== ≥1201px 首屏：与 ≤1200px 一致的「静态终态」流式布局 =====
-     用户确认 >1200px 不再需要 24-2 → 174-512 的滚动形变，首屏直接呈现 174-512 终态：
-     关掉 hero 的 pin / sticky，把绝对定位的文案放回文档流，让实心白字与
-     眉标 / 按钮 / 数据 / 红色句点立即可见。
-     其余区块仍按 --k = vw/1920 等比缩放，工作流 / 关于 / 页脚 / reveal 的滚动动效不变；
-     JS 侧只跳过 render() 里首屏相关的 transform / opacity 写入（见 HERO_STATIC）。 */
+  /* ===== >1200px 桌面：首屏垂直落位改按视口高度等比（Figma 封面 1920×1080）=====
+     原实现把 y / 间距都写成 N * --u（--k = vw/1920，只随宽度缩放），而 sticky 舞台恒为 100vh；
+     在 1201×985 这类「窄而高」的视口里，内容按 0.6256 缩到 ~636px 高，舞台却有 985px，
+     底部就空出 ~350px 纯背景。设计画布高 1080，故把 247/16/32/120/968 换算成 vh 比例：
+     16:9 视口下 100vh/1080 恰好等于 --k，像素与原来完全一致；其他比例自动铺满整屏。 */
   @media (min-width:1201px){
-    #heroPin{height:auto;background:var(--ink);}
-    #heroPin > .stage{
-      position:relative;top:auto;height:auto;min-height:0;overflow:hidden;display:block;
-      padding:calc(247 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));
-    }
-    #heroPin .hero-inner{position:relative;left:auto;top:auto;width:auto;transform:none;}
-    #heroPin .hero-copy{transform:none;}
-    /* 终态：实心白字 + 全部辅助元素立即可见，不跑透明度 / 位移形变 */
-    #heroPin .hero-late{opacity:1;transform:none;}
-    #heroPin .hero-pre,
-    #heroPin .hero-designer .dg-solid,
-    #heroPin .hero-portfolio .pf-solid{opacity:1;}
-    #heroPin .hero-designer .dg-fade,
-    #heroPin .hero-portfolio .pf-outline{display:none;}
-    #heroPin .hero-sub .sub-ch{transform:none;}
-    /* 提示按钮回到文档流并按屏幕中心居中（与 ≤1200px 同款），不再绝对定位贴 968u */
-    #heroPin .hero-hint{
-      position:relative;left:50%;translate:-50% 0;top:auto;
-      margin-top:calc(32 * var(--u));z-index:3;animation:none;
-    }
-    #heroPin .hero-hint .hint-arrow{animation:none;}
+    .hero-inner{top:22.87037vh;}
+    .hero-title{margin-top:1.48148vh;}
+    .hero-sub{margin-top:1.48148vh;}
+    .hero-actions{margin-top:2.96296vh;}
+    .hero-stats{margin-top:11.11111vh;}
+    .hero-hint{top:89.62963vh;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -918,8 +902,15 @@
     .hero-designer,.hero-portfolio,.hero-pre,.hero-sub .sub-ch{transform:none !important;}
     .pin .stage-inner{opacity:1 !important;}
   }
-  /* 减少动效：全宽首屏现在都是文档流里的静态终态，上面通用降级规则已足够，
-     不再需要「桌面绝对定位 → 文档流」的额外补丁（原 968u 落位会把 relative 按钮推到下一区块）。 */
+  /* 桌面端减少动效：首屏为绝对定位排版，需恢复为文档流，避免内容塌陷叠加。
+     下限与新平板断点对齐（1201px），否则 901–1200px 会被误按桌面绝对定位处理，把内容压塌 */
+  @media (prefers-reduced-motion: reduce) and (min-width: 1201px){
+    #heroPin .stage-inner{position:relative;min-height:calc(1080 * var(--u));padding:calc(247 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));}
+    #heroPin .hero-inner{position:relative;left:auto;top:auto;width:auto;}
+    /* 降级布局的包含块是 1080u 高的 stage-inner，提示按钮必须回到 968u，
+       否则 vh 落位会超出这个静态容器、压到下一区块 */
+    #heroPin .hero-hint{top:calc(968 * var(--u));}
+  }
 </style>
 </head>
 <body>
@@ -1312,15 +1303,9 @@
   let reduce=motionQuery.matches;
   /* 简化模式断点与 CSS 的平板横屏断点保持一致（≤1200px）：
      这段宽度已改为流式布局，必须同时停掉 pin/缩放动效，否则 JS 的 transform 会打乱排版。
-     >1200px 只保留下方区块的滚动动效（首屏见 HERO_STATIC）。 */
+     >1200px 的桌面逻辑完全不变。 */
   const mobileQuery=matchMedia('(max-width: 1200px)');
   let isMobile=mobileQuery.matches;
-  /* 首屏静态化：>1200px 也直接显示 Figma 174-512 终态（与 ≤1200px 同一套流式布局），
-     不再跑 24-2 → 174-512 的 pin / 词级形变。其余区块（工作流 / 关于 / 页脚 / reveal）
-     的滚动动效仍按桌面逻辑保留，只跳过 render() 里首屏相关的写入。
-     如需恢复旧的首屏滚动形变，把这里改成 false 并还原 @media (min-width:1201px) 的 vh 落位块；
-     形变代码（measureHeroMorph / 词级 transform）完整保留，没有删除。 */
-  const HERO_STATIC=true;
 
   /* ---------- 等比缩放基准 ---------- */
   let vw=innerWidth, vh=innerHeight;
@@ -1576,7 +1561,7 @@
       return {el, noFade:el.dataset.noFade==='1', top, start:Math.max(0, Math.min(top-triggerPx, maxScroll-travel)), travel};
     });
 
-    if(!HERO_STATIC) measureHeroMorph();
+    measureHeroMorph();
   }
 
   /* 每帧只在数值真正变化时写 style：静止/超出区间的元素不再无谓地触发样式重算 */
@@ -1602,9 +1587,6 @@
   function render(){
     const y=scrollY;
 
-    /* 首屏已静态化：整段 24-2 形变 / pin 退场 / 背景视差都不再写入，
-       由 CSS 的终态流式布局直接呈现。下方区块的动效照常计算。 */
-    if(!HERO_STATIC){
     /* ---- 首屏三段（sticky pin）：
        ① 入场  y 0 → 0.18 屏：不再是 1.38→1 的文字缩放，而是「24-2 排版 → 174-512 排版」的词级形变；
           24-2 的巨型 DESIGNER/PORTFOLIO、底部副标题随同一进度就位，174-512 独有的
@@ -1689,7 +1671,6 @@
     /* ---- 滚动提示：常驻显示，不做任何淡出/点击隐藏；
        它随 stage 在 pin 退场时自然滚出（无需额外动画）。
        位置改为 top:968u（24-2 精确落位），与副标题底（936）保持 32u，不与按钮/数据区相交 ---- */
-    } /* end HERO_STATIC guard */
 
     /* ---- 阶段一：模块顶部到 50vh → 只缩小标题，模块盒尺寸/位置不变 ---- */
     const mText=clamp((y-methodTextStart)/methodTextTravel,0,1);
@@ -1730,6 +1711,60 @@
     }
   }
 
+  /* ---------- 移动端 / 平板轻量动效（≤1200px）：参考 1201+ 的观感，但不跑巨型 24-2 形变 ----------
+     移动端是流式布局（不 pin、不钉住），故只做三件事，全部用 transform/opacity（不触发布局）：
+     ① 首屏背景视差：heroFlowShift 随滚动缓慢位移，文字滚走时背景滞后，形成纵深；
+     ② 首屏离场：整块文案随滚动微缩 + 渐隐，呼应桌面版的缩退，但幅度温和（不做 0.64 那样的狠缩）；
+     ③ 区块进入淡入 / 离场缩放：与桌面版同款 math，作用于 works / 工作流 / 关于 / 页脚 / reveal，
+        让移动端滚动时也有「该放大放大、该缩退缩退」的连贯节奏。 */
+  function renderMobile(){
+    const y=scrollY;
+
+    /* ① 背景视差：与桌面版同款位移（0.12/px），但只保留位移、不叠加大缩放，
+       避免手机上背景过早被 .hero{overflow:hidden} 裁切飞走 */
+    const bgShift=Math.min(y,heroTravel)*0.12;
+    writeStyle(heroFlowShift,'transform',`translate3d(0, ${bgShift.toFixed(2)}px, 0)`);
+
+    /* ② 首屏离场：整块文案微缩 + 渐隐（比桌面版温和） */
+    const exitP=clamp(y/vh,0,1);
+    const hs=1-0.10*easeInOut(exitP);
+    writeStyle(heroCopy,'transform',`scale(${hs.toFixed(4)})`);
+    const fadeP=clamp((y-vh*0.5)/vh,0,1);
+    writeStyle(heroCopy,'opacity',(1-0.45*easeInOut(fadeP)).toFixed(3));
+
+    /* ③ 区块进入 / 离场：与桌面版同款，移动端安全（纯 transform/opacity） */
+    const mText=clamp((y-methodTextStart)/methodTextTravel,0,1);
+    const mEnter=easeInOut(mText);
+    const methodScale=1.34-0.34*mEnter;
+    setTransform(methodTitle,methodScale,0);
+    writeStyle(methodSteps,'transform',`translate3d(0, ${((methodScale-1)*methodTitleH).toFixed(2)}px, 0)`);
+
+    const mBack=easeInOut(clamp((y-methodModStart)/methodModTravel,0,1));
+    writeStyle(methodStage,'transform',`translate3d(0, 0, 0) scale(${(1-0.14*mBack).toFixed(4)})`);
+
+    const relTop=aboutTop-y;
+    const aEnter=easeInOut(clamp(clamp((y-aboutStart)/aboutTravel,0,1)/0.55,0,1));
+    const aExit=easeInOut(clamp((vh*0.12-relTop)/(vh*0.45),0,1));
+    setTransform(aboutBg,1.06-0.06*aEnter,0);
+    setTransform(aboutTitle,1.16-0.16*aEnter-0.06*aExit,0);
+    writeStyle(aboutInner,'transform',`translate3d(0, ${(-vh*0.04*aExit).toFixed(2)}px, 0) scale(${(1-0.08*aExit).toFixed(4)})`);
+    writeStyle(aboutInner,'opacity',(1-0.35*aExit).toFixed(3));
+
+    const fRel=footerTop-y;
+    const fp=clamp((y-footerStart)/footerTravel,0,1);
+    const fEnter=easeInOut(fp);
+    const fExit=easeInOut(clamp((vh*0.12-fRel)/(vh*0.45),0,1));
+    setTransform(footerTitleEl,1.16-0.16*fEnter-0.06*fExit,0,0.55+0.45*fEnter);
+
+    for(const g of revealGeo){
+      const q=clamp((y-g.start)/g.travel,0,1);
+      const e=easeInOut(q);
+      const s0=parseFloat(g.el.dataset.enter)||1;
+      writeStyle(g.el,'transform',`scale(${(1+(s0-1)*(1-e)).toFixed(4)})`);
+      writeStyle(g.el,'opacity',g.noFade?'1':(0.55+0.45*e).toFixed(3));
+    }
+  }
+
   function clearMotion(){
     [heroCopy,heroTitle,heroFlowShift,methodTitle,methodSteps,methodStage,aboutBg,aboutInner,aboutTitle,footerTitleEl].forEach(el=>{
       if(!el) return;
@@ -1763,9 +1798,23 @@
     requestAnimationFrame(()=>{
       queued=false;
       updateHeader();
-      if(reduce||isMobile){ clearMotion(); return; }
-      render();
+      frame();
     });
+  }
+  /* 每帧统一分发：减少动效 → 静止；移动端 → 轻量动效；桌面 → 完整形变。
+     prevMode 只在「切到移动端」时清一次桌面形变残留（轻量动效不碰 morph 元素），其余无需清。 */
+  let prevMode=null;
+  function frame(){
+    updateHeader();
+    if(reduce){
+      if(prevMode!=='reduce') clearMotion();
+      prevMode='reduce'; return;
+    }
+    if(isMobile){
+      if(prevMode!=='mobile' && prevMode!==null) clearMotion();
+      prevMode='mobile'; renderMobile(); return;
+    }
+    prevMode='desktop'; render();
   }
 
   addEventListener('scroll',schedule,{passive:true});
@@ -1774,17 +1823,18 @@
     clearTimeout(resizeTimer);
     resizeTimer=setTimeout(()=>{
       measure();
-      if(reduce||isMobile) clearMotion(); else render();
+      frame();
     },120);
   });
 
   motionQuery.addEventListener('change',e=>{
     reduce=e.matches;
-    if(reduce) clearMotion(); else {measure();render();}
+    measure();
+    frame();
   });
   mobileQuery.addEventListener('change',()=>{
     measure();
-    if(reduce||isMobile) clearMotion(); else render();
+    frame();
   });
 
   /* ---------- 导航平滑滚动：easing + 固定导航偏移；减少动效时直接跳转 ---------- */
@@ -1838,7 +1888,7 @@
      形变要求「初始帧严格等于 24-2 的几何」，原来叠加的 scale(.94→1) 会在加载后 0.8s 内
      把整块文案缩小 6%，使 DESIGNER/PORTFOLIO/副标的初始落位偏离 Figma，故改为纯淡入。 */
   function intro(){
-    if(HERO_STATIC||reduce||isMobile||!heroCopy.animate) return;
+    if(reduce||isMobile||!heroCopy.animate) return;
     heroCopy.animate(
       [{opacity:0},{opacity:1}],
       {duration:800,easing:'cubic-bezier(.22,1,.36,1)'}
@@ -1847,16 +1897,14 @@
 
   addEventListener('load',()=>{
     measure();
-    updateHeader();
-    if(!reduce&&!isMobile) render();
+    frame();
     intro();
   });
   if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(()=>{ measure(); if(!reduce&&!isMobile) render(); });
+    document.fonts.ready.then(()=>{ measure(); frame(); });
   }
   measure();
-  updateHeader();
-  if(!reduce&&!isMobile) render();
+  frame();
 
   // 暴露给自动化验证
   window.__scrollScale={
