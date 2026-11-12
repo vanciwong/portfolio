@@ -345,9 +345,6 @@
   .method-head .works-link{flex:0 0 auto;color:#fff;padding-top:0;font-size:calc(12 * var(--u));letter-spacing:calc(2.4 * var(--u));}
   .method-head .works-link .underline{background:var(--line-dark);}
   /* 触屏没有 hover，给一条轻触提示；鼠标设备隐藏，默认态保持参考稿原样 */
-  .step-hint{display:none;margin-top:calc(24 * var(--u));font-size:calc(11 * var(--u));letter-spacing:calc(1.4 * var(--u));color:var(--gray);}
-  .step-hint b{font-weight:400;color:var(--red-bright);margin-left:calc(10 * var(--u));}
-  @media (hover:none), (pointer:coarse){ .step-hint{display:block;} }
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(40 * var(--u));margin-top:calc(56 * var(--u));}
   /* 工作流卡片：默认「精简大标题」，hover 沿 Y 轴 3D 翻页到「详细说明」背面。
      两层 grid 同格叠放，卡片高度自动取正反两面中较高的一面，背面不会被裁切 */
@@ -702,7 +699,6 @@
     .method .works-link.mobile-tail{color:#fff;margin-top:28px;}
     .method .works-link.mobile-tail .underline{background:var(--line-dark);}
     /* 触屏翻转提示在 390 稿中不存在（翻转交互仍保留） */
-    .method .step-hint{display:none;}
 
     /* 4) 设计理念：四张原则卡去掉右侧圆形箭头，正文占满剩余宽度 */
     .article{grid-template-columns:26px 1fr;}
@@ -1065,8 +1061,6 @@
         </div>
         <a class="works-link" href="concept.html"><span class="row">COMPLETE PROCESS 完整流程 <span style="color:var(--red)">›</span></span><span class="underline"></span></a>
       </div>
-
-      <p class="step-hint">轻触卡片查看详细说明<b>TAP TO FLIP</b></p>
 
       <div class="steps">
         <article class="step" tabindex="0" role="button" aria-pressed="false">
