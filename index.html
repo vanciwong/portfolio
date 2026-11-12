@@ -261,7 +261,8 @@
     height:calc(50 * var(--u));padding:0 calc(26 * var(--u));
     border:1px solid #474752;border-radius:999px;background:transparent;color:#fff;
     font-family:"Noto Sans SC","PingFang SC",sans-serif;
-    font-size:calc(13 * var(--u));line-height:1;letter-spacing:calc(1 * var(--u));
+    /* Figma 206:938：13px Noto Sans SC Bold / 字距 1px（此前漏写 font-weight，实际渲染成 400） */
+    font-size:calc(13 * var(--u));font-weight:700;line-height:1;letter-spacing:calc(1 * var(--u));
     white-space:nowrap;cursor:pointer;z-index:3;
     animation:hintBob 1.8s ease-in-out infinite;
     transition:border-color .25s ease;
@@ -781,9 +782,11 @@
     .hero-title .sp{font-size:.5em;}
     .hero-title .amp{font-size:.3125em;}
     .hero-title .line2{line-height:.95;margin-top:0;}
-    /* 红方块属于 PORTFOLIO 行末装饰：不能 right:0 贴整行右缘（会跑到首屏右上角）。
-       与 ≤900px 断点一致，用 em 跟随标题字号：PORTFOLIO 实测宽 ≈6.17em，方块 0.3em、底部 0.34em */
-    .hero-title .red-square{left:6.15em;right:auto;top:auto;bottom:.34em;width:.3em;height:.3em;}
+    /* Figma 174:512 节点 174:527：红方块 24×24、#DD1E1E，位于标题块 (792,192)。
+       按 128u 标题字号换算 → left 6.1875em / top 1.5em / 边长 .1875em。
+       PORTFOLIO 实测宽 ≈6.17em，方块恰好起于文字右缘之外，不会压住最后一个 O；
+       尺寸随字号缩放，与 >1200px 桌面（24u）视觉一致。 */
+    .hero-title .red-square{left:6.1875em;right:auto;top:1.5em;bottom:auto;width:.1875em;height:.1875em;}
     .hero-late{opacity:1;transform:none;}
     .hero-pre,.hero-designer .dg-solid,.hero-portfolio .pf-solid{opacity:1;}
     .hero-designer .dg-fade,.hero-portfolio .pf-outline{display:none;}
@@ -800,8 +803,11 @@
     .stat .label{font-size:11px;}
     .hero-side{font-size:11px;}
     .hero-side .row{font-size:12px;}
-    .hero-hint{position:static;translate:none;margin-top:32px;height:46px;padding:0 22px;font-size:13px;animation:none;}
-    .hero-hint .hint-arrow{width:14px;height:14px;animation:none;}
+    /* Figma 174:512 节点 206:937：162×50、radius 999、1px #474752、padding 26、gap 10、
+       文字 13px Bold/字距 1px、箭头 15px，水平居中（中心 960 = 1920/2）。
+       这些数值在基础层已按 --u 写死且本断点 k=1，故不再覆盖尺寸，只关掉跳动动画。 */
+    .hero-hint{margin-top:32px;animation:none;}
+    .hero-hint .hint-arrow{animation:none;}
     .works,.method,.concept{padding:72px 40px;}
     .h2,.method-title,.concept-title,.about h2{font-size:52px;}
     .works-head .works-link{padding-top:72px;}
@@ -854,9 +860,24 @@
   }
 
   /* 流式布局下滚动提示回到文档流，但 position:static 会让 z-index 失效，
-     左半边会被首屏圆环（z-index:1）盖住；改 relative 并清掉绝对定位偏移，层级才真正生效 */
+     左半边会被首屏圆环（z-index:1）盖住；改 relative 并清掉绝对定位偏移，层级才真正生效。
+     left:50% + translate:-50% 还原 Figma 174:512 的水平居中（原本 left:auto 会靠左）。 */
   @media (max-width:1200px){
-    .hero-hint{position:relative;left:auto;top:auto;z-index:3;}
+    .hero-hint{position:relative;left:50%;translate:-50% 0;top:auto;z-index:3;}
+  }
+
+  /* ===== >1200px 桌面：首屏垂直落位改按视口高度等比（Figma 封面 1920×1080）=====
+     原实现把 y / 间距都写成 N * --u（--k = vw/1920，只随宽度缩放），而 sticky 舞台恒为 100vh；
+     在 1201×985 这类「窄而高」的视口里，内容按 0.6256 缩到 ~636px 高，舞台却有 985px，
+     底部就空出 ~350px 纯背景。设计画布高 1080，故把 247/16/32/120/968 换算成 vh 比例：
+     16:9 视口下 100vh/1080 恰好等于 --k，像素与原来完全一致；其他比例自动铺满整屏。 */
+  @media (min-width:1201px){
+    .hero-inner{top:22.87037vh;}
+    .hero-title{margin-top:1.48148vh;}
+    .hero-sub{margin-top:1.48148vh;}
+    .hero-actions{margin-top:2.96296vh;}
+    .hero-stats{margin-top:11.11111vh;}
+    .hero-hint{top:89.62963vh;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -878,6 +899,9 @@
   @media (prefers-reduced-motion: reduce) and (min-width: 1201px){
     #heroPin .stage-inner{position:relative;min-height:calc(1080 * var(--u));padding:calc(247 * var(--u)) calc(200 * var(--u)) calc(96 * var(--u));}
     #heroPin .hero-inner{position:relative;left:auto;top:auto;width:auto;}
+    /* 降级布局的包含块是 1080u 高的 stage-inner，提示按钮必须回到 968u，
+       否则 vh 落位会超出这个静态容器、压到下一区块 */
+    #heroPin .hero-hint{top:calc(968 * var(--u));}
   }
 </style>
 </head>
