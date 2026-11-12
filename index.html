@@ -385,6 +385,8 @@
   @media (hover:hover) and (pointer:fine){
     .step:hover .step-front .step-no i{visibility:hidden;transition:visibility 0s linear .41s;}
   }
+  /* 翻面后的背面不需要点击提示图标：隐藏背面 .step-no 的点击手（保留编号） */
+  .step-back .step-no i{display:none;}
   /* 点击动效：手指先抬起、按下（tap）、再抬起，配合 ::after 波纹在按下瞬间迸发 */
   @keyframes tap-anim{
     0%{transform:translateY(calc(-3 * var(--u))) scale(1);}
