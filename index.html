@@ -149,9 +149,26 @@
   /* Chrome 会把 128px 字号的首行撑到 123px（行高 100 + 23 内容溢出），
      上移 13u 让第二行基线落回 Figma 的 493，块高仍为 230 */
   .hero-title .line2{display:block;line-height:calc(120 * var(--u));margin-top:calc(-13 * var(--u));}
+  /* Figma 251:4745 / 284:2101：标题末尾的红色「方块」其实是文字——
+     Myanmar Sangam MN Bold 的句点「.」墨迹为 0.132 × 0.125em，184px 字号下正好 24 × 23px，
+     颜色 #DD1E1E，等价于 174:527 那个 24×24 红色矩形。
+     改成内联字符后位置由 PORTFOLIO 的文字流决定，各断点随标题字号等比缩放，
+     不再需要 left / top / width / height 的手动定位（此前 5 处断点覆盖已全部移除）。 */
+  /* macOS / iOS 直接用系统字体；其余平台加载 400B 的自绘单字形 woff2
+     （只含一个矩形句点，度量与系统字体完全一致），避免句点退化成圆点 */
+  @font-face{
+    font-family:'HeroPeriod';
+    src:local('Myanmar Sangam MN Bold'),local('MyanmarSangamMN-Bold'),local('Myanmar Sangam MN'),
+        url('assets/fonts/hero-period-fallback.woff2') format('woff2');
+    font-weight:700;font-style:normal;font-display:swap;
+  }
   .hero-title .red-square{
-    position:absolute;left:calc(792 * var(--u));top:calc(192 * var(--u));
-    width:calc(24 * var(--u));height:calc(24 * var(--u));background:var(--red);
+    display:inline;position:static;
+    font-family:'HeroPeriod','Myanmar Sangam MN',sans-serif;font-weight:700;
+    color:var(--red);background:none;
+    font-size:1.4375em;line-height:0;vertical-align:baseline;
+    /* 句点字形左侧边距 0.029em；回退 0.018em 让墨迹起于文字右缘 +2u（Figma 792,192） */
+    margin-left:-.018em;letter-spacing:0;
   }
   .hero-sub{
     position:relative;margin-top:calc(16 * var(--u));
@@ -480,7 +497,6 @@
     .hero-title .sp{font-size:.5em;}
     .hero-title .amp{font-size:.3125em;display:inline-block;}
     .hero-title .line2{line-height:.95;margin-top:0;}
-    .hero-title .red-square{width:12px;height:12px;left:auto;right:0;top:6px;}
     .hero-sub{font-size:18px;letter-spacing:0;margin-top:14px;}
     .hero-actions{gap:12px;margin-top:26px;flex-wrap:wrap;}
     .btn{height:44px;padding:0 18px;font-size:13px;}
@@ -613,8 +629,6 @@
     /* 0) 首屏不再占满整屏（390 稿首屏 416px），并同步收紧封面 / 卡片 / 页脚密度；
           以下为对本断点上半部分已有尺寸的覆盖，>600px 仍走原值 */
     .hero{min-height:0;padding:84px 16px 24px;}
-    /* 红方块回到 PORTFOLIO 行末（用 em 跟随标题缩放），而非标题右上角 */
-    .hero-title .red-square{left:6.15em;right:auto;top:auto;bottom:.34em;width:.3em;height:.3em;}
     .hero-side .row .resume-sep{display:none;}
     .works-main .cover{height:160px;}
     .subcase .cover{height:150px;}
@@ -752,8 +766,7 @@
     .stat .label{font-size:12px;}
     .hero-side{text-align:left;font-size:12px;}
     .hero-side .row{justify-content:flex-start;font-size:12px;}
-    /* 红方块回到 PORTFOLIO 行末；统计标签补量词（与手机端口径一致） */
-    .hero-title .red-square{left:6.15em;right:auto;top:auto;bottom:.34em;width:.3em;height:.3em;}
+    /* 统计标签补量词（与手机端口径一致） */
     .stat:nth-child(1) .label::before{content:"年";}
     .stat:nth-child(2) .label::before{content:"个";}
   }
@@ -782,11 +795,6 @@
     .hero-title .sp{font-size:.5em;}
     .hero-title .amp{font-size:.3125em;}
     .hero-title .line2{line-height:.95;margin-top:0;}
-    /* Figma 174:512 节点 174:527：红方块 24×24、#DD1E1E，位于标题块 (792,192)。
-       按 128u 标题字号换算 → left 6.1875em / top 1.5em / 边长 .1875em。
-       PORTFOLIO 实测宽 ≈6.17em，方块恰好起于文字右缘之外，不会压住最后一个 O；
-       尺寸随字号缩放，与 >1200px 桌面（24u）视觉一致。 */
-    .hero-title .red-square{left:6.1875em;right:auto;top:1.5em;bottom:auto;width:.1875em;height:.1875em;}
     .hero-late{opacity:1;transform:none;}
     .hero-pre,.hero-designer .dg-solid,.hero-portfolio .pf-solid{opacity:1;}
     .hero-designer .dg-fade,.hero-portfolio .pf-outline{display:none;}
@@ -938,7 +946,7 @@
         <div class="eyebrow hero-eyebrow hero-late">交互设计师｜用户体验｜Agent 体验设计｜VibeCoding｜AI 工作流搭建｜人机交互｜可用性验证｜克制化极简设计｜B2B/B2C经验</div>
 
         <h1 class="hero-title" id="heroTitle">
-          <span class="hero-pre" id="heroPre">UX<span class="sp">&nbsp;</span><span class="amp">&amp;</span><span class="sp">&nbsp;</span>AX</span> <span class="hero-word hero-designer" id="heroDesigner"><span class="dg-fade" aria-hidden="true">DESIGNER</span><span class="dg-solid">DESIGNER</span></span><span class="line2"><span class="hero-word hero-portfolio" id="heroPortfolio"><span class="pf-outline" aria-hidden="true">PORTFOLIO</span><span class="pf-cover" aria-hidden="true">PORTFOLIO</span><span class="pf-solid">PORTFOLIO</span></span></span><span class="red-square" aria-hidden="true"></span>
+          <span class="hero-pre" id="heroPre">UX<span class="sp">&nbsp;</span><span class="amp">&amp;</span><span class="sp">&nbsp;</span>AX</span> <span class="hero-word hero-designer" id="heroDesigner"><span class="dg-fade" aria-hidden="true">DESIGNER</span><span class="dg-solid">DESIGNER</span></span><span class="line2"><span class="hero-word hero-portfolio" id="heroPortfolio"><span class="pf-outline" aria-hidden="true">PORTFOLIO</span><span class="pf-cover" aria-hidden="true">PORTFOLIO</span><span class="pf-solid">PORTFOLIO</span></span><span class="red-square" aria-hidden="true">.</span></span>
         </h1>
 
         <div class="hero-sub">用户体验设计师 / AGENT体验设计师 / 王家彬</div>
