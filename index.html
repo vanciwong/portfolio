@@ -1471,6 +1471,12 @@
   function measureHeroMorph(){
     morphK=isMobile?1:Math.min(1,vw/1920);
     const k=morphK, sizePx=128*k;
+    /* 24-2 初始态的「垂直锚点」必须和 .hero-hint 同源：桌面 CSS 的 y / 间距已改为 vh 比例
+       （设计画布高 1080），而 k=vw/1920 只随宽度缩放。若仍用 k 定位大字与副标题，
+       1920×978 这类宽扁视口里 hint 会上浮压住副标题，1201×985 这类窄高视口里
+       hint 会被推到底、与副标题之间空出 300px。 ky=vh/1080 时 16:9 视口 ky===k，
+       1920×1080 像素完全不变；其他比例下初始态各锚点随 hint 一起等比移动。 */
+    const ky=vh/1080;
     if(isMobile){ restoreSubText(); }
     else if(!subChars.length){ buildSubChars(); }
 
@@ -1478,8 +1484,8 @@
     const mp=inkMetrics(sizePx,parseFloat(getComputedStyle(heroPortfolio).lineHeight)||sizePx);
     const strokeLocal=(4/MORPH_S)*k;   /* 4px@300 换算到 128 基准后再被词级 scale 放大回 4u */
     morphWords=[
-      {el:heroDesigner,  tx:22*k-docLeft(heroDesigner),  ty:INK_D*k-(docTop(heroDesigner)+(md.inkTop)*MORPH_S)},
-      {el:heroPortfolio, tx:22*k-docLeft(heroPortfolio), ty:INK_P*k-(docTop(heroPortfolio)+(mp.inkTop-strokeLocal)*MORPH_S)}
+      {el:heroDesigner,  tx:22*k-docLeft(heroDesigner),  ty:INK_D*ky-(docTop(heroDesigner)+(md.inkTop)*MORPH_S)},
+      {el:heroPortfolio, tx:22*k-docLeft(heroPortfolio), ty:INK_P*ky-(docTop(heroPortfolio)+(mp.inkTop-strokeLocal)*MORPH_S)}
     ];
     /* UX & AX 在 24-2 里不存在：初值整组左移 604.4u（大部分在画布外），随词一起右移，
        始终与 DESIGNER 墨迹左缘留 8u 以上间隙，不会压字 */
@@ -1497,7 +1503,7 @@
       const initLineW=init[init.length-1]+subChars[subChars.length-1].offsetWidth*SUB_SCALE;
       const startX=centerX-initLineW/2;
       subGeo.tx=fin.map((f,i)=>startX+init[i]-(docLeft(heroSub)+f));
-      subGeo.ty=SUB_Y*k-docTop(heroSub);
+      subGeo.ty=SUB_Y*ky-docTop(heroSub);
     }else{
       subGeo.tx.length=0; subGeo.ty=0;
     }
