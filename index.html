@@ -771,7 +771,8 @@
     .stage{position:static;height:auto;overflow:visible;}
     .pin{height:auto !important;}
     #heroPin{height:auto;background:var(--ink);}
-    .hero{position:relative;height:auto;min-height:100svh;padding:120px 40px 64px;overflow:hidden;}
+    /* 不撑满整屏：内容实际只到 ~615px，min-height:100svh 会在按钮下方留下 240–285px 纯背景空白 */
+    .hero{position:relative;height:auto;min-height:0;padding:120px 40px 64px;overflow:hidden;}
     .hero-inner{position:relative;left:auto;top:auto;width:auto;}
     .hero-flow{top:-16px;bottom:-16px;left:-16px;right:-16px;}
     .ring-a{width:280px;height:280px;border-width:32px;left:-120px;top:auto;bottom:-60px;}
@@ -780,7 +781,9 @@
     .hero-title .sp{font-size:.5em;}
     .hero-title .amp{font-size:.3125em;}
     .hero-title .line2{line-height:.95;margin-top:0;}
-    .hero-title .red-square{width:16px;height:16px;left:auto;right:0;top:8px;}
+    /* 红方块属于 PORTFOLIO 行末装饰：不能 right:0 贴整行右缘（会跑到首屏右上角）。
+       与 ≤900px 断点一致，用 em 跟随标题字号：PORTFOLIO 实测宽 ≈6.17em，方块 0.3em、底部 0.34em */
+    .hero-title .red-square{left:6.15em;right:auto;top:auto;bottom:.34em;width:.3em;height:.3em;}
     .hero-late{opacity:1;transform:none;}
     .hero-pre,.hero-designer .dg-solid,.hero-portfolio .pf-solid{opacity:1;}
     .hero-designer .dg-fade,.hero-portfolio .pf-outline{display:none;}
