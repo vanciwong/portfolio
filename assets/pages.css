@@ -78,6 +78,12 @@ button{font:inherit;}
   border-bottom-color:rgba(255,255,255,.1);
 }
 .nav{display:flex;align-items:center;gap:calc(48 * var(--u));}
+/* 汉堡按钮：默认不渲染，仅 ≤900px 启用；>900px 桌面导航完全不受影响（复用首页同款实现） */
+.nav-toggle{
+  display:none;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;
+  width:32px;height:32px;padding:0;border:0;background:none;cursor:pointer;
+}
+.nav-toggle span{display:block;width:24px;height:2px;background:#fff;flex:none;}
 .nav a{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(2 * var(--u));color:#808080;transition:color .2s ease;}
 .nav a:hover{color:#fff;}
 .nav .cn{font-size:calc(18 * var(--u));line-height:1;color:#808080;font-weight:400;white-space:nowrap;}
@@ -267,6 +273,28 @@ button{font:inherit;}
   .nav{gap:20px;}
   .nav .cn{font-size:15px;}
   .nav .en{font-size:8px;letter-spacing:.18em;}
+  /* ===== ≤900px：与首页一致的汉堡菜单（601–900px 档尺寸） =====
+     文字导航收进下拉面板：中文左 / 英文右、行间分隔线；展开时三条线变 ×。
+     只作用于本断点，>900px 桌面仍是水平展开导航。 */
+  .nav-toggle{display:flex;width:36px;height:36px;}
+  .nav-toggle span{width:26px;}
+  .nav{
+    position:absolute;top:var(--nav-h);left:0;right:0;
+    display:none;flex-direction:column;align-items:stretch;gap:0;
+    padding:8px 32px 18px;
+    background:rgba(17,17,19,.97);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  }
+  .site-header.menu-open .nav{display:flex;}
+  .nav a{flex-direction:row;justify-content:space-between;align-items:center;gap:16px;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .nav a:last-child{border-bottom:0;}
+  .nav .cn{font-size:16px;}
+  .nav .en{display:block;font-size:10px;}
+  .nav a.is-active::after{display:none;}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
   .stages{grid-template-columns:repeat(2,minmax(0,1fr));}
   .flow-grid{grid-template-columns:1fr;}
   .ability-grid{grid-template-columns:1fr;}
@@ -287,6 +315,13 @@ button{font:inherit;}
   .nav .cn{font-size:13px;}
   .nav .en{display:none;}
   .nav a.is-active::after{bottom:-6px;width:5px;height:5px;margin-left:-2.5px;}
+  /* ≤600px 手机档：沿用首页汉堡面板的收紧尺寸；英文在展开面板里恢复显示 */
+  .nav-toggle{width:32px;height:32px;}
+  .nav-toggle span{width:24px;}
+  .nav{padding:6px 16px 14px;gap:0;}
+  .nav a{gap:12px;padding:13px 4px;}
+  .nav .cn{font-size:14px;}
+  .nav .en{display:block;font-size:9px;}
   .eyebrow{letter-spacing:2px;}
   .h2{line-height:1.2;}
   .hero-block{margin-top:22px;}

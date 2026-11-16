@@ -17,6 +17,26 @@
     addEventListener('scroll', onScroll, {passive:true});
   }
 
+  /* ≤900px 汉堡菜单：与首页同款交互（点击开合 / 点链接 / 点外部 / Esc / 回到 >900px 自动收起） */
+  var navBtn=document.getElementById('navToggle');
+  var siteNav=document.getElementById('siteNav');
+  if(headerEl&&navBtn&&siteNav){
+    var navMq=matchMedia('(max-width:900px)');
+    function setNavOpen(open){
+      headerEl.classList.toggle('menu-open',open);
+      navBtn.setAttribute('aria-expanded',open?'true':'false');
+      navBtn.setAttribute('aria-label',open?'关闭导航菜单':'打开导航菜单');
+    }
+    navBtn.addEventListener('click',function(e){
+      e.stopPropagation();
+      setNavOpen(!headerEl.classList.contains('menu-open'));
+    });
+    siteNav.addEventListener('click',function(e){ if(e.target.closest('a')) setNavOpen(false); });
+    document.addEventListener('click',function(e){ if(!headerEl.contains(e.target)) setNavOpen(false); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') setNavOpen(false); });
+    navMq.addEventListener('change',function(){ if(!navMq.matches) setNavOpen(false); });
+  }
+
   /* 作品页分类筛选：默认「全部 ALL」，点击后只显示对应 data-cat 的卡片 */
   var filters=[].slice.call(document.querySelectorAll('.filter'));
   if(filters.length){
