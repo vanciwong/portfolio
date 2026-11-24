@@ -21,7 +21,7 @@
   --sec-y:calc(100 * var(--u));
   --gap:calc(24 * var(--u));
   --card-pad:calc(24 * var(--u));
-  --card-img:calc(240 * var(--u));
+  --card-img:calc(270 * var(--u));
   --card-gap:calc(14 * var(--u));
   --card-min:calc(173 * var(--u));
   --portrait-w:calc(336 * var(--u));
