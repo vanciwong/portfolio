@@ -191,7 +191,12 @@ button{font:inherit;}
 .exp-row:last-child{padding-bottom:0;border-bottom:0;}
 .exp-year{font-size:12px;line-height:1.85;letter-spacing:1.4px;color:var(--muted);}
 .exp-role{font-size:calc(21 * var(--u));font-weight:700;line-height:1.4;color:var(--ink);margin-bottom:10px;}
-.exp-detail{font-size:var(--fs-body);line-height:1.85;color:var(--muted);white-space:pre-line;}
+.exp-items{list-style:none;margin:0;padding:0;font-size:var(--fs-body);line-height:1.85;color:var(--muted);}
+.exp-items li{position:relative;padding-left:12px;}
+.exp-items li::before{content:"\00B7";position:absolute;left:0;top:0;}
+.exp-items li.exp-group{padding-left:0;font-weight:700;color:var(--ink);margin-top:6px;}
+.exp-items li.exp-group:first-child{margin-top:0;}
+.exp-items li.exp-group::before{content:none;}
 .cap-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}
 .cap-cell{display:flex;flex-direction:column;gap:14px;padding-left:32px;}
 .cap-cell:first-child{padding-left:0;}
@@ -199,7 +204,11 @@ button{font:inherit;}
 .cap-cell h4{font-size:calc(21 * var(--u));font-weight:700;line-height:1.4;color:var(--ink);}
 .cap-cell .en{font-family:"Montserrat","Noto Sans SC",sans-serif;font-size:9px;letter-spacing:1.8px;color:var(--muted);}
 .cap-cell p{font-size:var(--fs-body);line-height:1.8;color:var(--muted);}
-.else-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;font-size:calc(19 * var(--u));line-height:1.9;color:var(--ink);white-space:pre-line;}
+.bd-section--center{align-items:center;}
+.else-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;font-size:calc(19 * var(--u));line-height:1.9;color:var(--ink);}
+.else-col p{margin:0;}
+.else-col p + p{margin-top:calc(6 * var(--u));}
+.else-col strong{font-weight:700;}
 
 /* ---------- 共用页脚 ---------- */
 .site-footer{background:var(--ink-deep);padding-block:calc(90 * var(--u));}
@@ -347,7 +356,7 @@ button{font:inherit;}
   .exp-list{gap:20px;}
   .exp-row{grid-template-columns:1fr;gap:8px;padding-bottom:20px;}
   .exp-role{font-size:16px;}
-  .exp-detail{font-size:13px;}
+  .exp-items{font-size:13px;}
   .cap-grid{grid-template-columns:1fr;gap:24px;}
   .cap-cell,.cap-cell:nth-child(3){padding-left:0;}
   .cap-cell h4{font-size:17px;}
