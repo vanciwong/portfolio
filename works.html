@@ -12,7 +12,8 @@
 <style>
   /* 案例卡片封面 + 长图弹窗（艺东南APP） */
   .card--case{cursor:pointer;}
-  .card--case:focus-visible{outline:2px solid var(--red);outline-offset:3px;}
+  .card--link{text-decoration:none;}
+  .card--link:focus-visible{outline:2px solid var(--red);outline-offset:3px;}
   .card-thumb--img{background:#1C1B19;}
   .card-thumb--img::after{background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.28));}
   .card-thumb--img img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 46%;
@@ -124,16 +125,25 @@
               <div class="tags"><span class="tag">需求简报</span><span class="tag">需求简报</span></div>
             </div>
           </article>
-          <article class="card" data-cat="data" data-reveal>
-            <div class="card-thumb" aria-hidden="true"></div>
+          <a class="card card--link" href="work-teaching-center/index.html" data-cat="data" data-reveal
+             aria-label="教学中心重构，查看完整案例详情">
+            <div class="card-thumb card-thumb--img">
+              <img src="work-teaching-center/assets/cover.png" alt="教学中心重构 封面" loading="lazy">
+              <span class="card-thumb__hint">查看详情</span>
+            </div>
             <div class="card-body">
               <h3>教学中心重构</h3>
               <p>写清目标、约束与不做什么；把「成功」变成可观察的行为</p>
               <div class="tags"><span class="tag">需求简报</span><span class="tag">需求简报</span></div>
             </div>
-          </article>
-          <article class="card" data-cat="b" data-reveal>
-            <div class="card-thumb" aria-hidden="true"></div>
+          </a>
+          <article class="card card--case" data-cat="b" data-reveal
+                   data-case="zkt-desktop" data-modal="caseModalZktDesktop" role="button" tabindex="0" aria-haspopup="dialog"
+                   aria-label="智课堂桌面端重构，点击查看用户体验优化方案">
+            <div class="card-thumb card-thumb--img">
+              <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案01.png" alt="智课堂桌面端重构 封面" loading="lazy">
+              <span class="card-thumb__hint">点击查看</span>
+            </div>
             <div class="card-body">
               <h3>智课堂桌面端重构</h3>
               <p>写清目标、约束与不做什么；把「成功」变成可观察的行为</p>
@@ -442,6 +452,60 @@
         <img src="assets/works/智课堂品牌VI设计/pages/p63.webp" alt="智课堂品牌VI设计 其他方案 第 11 页" width="1200" height="675" loading="lazy" decoding="async">
         <img src="assets/works/智课堂品牌VI设计/pages/p64.webp" alt="智课堂品牌VI设计 其他方案 第 12 页" width="1200" height="675" loading="lazy" decoding="async">
         <img src="assets/works/智课堂品牌VI设计/pages/p65.webp" alt="智课堂品牌VI设计 其他方案 第 13 页" width="1200" height="675" loading="lazy" decoding="async">
+    </div>
+  </div>
+</div>
+<div class="case-modal" id="caseModalZktDesktop" hidden>
+  <div class="case-backdrop" data-close></div>
+  <div class="case-dialog" role="dialog" aria-modal="true" aria-label="智课堂桌面端重构 用户体验优化方案">
+    <div class="case-bar">
+      <span class="case-title">智课堂桌面端重构 <em>WORK DISPLAY</em></span>
+      <div class="case-actions">
+        <span class="case-tip">向下滚动查看 · 共 40 张</span>
+        <button class="case-close" type="button" data-close aria-label="关闭">×</button>
+      </div>
+    </div>
+    <div class="case-scroll" tabindex="0" aria-label="智课堂桌面端重构 用户体验优化方案，40 张图片可滚动查看">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案01.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案01" width="1920" height="1080" loading="eager" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案02.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案02" width="1920" height="1080" loading="eager" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案03.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案03" width="1920" height="1080" loading="eager" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案04.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案04" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案05.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案05" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案06.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案06" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案07.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案07" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案08.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案08" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案09.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案09" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案10.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案10" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案11.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案11" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案12.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案12" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/0-智课堂教师授课PC版-用户体验优化方案13.png" alt="智课堂桌面端重构 0-智课堂教师授课PC版-用户体验优化方案13" width="1920" height="1080" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/1-智课堂-教师授课PC端-主界面.png" alt="智课堂桌面端重构 1-智课堂-教师授课PC端-主界面" width="960" height="2472" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/1-智课堂-教师授课PC端-功能列表.png" alt="智课堂桌面端重构 1-智课堂-教师授课PC端-功能列表" width="960" height="1946" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/2.1-智课堂-教师授课PC端-开始上课界面.png" alt="智课堂桌面端重构 2.1-智课堂-教师授课PC端-开始上课界面" width="2200" height="3118" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.1.1-智课堂-教师授课PC端-课程中心界面.png" alt="智课堂桌面端重构 3.1.1-智课堂-教师授课PC端-课程中心界面" width="2200" height="2842" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.1.3-智课堂-教师授课PC端-课程中心-内容预览.png" alt="智课堂桌面端重构 3.1.3-智课堂-教师授课PC端-课程中心-内容预览" width="2200" height="2010" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.1.4-智课堂-教师授课PC端-课程中心-内容预览-开始上课.png" alt="智课堂桌面端重构 3.1.4-智课堂-教师授课PC端-课程中心-内容预览-开始上课" width="2200" height="2864" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.1.5-智课堂-教师授课PC端-课程中心-授课推题.png" alt="智课堂桌面端重构 3.1.5-智课堂-教师授课PC端-课程中心-授课推题" width="2200" height="4800" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.2智课堂-教师授课PC端-资源库界面.png" alt="智课堂桌面端重构 3.2智课堂-教师授课PC端-资源库界面" width="2200" height="3690" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.3-智课堂-教师授课PC端-视频资源等.png" alt="智课堂桌面端重构 3.3-智课堂-教师授课PC端-视频资源等" width="2200" height="1192" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/3.4-智课堂-教师授课PC端-习题资源.png" alt="智课堂桌面端重构 3.4-智课堂-教师授课PC端-习题资源" width="2200" height="2120" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.1-智课堂-教师授课PC端-课堂工具-画板&amp;批注&amp;截图.png" alt="智课堂桌面端重构 4.1-智课堂-教师授课PC端-课堂工具-画板&amp;批注&amp;截图" width="2200" height="2092" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.2-智课堂-教师授课PC端-多屏教学-镜像至副屏&amp;展示副屏画面.png" alt="智课堂桌面端重构 4.2-智课堂-教师授课PC端-多屏教学-镜像至副屏&amp;展示副屏画面" width="2200" height="1299" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.3-智课堂-教师授课PC端-空中课堂-课堂录制.png" alt="智课堂桌面端重构 4.3-智课堂-教师授课PC端-空中课堂-课堂录制" width="2200" height="988" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.4-智课堂-教师授课PC端-空中课堂-互动直播.png" alt="智课堂桌面端重构 4.4-智课堂-教师授课PC端-空中课堂-互动直播" width="2200" height="2400" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.5-智课堂-教师授课PC端-空中课堂-独立直播.png" alt="智课堂桌面端重构 4.5-智课堂-教师授课PC端-空中课堂-独立直播" width="2200" height="3258" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/4.6-智课堂-教师授课PC端-空中课堂-同步课堂.png" alt="智课堂桌面端重构 4.6-智课堂-教师授课PC端-空中课堂-同步课堂" width="2200" height="2000" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.1-智课堂-教师授课PC端-师生互动-点名.png" alt="智课堂桌面端重构 5.1-智课堂-教师授课PC端-师生互动-点名" width="2200" height="2161" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.2-智课堂-教师授课PC端-师生互动-抽答.png" alt="智课堂桌面端重构 5.2-智课堂-教师授课PC端-师生互动-抽答" width="2200" height="2200" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.3-智课堂-教师授课PC端-师生互动-抢答.png" alt="智课堂桌面端重构 5.3-智课堂-教师授课PC端-师生互动-抢答" width="2200" height="1600" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.4-智课堂-教师授课PC端-师生互动-图片投屏.png" alt="智课堂桌面端重构 5.4-智课堂-教师授课PC端-师生互动-图片投屏" width="2200" height="1348" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.5-智课堂-教师授课PC端-师生互动-镜像投屏.png" alt="智课堂桌面端重构 5.5-智课堂-教师授课PC端-师生互动-镜像投屏" width="2200" height="2048" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.6.1-智课堂-教师授课PC端-师生互动-分组.png" alt="智课堂桌面端重构 5.6.1-智课堂-教师授课PC端-师生互动-分组" width="2200" height="1600" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.6.2-智课堂-教师授课PC端-师生互动-查看分组.png" alt="智课堂桌面端重构 5.6.2-智课堂-教师授课PC端-师生互动-查看分组" width="2200" height="1256" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/5.6.3-智课堂-教师授课PC端-师生互动-分组PK.png" alt="智课堂桌面端重构 5.6.3-智课堂-教师授课PC端-师生互动-分组PK" width="2200" height="8800" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/6.1-智课堂-教师授课PC端-设置-重新配置.png" alt="智课堂桌面端重构 6.1-智课堂-教师授课PC端-设置-重新配置" width="2200" height="1840" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/6.2-智课堂-教师授课PC端-设置-意见反馈&amp;关于.png" alt="智课堂桌面端重构 6.2-智课堂-教师授课PC端-设置-意见反馈&amp;关于" width="2200" height="954" loading="lazy" decoding="async">
+        <img src="assets/works/智课堂桌面端重构/6.2-智课堂-教师授课PC端-设置-智课堂配置&amp;切换授课教室.png" alt="智课堂桌面端重构 6.2-智课堂-教师授课PC端-设置-智课堂配置&amp;切换授课教室" width="2200" height="954" loading="lazy" decoding="async">
     </div>
   </div>
 </div>

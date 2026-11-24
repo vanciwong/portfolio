@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教学中心重构 · 界面走查报告</title>
+<style>
+:root{--ink:#1a1a1a;--gray:#6b7280;--line:#e5e7eb;--blue:#1763f6;--red:#d22630;--amber:#b45309;--green:#157a4a;}
+*{box-sizing:border-box;}
+body{margin:0;background:#f5f6f8;color:var(--ink);font-family:"PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px;}
+header{background:linear-gradient(120deg,#0d2f7e,#1763f6 62%,#17adb9);color:#fff;border-radius:18px;padding:36px 40px;}
+header h1{margin:0 0 8px;font-size:30px;letter-spacing:.5px;}
+header .meta{opacity:.9;font-size:13px;line-height:2;}
+header .meta b{font-weight:600;}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0 34px;}
+.summary div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+.summary .n{font-size:28px;font-weight:700;line-height:1.1;}
+.summary .l{font-size:12px;color:var(--gray);margin-top:6px;}
+.c-red{color:var(--red);}.c-amber{color:var(--amber);}.c-blue{color:var(--blue);}.c-gray{color:var(--gray);}
+h2{font-size:19px;margin:38px 0 14px;padding-left:12px;border-left:4px solid var(--blue);}
+h3{font-size:15px;margin:26px 0 10px;color:#374151;}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gray);border-radius:10px;padding:14px 18px;font-size:13px;color:#4b5563;margin:16px 0;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);font-size:13px;}
+th{background:#eef2f8;text-align:left;padding:11px 13px;font-weight:600;color:#374151;border-bottom:1px solid var(--line);}
+td{padding:11px 13px;border-bottom:1px solid #f0f1f3;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{background:#f1f3f5;border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all;}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap;}
+.t-red{background:#fde8e8;color:var(--red);}.t-amber{background:#fdf1dc;color:var(--amber);}.t-blue{background:#e6efff;color:var(--blue);}.t-gray{background:#eceef1;color:#4b5563;}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0;}
+.compare figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.compare figcaption{padding:10px 14px;font-size:12px;color:var(--gray);border-bottom:1px solid var(--line);background:#fafbfc;}
+.compare img{width:100%;display:block;}
+.update{background:#ecfdf3;border:1px solid #a7f3d0;border-left:4px solid var(--green);border-radius:10px;padding:16px 18px;font-size:13px;margin:18px 0 4px;color:#14532d;}
+.update b{color:#065f46;}
+footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--gray);}
+@media(max-width:760px){.summary{grid-template-columns:repeat(2,1fr);}.compare{grid-template-columns:1fr;}header{padding:26px 22px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>教学中心重构 · 界面走查报告</h1>
+  <div class="meta">
+    <div><b>走查对象：</b>work-teaching-center/index.html（实际页面）</div>
+    <div><b>设计基准：</b>Figma 节点 305:525「作品-教学中心重构」（1920 × 19042）</div>
+    <div><b>走查日期：</b>2026-11-24　　<b>走查方式：</b>设计节点数据逐项比对 + 分区截图视觉核对</div>
+  </div>
+</header>
+
+<div class="update">
+  <b>更新（2026-11-24，设计稿元素已替换为图片资源）：</b>已重新提取 Figma 305:525（节点由 841 个简化为 354 个），导出 18 张图片资源并同步修改 <code>work-teaching-center/index.html</code>：封面背景 / 四角星 / 浏览器图、设计目标三圆、敏捷甘特图、AI 调研图、教师与学生任务流全图、决策一前后对照与箭头、决策二 / 三界面图等 16 处均改用设计稿原图；顶部品牌改用 logo 图片；首屏 badge、ROLE、中文引号、验证复盘文案已按新稿修正。重新校验后，设计稿文字在页面中<b>无缺失（0 处）</b>。下方差异清单保留为本次修改前的走查记录，其中「矢量未还原 / 图标用 CSS 圆点 / 任务流节点缺失 / 渐变近似 / 文案字面差异」等问题已随本次替换解决；「固定长画板改流式布局」仍为已确认取舍。
+</div>
+
+<div class="summary">
+  <div><div class="n c-red">7</div><div class="l">文案 / 内容差异</div></div>
+  <div><div class="n c-amber">6</div><div class="l">视觉还原差异</div></div>
+  <div><div class="n c-blue">3</div><div class="l">素材缺失 / 替换</div></div>
+  <div><div class="n c-gray">1</div><div class="l">结构性差异</div></div>
+</div>
+
+<div class="note">
+  <b>总体结论：</b>页面已按设计稿的分区顺序、文案主体、配色体系和截图素材完成重建，14 个设计分区均有对应实现（页面按 12 个 section + 首屏 + 页脚组织）。整体视觉一致性较高。差异集中在三类：① 少量文案与设计稿字面不一致（含 3 处任务流节点被替换/遗漏）；② 渐变由径向改为线性、矢量改为位图等实现层近似；③ 3 处图片素材未导出或用近似图替代。以下逐项列出。
+</div>
+
+<h2>一、设计稿 / 页面整体对照</h2>
+<div class="compare">
+  <figure><figcaption>设计稿整体（Figma 305:525 预览）</figcaption><img src="screens/design-overview.png" alt="设计稿整体预览"></figure>
+  <figure><figcaption>实际页面首屏</figcaption><img src="screens/vp_hero.png" alt="实际页面首屏"></figure>
+</div>
+
+<h2>二、文案 / 内容差异（7 项）</h2>
+<table>
+<thead><tr><th style="width:38px">#</th><th style="width:110px">分区</th><th>设计稿（期望）</th><th>实际页面</th><th style="width:74px">级别</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>首屏</td><td><code>教学中心 WEB 端</code></td><td><code>教学中心 · WEB 端</code>（多了「·」）</td><td><span class="tag t-gray">轻微</span></td></tr>
+<tr><td>2</td><td>首屏 · PROJECT</td><td><code>需求原型 / 交互设计 / 界面设计</code></td><td><code>需求梳理 / 交互设计 / 界面设计</code>（「原型」→「梳理」）</td><td><span class="tag t-amber">中等</span></td></tr>
+<tr><td>3</td><td>09 解决问题</td><td><code>把“找到课程”变成首屏的核心任务</code>（中文弯引号 “ ”）</td><td><code>把"找到课程"变成首屏的核心任务</code>（英文直引号 " "）</td><td><span class="tag t-gray">轻微</span></td></tr>
+<tr><td>4</td><td>06 任务流</td><td>教师「原流程」含节点 <code>已开课课节</code>、<code>添加教学班</code></td><td>该两节点未呈现；页面以 <code>新建课节</code> 等替代，节点集合与设计稿不完全对应</td><td><span class="tag t-red">明显</span></td></tr>
+<tr><td>5</td><td>06 任务流</td><td>教师「优化后流程」含节点 <code>添加教学班</code></td><td>缺少 <code>添加教学班</code> 节点</td><td><span class="tag t-red">明显</span></td></tr>
+<tr><td>6</td><td>06 任务流</td><td>学生「优化后流程」含节点 <code>查看教学班</code></td><td>缺少 <code>查看教学班</code> 节点</td><td><span class="tag t-red">明显</span></td></tr>
+<tr><td>7</td><td>06 任务流 / 优化方案</td><td>英文标注为小写：<code>before</code> / <code>after</code> / <code>scheme</code> / <code>optimization</code></td><td>任务流用大写 <code>BEFORE</code> / <code>AFTER</code>、方案用 <code>SCHEME</code>；仅 <code>optimization</code> 与水印保持小写</td><td><span class="tag t-amber">中等</span></td></tr>
+</tbody>
+</table>
+<div class="note">
+  说明：任务流三组差异（#4–#6）属于「节点集合不一致」，不只是文字改动。设计稿任务流共 87 段文字节点，页面用流程节点方式重绘，个别节点被合并或省略。如需严格对齐，建议按设计稿节点清单逐项补齐；如为有意精简，建议在走查中标注为「已确认取舍」。
+</div>
+
+
+<h2>三、视觉还原差异（6 项）</h2>
+<table>
+<thead><tr><th style="width:38px">#</th><th style="width:110px">分区</th><th>设计稿（期望）</th><th>实际页面</th><th style="width:74px">级别</th></tr></thead>
+<tbody>
+<tr><td>8</td><td>首屏背景</td><td>封面渐变由 <code>305:527</code> 线性渐变 + <code>305:528</code> 径向光晕叠合构成，色标 #55f1ef → #1364f4 → #092f88</td><td>改用整张 <code>cover-bg.jpg</code> 铺底 + 一层 <code>linear-gradient(115deg)</code> 叠加，光晕位置与色标为近似</td><td><span class="tag t-amber">中等</span></td></tr>
+<tr><td>9</td><td>02 设计目标</td><td>三个交叠圆 <code>346:937 / 346:916 / 346:917</code> 为径向渐变（RADIAL），透明度 .82–.92</td><td>CSS <code>linear-gradient(180deg,...)</code> 线性渐变，渐变方向与衰减形式不同</td><td><span class="tag t-amber">中等</span></td></tr>
+<tr><td>10</td><td>首屏四角星</td><td><code>305:542</code> 为 VECTOR 矢量图形（渐变填充 280×280）</td><td>导出为 <code>305_542.png</code> 位图贴入，不可编辑、缩放可能失真</td><td><span class="tag t-gray">轻微</span></td></tr>
+<tr><td>11</td><td>04 交互策略</td><td>5 个 40×40 图标节点（<code>332:238 / 332:244 / 332:246 / 333:248 / 333:250</code>）为图片填充</td><td>未导出图片，改用 CSS 圆点 <code>.ai-icons i</code> 近似，图标内容与设计稿不同</td><td><span class="tag t-amber">中等</span></td></tr>
+<tr><td>12</td><td>首屏返回组件</td><td>返回组件含「無白設計-EXTREME-BLACK」图片节点（<code>I305:819</code>，128×33）</td><td>顶部导航仅为纯文字「← 返回」+ 标题 + 品牌，logo 图片未使用</td><td><span class="tag t-gray">轻微</span></td></tr>
+<tr><td>13</td><td>各分区矢量</td><td>设计稿含 112 个 VECTOR / LINE 节点（描边图形、线条、图标）</td><td>仅 1 个（四角星）导出为图片，其余以 CSS 矩形 + border 近似，复杂矢量形状会有偏差</td><td><span class="tag t-amber">中等</span></td></tr>
+</tbody>
+</table>
+
+<h2>四、素材缺失 / 替换（3 项）</h2>
+<table>
+<thead><tr><th style="width:38px">#</th><th style="width:110px">分区</th><th>设计稿（期望）</th><th>实际页面</th><th style="width:74px">级别</th></tr></thead>
+<tbody>
+<tr><td>14</td><td>10 决策二</td><td>改版截图节点 <code>305:695</code>（after-workspace，1042×1068）</td><td>使用 <code>310_820.png</code>（尺寸同为 1042×1068，节点 ID 不在 305:525 树内）——疑为同图另一节点导出，需确认内容一致</td><td><span class="tag t-blue">待确认</span></td></tr>
+<tr><td>15</td><td>02 设计目标</td><td>5 个图片填充矩形（同 #11）</td><td>CSS 圆点替代，未生成对应图片文件</td><td><span class="tag t-amber">中等</span></td></tr>
+<tr><td>16</td><td>首屏</td><td>封面返回组件图片（同 #12）</td><td>未生成对应图片文件</td><td><span class="tag t-gray">轻微</span></td></tr>
+</tbody>
+</table>
+
+<h2>五、结构性差异（1 项）</h2>
+<table>
+<thead><tr><th style="width:38px">#</th><th style="width:110px">范围</th><th>设计稿（期望）</th><th>实际页面</th><th style="width:74px">级别</th></tr></thead>
+<tbody>
+<tr><td>17</td><td>整体</td><td>1920 × 19042 固定长画板，所有元素按绝对坐标定位（--u 等比缩放）</td><td>12 个 section + 首屏 + 页脚的流式响应式布局，grid/flex + clamp() 字号，随视口重排（900px 断点）</td><td><span class="tag t-blue">已确认取舍</span></td></tr>
+</tbody>
+</table>
+<div class="note">
+  该项为页面重做时有意选择的方案（流式响应式替代绝对定位），不是缺陷。影响：页面不再与设计稿逐像素重合，但获得了小屏适配能力。若验收要求「像素级还原」，需回到绝对定位方案；若要求「多端可用」，当前方案更合适。
+</div>
+
+<h2>六、分区截图索引</h2>
+<table>
+<thead><tr><th style="width:80px">分区</th><th>页面截图</th><th style="width:80px">分区</th><th>页面截图</th></tr></thead>
+<tbody>
+<tr><td>首屏 / 00</td><td><a href="screens/vp_hero.png">vp_hero.png</a></td><td>07 原型</td><td><a href="screens/vp_s07.png">vp_s07.png</a></td></tr>
+<tr><td>01 项目背景</td><td><a href="screens/vp_s01.png">vp_s01.png</a></td><td>08 旧版诊断</td><td><a href="screens/vp_s08.png">vp_s08.png</a></td></tr>
+<tr><td>02 设计目标</td><td><a href="screens/vp_s02.png">vp_s02.png</a></td><td>09 解决问题</td><td><a href="screens/vp_s09.png">vp_s09.png</a></td></tr>
+<tr><td>03 敏捷开发</td><td><a href="screens/vp_s03.png">vp_s03.png</a></td><td>10 决策二</td><td><a href="screens/vp_s10.png">vp_s10.png</a></td></tr>
+<tr><td>04 交互策略</td><td><a href="screens/vp_s04.png">vp_s04.png</a></td><td>11 决策三</td><td><a href="screens/vp_s11.png">vp_s11.png</a></td></tr>
+<tr><td>05 问题定义</td><td><a href="screens/vp_s05.png">vp_s05.png</a></td><td>12 验证复盘</td><td><a href="screens/vp_s12.png">vp_s12.png</a></td></tr>
+<tr><td>06 任务流</td><td><a href="screens/vp_s06.png">vp_s06.png</a></td><td>收尾</td><td><a href="screens/vp_foot.png">vp_foot.png</a></td></tr>
+</tbody>
+</table>
+
+<h2>七、修复优先级建议</h2>
+<table>
+<thead><tr><th style="width:90px">优先级</th><th>建议动作</th></tr></thead>
+<tbody>
+<tr><td><span class="tag t-red">P0</span></td><td>补齐任务流缺失节点（#4–#6）：「已开课课节」「添加教学班」×2、「查看教学班」，对齐设计稿节点集合。</td></tr>
+<tr><td><span class="tag t-amber">P1</span></td><td>修正文案字面差异（#2、#7）：「需求原型」、before/after/scheme 大小写；确认 #14 截图内容是否与节点 305:695 一致。</td></tr>
+<tr><td><span class="tag t-amber">P1</span></td><td>视觉还原（#8、#9）：径向渐变替代线性渐变，恢复设计稿的圆形光晕衰减效果。</td></tr>
+<tr><td><span class="tag t-gray">P2</span></td><td>细节对齐（#1、#3、#10、#12）：去除多余「·」、恢复中文引号、导出 logo 与四角星为可编辑矢量（SVG）。</td></tr>
+<tr><td><span class="tag t-gray">P2</span></td><td>素材补全（#11、#15、#16）：导出 5 个图标与返回组件 logo；矢量图形优先用 SVG 而非位图。</td></tr>
+</tbody>
+</table>
+
+<footer>
+  本报告基于 Figma 节点数据（/tmp/nodes_abs.json，841 节点）与实际页面 DOM/CSS 比对生成；截图为 headless Chrome 1440px 视口下各分区渲染结果。标记为「待确认」的条目需人工核对源图内容。
+</footer>
+</div>
+</body>
+</html>
