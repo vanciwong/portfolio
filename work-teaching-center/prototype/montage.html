@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>教学中心 · 单色高保真原型 · 拼贴效果图</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:1300px;overflow:hidden}
+body{font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif}
+
+.canvas{
+  width:1600px;height:1300px;position:relative;overflow:hidden;
+  background-color:#F3F2EC;
+  background-image:
+    radial-gradient(ellipse at 28% 14%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 58%),
+    radial-gradient(ellipse at 82% 88%, rgba(214,211,201,.42) 0%, rgba(214,211,201,0) 55%),
+    repeating-linear-gradient(115deg, transparent 0 3px, rgba(120,116,104,.032) 3px 4px);
+}
+
+/* 屏幕墙 */
+.shot{
+  position:absolute;width:440px;height:250px;border-radius:11px;overflow:hidden;
+  background:#fff;border:1px solid rgba(0,0,0,.055);
+  box-shadow:
+    0 2px 5px rgba(40,38,32,.07),
+    0 12px 26px rgba(40,38,32,.13),
+    0 26px 54px rgba(40,38,32,.10);
+}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top left;display:block}
+
+/* 左下角胶囊标签 */
+.badge{
+  position:absolute;left:52px;bottom:44px;z-index:20;
+  display:flex;align-items:center;gap:14px;
+  background:#fff;border-radius:44px;padding:11px 28px 11px 11px;
+  box-shadow:0 10px 34px rgba(40,38,32,.20),0 2px 6px rgba(40,38,32,.10);
+}
+.badge .ico{
+  width:46px;height:46px;border-radius:50%;flex:0 0 46px;
+  background:linear-gradient(135deg,#7C6CF8 0%,#4C7DF3 48%,#28C7E6 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.45),0 3px 8px rgba(76,125,243,.35);
+}
+.badge .ico svg{width:24px;height:24px}
+.badge .txt .t1{font-size:20px;font-weight:800;color:#242424;letter-spacing:.01em;line-height:1.15}
+.badge .txt .t2{font-size:11px;color:#8A8A8A;margin-top:3px;letter-spacing:.03em}
+
+/* 右上角小标注 */
+.stamp{
+  position:absolute;right:52px;top:42px;z-index:20;text-align:right;
+}
+.stamp .s1{font-size:12px;color:#9A978C;letter-spacing:.22em;font-weight:700}
+.stamp .s2{font-size:11px;color:#B0ADA2;margin-top:6px;letter-spacing:.05em}
+
+/* 四角暗角 */
+.vignette{
+  position:absolute;inset:0;pointer-events:none;z-index:30;
+  background:radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 58%, rgba(70,66,56,.12) 100%);
+}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- 列1 -->
+  <div class="shot" style="left:140px;top:90px;transform:rotate(-2.2deg)"><img src="shot-mono-courses.png"></div>
+  <div class="shot" style="left:140px;top:490px;transform:rotate(1.6deg) translateY(18px)"><img src="shot-mono-pre-task.png"></div>
+  <div class="shot" style="left:140px;top:890px;transform:rotate(-1.3deg) translateY(-6px)"><img src="shot-mono-analytics.png"></div>
+
+  <!-- 列2 -->
+  <div class="shot" style="left:580px;top:90px;transform:rotate(1.9deg) translateY(26px)"><img src="shot-mono-lesson.png"></div>
+  <div class="shot" style="left:580px;top:490px;transform:rotate(-2.6deg)"><img src="shot-mono-classes.png"></div>
+  <div class="shot" style="left:580px;top:890px;transform:rotate(1.1deg) translateY(30px)"><img src="shot-mono-scores.png"></div>
+
+  <!-- 列3 -->
+  <div class="shot" style="left:1020px;top:90px;transform:rotate(-1.4deg) translateY(10px)"><img src="shot-mono-records.png"></div>
+  <div class="shot" style="left:1020px;top:490px;transform:rotate(2.4deg) translateY(34px)"><img src="shot-mono-course-info.png"></div>
+  <div class="shot" style="left:1020px;top:890px;transform:rotate(-1.8deg)"><img src="shot-mono-index.png"></div>
+
+  <div class="stamp">
+    <div class="s1">LINKWALL DESIGN</div>
+    <div class="s2">教学中心 · 单色高保真原型 · 9 SCREENS</div>
+  </div>
+
+  <div class="badge">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3.2 13.9 9.1 19.8 11l-5.9 1.9L12 18.8l-1.9-5.9L4.2 11l5.9-1.9L12 3.2Z" fill="#fff" opacity=".95"/>
+        <circle cx="18.6" cy="5.6" r="1.5" fill="#fff" opacity=".85"/>
+      </svg>
+    </span>
+    <span class="txt">
+      <div class="t1">单色高保真原型</div>
+      <div class="t2">教学中心 · WorkBuddy 设计输出</div>
+    </span>
+  </div>
+
+  <div class="vignette"></div>
+</div>
+</body>
+</html>

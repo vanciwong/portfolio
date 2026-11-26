@@ -85,7 +85,7 @@ a{text-decoration:none;color:inherit;}
 
 /* ---------- Hero ---------- */
 .hero{
-  position:relative;color:#fff;overflow:hidden;isolation:isolate;
+  position:relative;z-index:50;color:#fff;overflow:hidden;isolation:isolate;
   background:#0d2f7e url("assets/img/377_2323.png") center/cover no-repeat;
 }
 .hero::before{
@@ -130,8 +130,25 @@ a{text-decoration:none;color:inherit;}
 .browser .bar i::before{content:"";width:clamp(7px,calc(.573 * var(--vw)),11px);height:clamp(7px,calc(.573 * var(--vw)),11px);border-radius:50%;background:#f87874;box-shadow:calc(clamp(5px,calc(.52 * var(--vw)),10px)*2) 0 0 #f6cb60,calc(clamp(5px,calc(.52 * var(--vw)),10px)*4) 0 0 #65c798;}
 
 /* ---------- 章节通用 ---------- */
+/* 分割线按设计稿线色叠加到各模块背景后的实际渲染色逐条还原（Figma 387:1970 / 379:772 采样） */
 section{padding:var(--pad-sec) var(--pad-x);}
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;}
+.sec-head{position:relative;display:flex;justify-content:space-between;align-items:baseline;gap:16px;}
+.sec-head::after{content:"";position:absolute;left:0;right:0;bottom:calc(-1 * (1.25 * var(--vw)) - 1px);
+  height:1px;background:var(--line-c,#cbd8ea);}
+/* 白底模块（#ffffff）→ #e0e8f2 */
+#s01,#s05,#s07,#s10{--line-c:#e0e8f2;}
+/* 浅蓝底 #edf7fd → #d9e4f2 */
+#s02,#s11{--line-c:#d9e4f2;}
+/* 浅蓝底 #f6f9ff → #dce5f2 */
+#s03{--line-c:#dce5f2;}
+/* 深色底 #10151f → #363a43 */
+#s04{--line-c:#363a43;}
+/* 浅灰底 #f7f9fc → #dde5f1 */
+#s06,#s08{--line-c:#dde5f1;}
+/* 浅灰底 #f3f6fc → #dbe4f1 */
+#s09{--line-c:#dbe4f1;}
+/* 深色底 #111a2c → #373f4e */
+#s12{--line-c:#373f4e;}
 .sec-label{color:var(--blue);font-weight:700;font-size:var(--fs-label);letter-spacing:.02em;white-space:nowrap;}
 .dark .sec-label{color:#95bbff;}
 .sec-tag{color:var(--gray-2);font-size:var(--fs-label);white-space:nowrap;}
@@ -160,11 +177,12 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 
 /* ---------- 02 Design Goals ---------- */
 #s02{background:var(--bg-blue-1);}
-.venn{display:flex;align-items:center;gap:clamp(8px,calc(1 * var(--vw)),20px);margin-top:clamp(34px,calc(4.4 * var(--vw)),85px);}
-.v-side{flex:1;display:flex;flex-direction:column;gap:clamp(24px,calc(4.4 * var(--vw)),85px);align-items:center;}
+.venn{display:flex;align-items:center;justify-content:center;gap:clamp(16px,calc(2.1875 * var(--vw)),42px);margin-top:clamp(34px,calc(4.4 * var(--vw)),85px);}
+.v-side{flex:0 0 clamp(80px,calc(6.667 * var(--vw)),128px);min-width:0;display:flex;flex-direction:column;gap:clamp(24px,calc(4.4 * var(--vw)),85px);align-items:center;}
+.v-side:last-child{flex-basis:clamp(90px,calc(7.5 * var(--vw)),144px);}
 .v-side li{font-size:clamp(12px,calc(1.25 * var(--vw)),24px);color:#8a8a88;white-space:nowrap;}
 .v-side .key{position:relative;font-size:clamp(15px,calc(1.667 * var(--vw)),32px);font-weight:700;color:#28282a;}
-.v-side .key i{position:absolute;left:50%;transform:translateX(-50%);bottom:clamp(-8px,-calc(.6 * var(--vw)),-12px);width:clamp(44px,calc(4.583 * var(--vw)),88px);height:clamp(6px,calc(.625 * var(--vw)),12px);border-radius:clamp(3px,calc(.31 * var(--vw)),6px);}
+.v-side .key i{position:absolute;left:50%;transform:translateX(-50%);bottom:clamp(-10px,calc(-.5 * var(--vw)),-6px);width:clamp(44px,calc(4.583 * var(--vw)),88px);height:clamp(6px,calc(.625 * var(--vw)),12px);border-radius:clamp(3px,calc(.31 * var(--vw)),6px);}
 .v-side .key.cyan i{background:#2ec5dc;}
 .v-side .key.blue i{background:#3a83f4;}
 .v-circles{display:flex;align-items:center;justify-content:center;}
@@ -192,6 +210,7 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 #s03{background:var(--bg-blue-2);}
 #s03 .sec-title{text-align:center;font-size:var(--fs-h2c);}
 #s03 .sec-title .line2{display:block;color:var(--blue);}
+#s03 .gantt-img{margin-top:clamp(40px,calc(4.167 * var(--vw)),80px);}
 .gantt{margin-top:clamp(30px,calc(3.9 * var(--vw)),75px);display:flex;flex-direction:column;gap:clamp(14px,calc(1.56 * var(--vw)),30px);}
 .g-head,.g-row{display:grid;grid-template-columns:clamp(30px,calc(2.08 * var(--vw)),40px) 1fr;align-items:center;}
 .g-head span{font-size:clamp(11px,calc(.833 * var(--vw)),16px);color:var(--gray-2);}
@@ -215,6 +234,8 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 #s04{background:var(--dark-1);}
 #s04 h2{color:#fff;}
 #s04 .sec-sub{color:#a5b4cd;}
+#s04 .duo{margin-top:clamp(28px,calc(2.917 * var(--vw)),56px);}
+#s04 .duo .sec-title{margin-top:0;}
 .ai-ref{position:relative;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 .ai-docs{position:relative;height:clamp(120px,calc(13.2 * var(--vw)),254px);width:clamp(160px,calc(18.75 * var(--vw)),360px);}
 .ai-docs img{position:absolute;top:0;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.45);}
@@ -224,19 +245,25 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 .ai-icons{display:flex;gap:6px;}
 .ai-icons i{width:clamp(18px,calc(2.08 * var(--vw)),40px);height:clamp(18px,calc(2.08 * var(--vw)),40px);border-radius:22%;background:#1f2c43;border:1px solid rgba(255,255,255,.14);position:relative;}
 .ai-icons i::after{content:"";position:absolute;inset:30%;border-radius:50%;background:var(--c,#60b9fa);}
-#s04 .duo{display:grid;grid-template-columns:1fr auto;gap:clamp(20px,calc(2.6 * var(--vw)),50px);align-items:start;}
-.stage-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,calc(1.56 * var(--vw)),30px);margin-top:clamp(26px,calc(3.1 * var(--vw)),60px);align-items:stretch;}
+#s04 .duo{display:grid;grid-template-columns:minmax(0,1fr) clamp(180px,calc(18.75 * var(--vw)),360px);gap:clamp(20px,calc(1.25 * var(--vw)),24px);align-items:center;}
+#s04 .duo > div:first-child{min-width:0;}
+#s04 .duo .ai-ref-img{width:100%;height:auto;display:block;}
+/* 设计稿：4 节点各 337、3 箭头各 71、间隙各 7（1920，合计 1600） */
+.stage-flow{display:grid;grid-template-columns:minmax(0,1fr) clamp(32px,calc(3.698 * var(--vw)),71px) minmax(0,1fr) clamp(32px,calc(3.698 * var(--vw)),71px) minmax(0,1fr) clamp(32px,calc(3.698 * var(--vw)),71px) minmax(0,1fr);grid-template-rows:auto;gap:clamp(3px,calc(.365 * var(--vw)),7px);margin-top:clamp(28px,calc(2.917 * var(--vw)),56px);align-items:center;}
 .stage-node{
-  position:relative;background:var(--card-dark-2);border-radius:clamp(12px,calc(1.5625 * var(--vw)),30px);
-  min-height:clamp(64px,calc(9.27 * var(--vw)),178px);display:grid;place-items:center;
+  grid-row:1;background:var(--card-dark-2);border-radius:clamp(12px,calc(1.5625 * var(--vw)),30px);
+  height:clamp(64px,calc(9.27 * var(--vw)),178px);display:grid;place-items:center;
   font-size:var(--fs-title-flow);font-weight:700;color:#fff;
 }
-.stage-node:first-child{background:var(--blue);}
-.stage-node:not(:last-child)::after{
-  content:"";position:absolute;right:calc(-1*clamp(12px,calc(1.87 * var(--vw)),36px));top:50%;
-  width:clamp(8px,calc(.83 * var(--vw)),16px);height:clamp(8px,calc(.83 * var(--vw)),16px);
-  background:#60b9fa;transform:translate(50%,-50%) rotate(45deg);
-}
+.stage-node.n1{grid-column:1;}
+.stage-node.n2{grid-column:3;}
+.stage-node.n3{grid-column:5;}
+.stage-node.n4{grid-column:7;}
+.stage-node.first{background:var(--blue);}
+.stage-arrow{grid-row:1;width:100%;height:auto;display:block;}
+.stage-arrow.a1{grid-column:2;}
+.stage-arrow.a2{grid-column:4;}
+.stage-arrow.a3{grid-column:6;}
 .stage-list{display:flex;flex-direction:column;gap:clamp(10px,calc(1.04 * var(--vw)),20px);margin-top:clamp(16px,calc(1.77 * var(--vw)),34px);}
 .stage-row{background:var(--card-dark);border-radius:clamp(10px,calc(1.46 * var(--vw)),28px);padding:clamp(14px,calc(1.67 * var(--vw)),32px) clamp(16px,calc(2.5 * var(--vw)),48px);}
 .stage-row.dim{background:rgba(28,38,56,.5);}
@@ -303,16 +330,17 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 .scheme li b{color:var(--orange);font-weight:500;}
 
 /* ---------- 07 Prototype ---------- */
-#s07{background:#fff;overflow:hidden;}
-.proto-grid{display:grid;grid-template-columns:1293fr 844fr;gap:clamp(24px,calc(3.9 * var(--vw)),75px);margin-top:clamp(28px,calc(3.9 * var(--vw)),75px);align-items:start;}
-.collage{position:relative;overflow:hidden;border-radius:var(--r-md);}
-.collage .row{display:flex;gap:clamp(8px,calc(1 * var(--vw)),20px);margin-bottom:clamp(8px,calc(1 * var(--vw)),20px);align-items:flex-start;}
-.collage .row:nth-child(2){margin-left:clamp(-40px,-calc(2.4 * var(--vw)),-46px);}
-.collage .row:nth-child(3){margin-left:0;}
-.collage img{width:calc(33.333% + clamp(6px,calc(.7 * var(--vw)),14px));border-radius:6px;box-shadow:0 6px 24px rgba(23,35,60,.12);}
-.proto-side{display:flex;flex-direction:column;gap:clamp(16px,calc(1.67 * var(--vw)),32px);align-items:flex-start;}
+/* 设计稿 379:1213：拼贴出血到画布左边缘，右侧列 x=1000..1760 压在拼贴上，pill/browser/btn 共中轴 x=1380 */
+#s07{background:#fff;overflow:hidden;padding-bottom:0;}
+.proto-grid{position:relative;margin-top:clamp(24px,calc(2.4 * var(--vw)),46px);height:calc(39.9 * var(--vw));}
+.collage-link{position:absolute;left:calc(-8.333 * var(--vw));top:0;width:calc(67.34 * var(--vw));display:block;}
+.collage-img{width:100%;height:auto;display:block;}
+.proto-side{position:absolute;left:calc(43.75 * var(--vw));top:clamp(0px,calc(.52 * var(--vw)),10px);width:calc(39.58 * var(--vw));display:flex;flex-direction:column;gap:clamp(24px,calc(2.917 * var(--vw)),56px);align-items:center;}
 .proto-pill{background:#e7f0ff;color:var(--blue);border-radius:999px;padding:clamp(10px,calc(.99 * var(--vw)),19px) clamp(16px,calc(1.67 * var(--vw)),32px);font-weight:700;font-size:clamp(14px,calc(1.51 * var(--vw)),29px);white-space:nowrap;}
-.proto-side .browser{width:100%;align-self:stretch;}
+.browser-link{width:100%;align-self:stretch;display:block;cursor:pointer;}
+.proto-side .browser{width:100%;margin:0;}
+.browser-link:hover .browser{filter:brightness(.97);}
+.browser-link .browser{transition:filter .2s;}
 .proto-btn{background:#e8f0fe;color:var(--blue);border-radius:999px;padding:clamp(8px,calc(.52 * var(--vw)),10px) clamp(16px,calc(.99 * var(--vw)),19px);font-weight:700;font-size:clamp(13px,calc(1.25 * var(--vw)),24px);transition:background .2s;}
 .proto-btn:hover{background:#d8e6ff;}
 
@@ -366,24 +394,26 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 .nav-points li h4{display:inline;font-size:clamp(15px,calc(1.51 * var(--vw)),29px);font-weight:700;margin-left:clamp(10px,calc(.83 * var(--vw)),16px);}
 .nav-points li p{margin-top:clamp(6px,calc(.7 * var(--vw)),13px);color:rgba(255,255,255,.85);font-size:var(--fs-body);line-height:1.6;}
 
-/* ---------- 11 Problem Solving ---------- */
+/* ---------- 11 AI Assisted Workflow ---------- */
 #s11{background:var(--bg-blue-1);}
-.state-grid{display:grid;grid-template-columns:1000fr 576fr;gap:clamp(16px,calc(1.25 * var(--vw)),24px);margin-top:clamp(28px,calc(3.9 * var(--vw)),75px);}
-.state-card{background:#fff;border-radius:var(--r-lg);padding:clamp(16px,calc(2.19 * var(--vw)),42px);}
-.state-card h4{font-size:var(--fs-num);font-weight:700;}
-.state-card img{margin-top:clamp(12px,calc(1.72 * var(--vw)),33px);width:100%;}
-.state-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,calc(2.08 * var(--vw)),40px);margin-top:clamp(28px,calc(3.9 * var(--vw)),75px);}
-.white-card{background:#fff;border-radius:clamp(12px,calc(1.46 * var(--vw)),28px);padding:clamp(18px,calc(1.67 * var(--vw)),32px);}
-.white-card h4{font-size:var(--fs-title);font-weight:700;}
-.white-card p{margin-top:clamp(8px,calc(.94 * var(--vw)),18px);color:var(--gray);font-size:var(--fs-body);line-height:1.6;}
+.ai-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,calc(1.25 * var(--vw)),24px);margin-top:clamp(28px,calc(3.02 * var(--vw)),58px);}
+.ai-card{background:#fff;border-radius:clamp(12px,calc(1.04 * var(--vw)),20px);padding:clamp(18px,calc(1.67 * var(--vw)),32px);display:flex;flex-direction:column;}
+.ai-card h4{font-size:var(--fs-title);font-weight:700;color:var(--ink);}
+.ai-card p{margin-top:clamp(10px,calc(1.25 * var(--vw)),24px);color:var(--gray);font-size:clamp(15px,calc(1.25 * var(--vw)),24px);line-height:1.55;}
+.ai-card img{margin-top:clamp(14px,calc(1.51 * var(--vw)),29px);width:100%;height:auto;display:block;}
+.ai-card .ai-media{display:block;margin-top:clamp(14px,calc(1.51 * var(--vw)),29px);}
+.ai-card .ai-media img{margin-top:0;}
+.ai-card .ai-media:hover img{filter:brightness(.97);}
+.ai-card .proto-btn{margin-top:auto;align-self:center;}
 
 /* ---------- 12 Validation（暗色） ---------- */
-#s12{background:var(--dark-2);}
+#s12{background:var(--dark-2);padding-bottom:0;}
 #s12 h2{color:#fff;}
 .val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,calc(2.08 * var(--vw)),40px);margin-top:clamp(28px,calc(3.9 * var(--vw)),75px);}
 .val-card{background:var(--card-slate-2);border-radius:clamp(12px,calc(1.46 * var(--vw)),28px);padding:clamp(18px,calc(1.67 * var(--vw)),32px);}
 .val-card h4{color:#fff;font-size:var(--fs-title);font-weight:700;}
 .val-card p{margin-top:clamp(8px,calc(.94 * var(--vw)),18px);color:#a8b9d5;font-size:var(--fs-body);line-height:1.6;}
+.val-hero{display:block;width:calc(100% + 2 * var(--pad-x));max-width:none;height:auto;margin-top:clamp(32px,calc(3.33 * var(--vw)),64px);margin-left:calc(-1 * var(--pad-x));}
 
 /* ---------- Footer ---------- */
 .foot{
@@ -392,7 +422,7 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 }
 .foot .kicker{color:#a8dfff;font-weight:700;font-size:var(--fs-label);letter-spacing:.05em;}
 .foot h2{margin-top:clamp(28px,calc(3.4 * var(--vw)),65px);font-size:var(--fs-foot);line-height:1.35;font-weight:700;}
-.foot-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:clamp(36px,calc(5.4 * var(--vw)),104px);color:#b4e7ff;flex-wrap:wrap;}
+.foot-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:clamp(36px,calc(5.4 * var(--vw)),104px);padding-top:calc(2.3 * var(--vw));border-top:1px solid #58aad2;color:#b4e7ff;flex-wrap:wrap;}
 .foot-row .l{font-weight:500;font-size:clamp(14px,calc(1.35 * var(--vw)),26px);}
 .foot-row .r{font-size:clamp(12px,calc(1.09 * var(--vw)),21px);}
 
@@ -407,7 +437,10 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 .ba-col .browser .bar,.pf-grid .browser .bar,.proto-side .browser .bar{display:none;}
 .ba-col .browser img,.pf-grid .browser img,.proto-side .browser img{width:100%;height:auto;}
 .brand-logo{height:clamp(18px,calc(1.72 * var(--vw)),33px);width:auto;display:block;}
-.venn-img,.gantt-img,.ai-ref-img,.flow-img,.collage-img,.ba-img,.state-img{display:block;width:100%;height:auto;}
+.venn-img{flex:1 1 auto;min-width:0;width:auto;height:auto;display:block;}
+.gantt-img,.ai-ref-img,.flow-img,.ba-img,.state-img{display:block;width:100%;height:auto;}
+#s06 .sec-sub + .flow-img{margin-top:clamp(28px,calc(2.917 * var(--vw)),56px);}
+#s06 .flow-img + .flow-img{margin-top:clamp(28px,calc(2.917 * var(--vw)),56px);}
 .path-arrow-img{width:clamp(70px,calc(8 * var(--vw)),154px);height:auto;flex:none;}
 </style>
 </head>
@@ -516,11 +549,15 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
       <p class="sec-sub">AI 辅助调研分析与任务流拆解，深挖师生场景隐性痛点，锚定设计核心方向。</p>
     </div>
     <img class="ai-ref-img" src="assets/img/377_2328.png" alt="基于 AI 大模型辅助研究">
-
-    <div class="stage-node">课程管理</div>
-    <div class="stage-node">备课</div>
-    <div class="stage-node">上课</div>
-    <div class="stage-node">课后分析</div>
+  </div>
+  <div class="stage-flow">
+    <div class="stage-node n1 first">课程管理</div>
+    <img class="stage-arrow a1" src="assets/img/stage_arrow.png" alt="">
+    <div class="stage-node n2">备课</div>
+    <img class="stage-arrow a2" src="assets/img/stage_arrow.png" alt="">
+    <div class="stage-node n3">上课</div>
+    <img class="stage-arrow a3" src="assets/img/stage_arrow.png" alt="">
+    <div class="stage-node n4">课后分析</div>
   </div>
   <div class="stage-list">
     <div class="stage-row">
@@ -577,13 +614,17 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
   <h2 class="sec-title"><span class="hl">AI 提效原型产出，</span><br>提速前期方案验证与迭代效率。</h2>
   <p class="sec-sub">基于教学业务场景，结合 VibeCoding 与结构化指令快速生成可运行原型，覆盖从需求到高保真的全链路设计，高效支撑 0-1 阶段方案验证与快速迭代。</p>
   <div class="proto-grid">
-    <img class="collage-img" src="assets/img/377_2332.png" alt="低保真线框图与原型拼图">
+    <div class="collage-link">
+      <img class="collage-img" src="assets/img/377_2332.png" alt="低保真线框图与原型拼图">
+    </div>
     <div class="proto-side">
       <span class="proto-pill">Vibe Coding 生成高保真原型</span>
-      <figure class="browser">
-        <img src="assets/img/377_2333.png" alt="高保真原型 · 教学中心课程首页">
-      </figure>
-      <a class="proto-btn" href="assets/img/377_2333.png" target="_blank" rel="noopener">点击查看原型&nbsp;&nbsp;&gt;</a>
+      <a class="browser-link" href="prototype/hi-fi-courses.html" target="_blank" rel="noopener" aria-label="打开高保真原型">
+        <figure class="browser">
+          <img src="assets/img/377_2333.png" alt="高保真原型 · 教学中心课程首页">
+        </figure>
+      </a>
+      <a class="proto-btn" href="prototype/hi-fi-courses.html" target="_blank" rel="noopener">点击查看原型&nbsp;&nbsp;&gt;</a>
     </div>
   </div>
 </section>
@@ -669,7 +710,7 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
       </div>
       <ul class="nav-points">
         <li><span class="no">01</span><h4>功能归集</h4><p>将课程相关功能归集，将分散的入口统一，使教师和学生更易查找。</p></li>
-        <li><span class="no">02</span><h4>课节列表对应章节目录</h4><p>使教师和学生对课程章节的心智模型统一，更好理解产品。</p></li>
+        <li><span class="no">02</span><h4>课节列表展示</h4><p>教师和学生可直接通过侧边栏切换课节，无需返回上一级页面。</p></li>
         <li><span class="no">03</span><h4>课程内容归集</h4><p>课节相关的资源、任务、课程回顾排列展示，备课更高效。</p></li>
       </ul>
     </div>
@@ -682,16 +723,30 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
 <!-- 11 -->
 <section id="s11">
   <div class="sec-head">
-    <span class="sec-label">11 / PROBLEM SOLVING</span>
-    <span class="sec-tag">解决问题</span>
+    <span class="sec-label">11 / AI-ASSISTED WORKFLOW</span>
+    <span class="sec-tag">AI辅助工作流</span>
   </div>
-  <h2 class="sec-title"><span class="hl">让状态可见，</span><br>让下一步有判断依据。</h2>
-  <p class="sec-sub">处理中、失败与已删除，不只是不同颜色，也需要明确文字与可用性区分。</p>
-  <img class="state-img" src="assets/img/377_2341.png" alt="资源列表与预览中的处理中、失败状态反馈">
-  <div class="state-cards">
-    <div class="white-card"><h4>处理中</h4><p>文字说明处理状态，区分当前可用与不可用内容。</p></div>
-    <div class="white-card"><h4>失败 / 已删除</h4><p>用文字标签辅助颜色，避免只靠视觉样式猜测原因。</p></div>
-    <div class="white-card"><h4>后续恢复路径</h4><p>现有等待提示并非完整闭环，重试、完成通知仍需补充验证。</p></div>
+  <h2 class="sec-title"><span class="hl">让AI辅助工作流，</span><br>提效、规范可验证。</h2>
+  <p class="sec-sub">搭建标准化 UI/UX 设计工作流：引用调研分析类 skill.md 支撑需求、用户研究；沉淀设计过程 skill.md 指导 AI 生成界面；编写 design.md 固化项目设计规范、约束 AI 界面生成；配套设计走查 skill.md 实现人机协同走查，确保产出有规范、可复查、可追溯。</p>
+  <div class="ai-cards">
+    <div class="ai-card">
+      <h4>总结沉淀 workflow.md</h4>
+      <p>workflow.md（流程剧本）：规定阶段顺序与人机分工，回答“先做什么、后做什么”，管的是节奏与衔接。</p>
+      <img src="assets/img/ai_workflow_1.png" alt="workflow.md 流程剧本示例">
+    </div>
+    <div class="ai-card">
+      <h4>设计/走查技能生成 skill.md</h4>
+      <p>skill.md（能力说明）：沉淀方法与判断原则，告诉 AI 何时触发、怎么做，管的是能力与决策力。</p>
+      <img src="assets/img/ai_workflow_2.png" alt="skill.md 能力说明示例">
+    </div>
+    <div class="ai-card">
+      <h4>设计规范生成design.md</h4>
+      <p>design.md（事实基准）：记录实测 Token 与规范数值，回答“按什么标准产出”，管的是唯一事实源。</p>
+      <a class="ai-media" href="design-spec/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83.html#source" target="_blank" rel="noopener" aria-label="查看 design.md 设计规范">
+        <img src="assets/img/ai_workflow_3.png" alt="design.md 设计规范示例">
+      </a>
+      <a class="proto-btn" href="design-spec/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83.html#source" target="_blank" rel="noopener">点击查看详情&nbsp;&nbsp;&gt;</a>
+    </div>
   </div>
 </section>
 
@@ -707,6 +762,7 @@ h2.sec-title{margin-top:var(--gap-sec);font-size:var(--fs-h2);line-height:1.35;f
     <div class="val-card"><h4>问题复盘</h4><p>梳理设计预期与真实使用的差异，定位边缘场景与体验疏漏。</p></div>
     <div class="val-card"><h4>资产沉淀</h4><p>沉淀组件规范与项目方法论，反哺后续同类项目提效。</p></div>
   </div>
+  <img class="val-hero" src="assets/img/s12_interface_bg.png" alt="界面示意：改版后的教学中心课程列表与学情统计界面" width="1920" height="1236">
 
 </section>
 

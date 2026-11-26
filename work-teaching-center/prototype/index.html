@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>教学中心 · 单色高保真原型</title>
+<link rel="stylesheet" href="mono.css">
+<style>
+body{background:#ECECEC}
+#canvas{background:#ECECEC;min-height:1080px;padding:48px 72px 60px}
+.idx-head{margin-bottom:34px}
+.idx-head h1{font-size:28px;color:var(--ink);letter-spacing:.02em;margin-bottom:10px}
+.idx-head p{font-size:13px;color:var(--grey-60);line-height:1.9}
+.idx-head .rule{width:56px;height:3px;background:var(--brand);margin:18px 0 0}
+.idx-group{margin-bottom:32px}
+.idx-group h2{font-size:13px;color:var(--grey-60);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #D5D5D5;letter-spacing:.04em}
+.idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.idx-card{display:block;background:#fff;border:1px solid #DFDFDF;border-radius:6px;padding:18px 18px 16px;min-height:126px;transition:box-shadow .16s,transform .16s,border-color .16s;position:relative}
+.idx-card:hover{box-shadow:var(--shadow-02);border-color:#B8B8B8;transform:translateY(-2px)}
+.idx-card .no{font-family:"PT Mono",monospace;font-size:11px;color:var(--grey-40);margin-bottom:10px}
+.idx-card .tt{font-size:15px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.idx-card .ds{font-size:11px;color:var(--grey-50);line-height:1.7}
+.idx-card .go{position:absolute;right:16px;bottom:14px;font-size:11px;color:var(--brand);display:inline-flex;align-items:center;gap:4px}
+.idx-card .go svg{width:12px;height:12px}
+.idx-card.feature{background:var(--brand);border-color:var(--brand)}
+.idx-card.feature .no,.idx-card.feature .ds{color:rgba(255,255,255,.72)}
+.idx-card.feature .tt,.idx-card.feature .go{color:#fff}
+.idx-note{margin-top:10px;font-size:11px;color:var(--grey-50);line-height:1.9}
+.idx-note b{color:var(--ink-2);font-weight:700}
+</style>
+</head>
+<body data-page="index">
+<div id="redirect" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#ECECEC;font:14px/1.6 'Microsoft YaHei','PingFang SC',Arial,sans-serif;color:#5C5C5C">
+  <div>正在进入教学中心原型…</div>
+</div>
+<script>location.replace('hi-fi-courses.html');</script>
+</body>
+</html>
